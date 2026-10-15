@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10-2 幻灯片</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }
+
+    .box {
+      width: 520px;
+      background: transparent;
+    }
+
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      background: #000;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      animation: fade 9s infinite;
+    }
+
+    .slide:nth-child(2) {
+      animation-delay: 3s;
+    }
+
+    .slide:nth-child(3) {
+      animation-delay: 6s;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .title {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      z-index: 2;
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 28px;
+      letter-spacing: 2px;
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .text {
+      margin-top: 18px;
+      padding: 16px 20px;
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 2px;
+      border-radius: 8px;
+    }
+
+    @keyframes fade {
+      0%, 20% {
+        opacity: 0;
+      }
+      25%, 45% {
+        opacity: 1;
+      }
+      50%, 100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="slider">
+      <div class="slide">
+        <img src="img/1.jpg" alt="图片1" />
+        <div class="title">许镇玺</div>
+      </div>
+      <div class="slide">
+        <img src="img/2.jpg" alt="图片2" />
+        <div class="title">许镇玺</div>
+      </div>
+      <div class="slide">
+        <img src="img/3.jpg" alt="图片3" />
+        <div class="title">许镇玺</div>
+      </div>
+    </div>
+
+    <div class="text">许镇玺</div>
+  </div>
+</body>
+</html>

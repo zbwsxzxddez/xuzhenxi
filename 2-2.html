@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>115 许镇玺</title>
+</head>
+<body>
+    <!-- 超链接 -->
+    <a href="https://www.huanqiu.com">环球网</a>
+    <a href="https://www.baidu.com" target="_blank">百度</a>
+    <a href="https://www.baidu.com" target="_self">百度</a>
+    <a href="./2-1.html" target="_blank">相对路径</a>
+    <!-- ./表示当前目录，..表示上一级目录 -->
+    <!-- 多个html属性中间用空格分隔 -->
+     <!-- 图片img -->
+      <img src="./img/1.jpg">
+      <img src="./img/2.jpg" title="seo用，搜索引擎优化">
+      <img src="./img/3.jpg" width="300" >
+      ```
+<!-- 小扩展：图片超链接。 -->
+    <a href="https://www.baidu.com">
+        <img src="./img/1.jpg" width="300">
+    </a>
+
+    <!--大扩展：表格，大国重器，四行三列的表格，有表头-->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>表头1</th>
+                <th>表头2</th>
+                <th>表头3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>内容1</td>
+                <td>内容2</td>
+                <td>内容3</td>
+            </tr>
+            <tr>
+                <td>内容4</td>
+                <td>内容5</td>
+                <td>内容6</td>
+            </tr>
+            <tr>
+                <td>内容7</td>
+                <td>内容8</td>
+                <td>内容9</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+```
+
+> 
+> `border="1"` 给表格加上边框，方便课堂看效果。
+
+今天 16:45
+
+我要的是环球网。
+
+```
+<!--小扩展：图片超链接，跳转环球网-->
+<a href="https://www.huanqiu.com">
+    <img src="./img/1.jpg" width="300">
+</a>
+```
+
+点击图片就打开环球网官网。
+
+完整代码片段：
+
+```
+<html lang="en">
+<body>
+    <!-- 图片img -->
+    <img src="./img/1.jpg">
+    <img src="./img/2.jpg" title="seo用，搜索引擎优化">
+    <img src="./img/3.jpg" width="300" >
+    <!-- 只设置宽度，不设置高度 -->
+
+    <!-- 小扩展：图片超链接，跳转环球网，新标签打开 -->
+    <a href="https://www.huanqiu.com" target="_blank">
+        <img src="./img/1.jpg" width="300">
+    </a>
+
+    <!--大扩展：表格，四行三列表格，带表头-->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>表头1</th>
+                <th>表头2</th>
+                <th>表头3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>内容1</td>
+                <td>内容2</td>
+                <td>内容3</td>
+            </tr>
+            <tr>
+                <td>内容4</td>
+                <td>内容5</td>
+                <td>内容6</td>
+            </tr>
+            <tr>
+                <td>内容7</td>
+                <td>内容8</td>
+                <td>内容9</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

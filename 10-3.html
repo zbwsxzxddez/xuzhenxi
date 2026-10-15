@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10-3 media query</title>
+  <style>
+    :root {
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f7d6a5;
+      color: #111;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      transition: background 0.5s ease;
+    }
+
+    .full {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f7d6a5;
+      transition: all 0.5s ease;
+    }
+
+    .box {
+      text-align: center;
+      padding: 2rem 3rem;
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 3rem;
+      letter-spacing: 0.25rem;
+      color: #111;
+      text-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 1200px) {
+      body {
+        background: #cfe8ff;
+      }
+
+      .full {
+        background: #cfe8ff;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 800px) {
+      body {
+        background: #bfe7c7;
+      }
+
+      .full {
+        background: #bfe7c7;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        background: #f4b6c2;
+      }
+
+      .full {
+        background: #f4b6c2;
+      }
+
+      .box {
+        padding: 1.5rem 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        letter-spacing: 0.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="full">
+    <div class="box">
+      <h1>许镇玺</h1>
+    </div>
+  </div>
+</body>
+</html>
