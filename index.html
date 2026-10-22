@@ -262,8 +262,8 @@ footer{
       本页全部采用原生 HTML、CSS 与 JavaScript 手写，未引用任何 CDN 或外部资源。
     </p>
     <ul class="stats rise" style="animation-delay:.35s">
-      <li><b>17</b>个实践网页</li>
-      <li><b>11</b>个知识章节</li>
+      <li><b>18</b>个实践网页</li>
+      <li><b>12</b>个知识章节</li>
       <li><b>7</b>份配套素材</li>
       <li><b>0</b>CDN 外部依赖</li>
     </ul>
@@ -689,6 +689,100 @@ footer{
     </div>
   </section>
 
+  <!-- ===== 第十三章 ===== -->
+  <section class="chapter">
+    <div class="chapter-head">
+      <span class="chapter-num">13</span>
+      <div>
+        <h2>第十三章 · Grid 网格布局与图标库</h2>
+        <p>命名区块排布 · Font Awesome 字体图标 · Lucide SVG 图标</p>
+      </div>
+    </div>
+    <div class="cards">
+
+      <article class="card rise" style="animation-delay:.1s">
+        <div class="card-top">
+          <span class="file">13-1.html</span>
+          <span class="tag">Grid 网格</span>
+        </div>
+        <h3 class="card-title"><a href="13-1.html" target="_blank" rel="noopener">CSS Grid 命名区块布局</a></h3>
+        <ul class="points">
+          <li>grid-template-areas 按名称划分 a b c d e f 六个区块</li>
+          <li>重复字母让区块自动跨行跨列（b 跨 2×2、c 跨 3 行、d 跨 2 行）</li>
+          <li>grid-area 认领区块，配合媒体查询在窄屏改为一列堆叠</li>
+        </ul>
+        <a class="go" href="13-1.html" target="_blank" rel="noopener">打开实践页面
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+
+      <article class="card rise" style="animation-delay:.2s">
+        <div class="card-top">
+          <span class="file">13-2.html</span>
+          <span class="tag">字体图标</span>
+        </div>
+        <h3 class="card-title"><a href="13-2.html" target="_blank" rel="noopener">Font Awesome 字体图标</a></h3>
+        <ul class="points">
+          <li>fa-solid 900 / fa-regular 400 / fa-brands 三种字体族同屏对比</li>
+          <li>图标即字符：@font-face 加载 woff2，::before 输出编码，color、font-size 直接控制</li>
+          <li>CDN 资源已下载到本地 cdn/fontawesome/（all.min.css + 6 个字体文件）</li>
+        </ul>
+        <a class="go" href="13-2.html" target="_blank" rel="noopener">打开实践页面
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+
+      <article class="card rise" style="animation-delay:.3s">
+        <div class="card-top">
+          <span class="file">13-3.html</span>
+          <span class="tag">SVG 图标</span>
+        </div>
+        <h3 class="card-title"><a href="13-3.html" target="_blank" rel="noopener">Lucide SVG 矢量图标</a></h3>
+        <ul class="points">
+          <li>内联 &lt;svg&gt;：path 路径 + stroke="currentColor"，颜色随 color 变化</li>
+          <li>&lt;img src&gt; 外链方式直接加载本地 .svg 文件，两种用法对比</li>
+          <li>CDN 资源已下载到本地 cdn/lucide/icons/（lucide-static 16 个 svg）</li>
+        </ul>
+        <a class="go" href="13-3.html" target="_blank" rel="noopener">打开实践页面
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+
+      <article class="card rise" style="animation-delay:.4s">
+        <div class="card-top">
+          <span class="file">13-4.html</span>
+          <span class="tag">字体图标底导</span>
+        </div>
+        <h3 class="card-title"><a href="13-4.html" target="_blank" rel="noopener">iconfont 字体图标 · 移动端固定底导</a></h3>
+        <ul class="points">
+          <li>woff2 字体 + .icon-xxx 类名，::before 输出编码（首页 eaf0 / 发现 e631 / 微信 e608 / 我的 e8c6）</li>
+          <li>position:fixed + 100% 全屏宽度，flex:1 四项均分自适应屏宽</li>
+          <li>数字徽章（5、99+）与右上角红点均为纯 CSS 覆盖层</li>
+        </ul>
+        <a class="go" href="13-4.html" target="_blank" rel="noopener">打开实践页面
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+
+      <article class="card rise" style="animation-delay:.5s">
+        <div class="card-top">
+          <span class="file">13-5.html</span>
+          <span class="tag">SVG 图标底导</span>
+        </div>
+        <h3 class="card-title"><a href="13-5.html" target="_blank" rel="noopener">iconfont SVG 图标 · 移动端固定底导</a></h3>
+        <ul class="points">
+          <li>iconfont.js 的 symbol 内联为隐藏 sprite，&lt;use href&gt; 引用矢量路径</li>
+          <li>fill="currentColor" 颜色跟随 CSS color，与 13-4 字体方案一一对应便于对比</li>
+          <li>同样 fixed + 100% 全屏宽度、flex:1 四项均分、CSS 徽章与红点</li>
+        </ul>
+        <a class="go" href="13-5.html" target="_blank" rel="noopener">打开实践页面
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
   <!-- ===== 任务原文（本提示词） ===== -->
   <section class="brief rise">
     <span class="brief-label">任务原文 · PROMPT</span>
@@ -696,7 +790,7 @@ footer{
       “创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为许镇玺的《高级网页设计》课堂实践，美化页面，页面中包括本提示词。”
     </blockquote>
     <p class="brief-note">
-      <b>完成情况：</b>本页 <b>index.html</b> 即依据上述提示词创建——已收录本目录全部 13 个网页的超链接，
+      <b>完成情况：</b>本页 <b>index.html</b> 即依据上述提示词创建——已收录本目录 22 个网页的超链接，
       全部使用原生 HTML / CSS / JavaScript 手写，未使用任何 CDN，并在此完整保留提示词原文。
     </p>
   </section>
@@ -711,6 +805,9 @@ footer{
     <span class="chip">img/a1.jpg</span>
     <span class="chip">img/a2.jpg</span>
     <span class="chip">img/a3.jpg</span>
+    <span class="chip">cdn/fontawesome/</span>
+    <span class="chip">cdn/lucide/icons/</span>
+    <span class="chip">font/font_5244851_6n95j09brtj/</span>
   </section>
 
 </main>

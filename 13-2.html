@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>许镇玺 · Font Awesome 字体图标</title>
+<!-- 引用已下载到本地 cdn 目录的 Font Awesome 6 Free -->
+<link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+<style>
+/* ============================================================
+   许镇玺 · Font Awesome 字体图标演示（13-2）
+   字体图标原理：
+     1. @font-face 加载 woff2 / ttf 字体文件（本地 cdn/fontawesome/webfonts/）
+     2. 图标类名通过 ::before 的 content 输出图标编码（如房子 = f015）
+     3. 字体渲染出图形，因此可用 color / font-size / font-weight 控制
+   页面不联网，资源全部来自本地 cdn/fontawesome/ 目录
+   ============================================================ */
+
+:root{
+  --xuzhenxi_bg:      #f5f1e8;
+  --xuzhenxi_surface: #fbf8f1;
+  --xuzhenxi_text:    #222b28;
+  --xuzhenxi_muted:   #7d7666;
+  --xuzhenxi_line:    #e2dac6;
+  --xuzhenxi_radius:  14px;
+  --xuzhenxi_gap:     12px;
+  --xuzhenxi_font:    "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xuzhenxi_mono:    Consolas,"Courier New",monospace;
+  --xuzhenxi_shadow:  0 12px 30px -18px rgba(31,42,40,.4);
+  --xuzhenxi_teal:    #154943;
+  --xuzhenxi_red:     #b23c28;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:var(--xuzhenxi_font);
+  color:var(--xuzhenxi_text);
+  background:var(--xuzhenxi_bg);
+  line-height:1.7;
+  padding:40px 18px 60px;
+}
+.xuzhenxi_wrap{width:min(960px,94%);margin:0 auto;}
+
+/* ---------- 头部 ---------- */
+.xuzhenxi_hero{text-align:center;margin-bottom:30px;}
+.xuzhenxi_kicker{
+  font-family:var(--xuzhenxi_mono);font-size:12px;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--xuzhenxi_teal);margin-bottom:12px;
+}
+.xuzhenxi_hero h1{font-size:clamp(26px,4.6vw,42px);letter-spacing:.04em;}
+.xuzhenxi_hero h1 em{
+  font-style:normal;color:var(--xuzhenxi_red);
+  background:linear-gradient(transparent 62%,rgba(178,60,40,.18) 62%);
+}
+.xuzhenxi_hero p{color:var(--xuzhenxi_muted);margin-top:12px;font-size:15px;}
+
+/* ---------- 区块标题 ---------- */
+.xuzhenxi_block{margin-top:30px;}
+.xuzhenxi_title{
+  font-size:16px;letter-spacing:.06em;color:#2a6b62;
+  margin-bottom:14px;font-weight:700;
+}
+.xuzhenxi_title code{
+  font-family:var(--xuzhenxi_mono);font-size:13px;
+  background:#ece4d1;color:var(--xuzhenxi_red);
+  padding:2px 8px;border-radius:6px;
+}
+
+/* ---------- 图标网格 ---------- */
+.xuzhenxi_grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(126px,1fr));
+  gap:var(--xuzhenxi_gap);
+}
+.xuzhenxi_item{
+  background:var(--xuzhenxi_surface);
+  border:1px solid var(--xuzhenxi_line);
+  border-radius:var(--xuzhenxi_radius);
+  padding:20px 10px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.xuzhenxi_item:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--xuzhenxi_shadow);
+  border-color:var(--xuzhenxi_red);
+}
+/* 图标本体：字体图标，尺寸与颜色都由文字属性决定 */
+.xuzhenxi_item i{
+  font-size:32px;
+  color:var(--xuzhenxi_teal);
+  transition:color .18s ease;
+}
+.xuzhenxi_item:hover i{color:var(--xuzhenxi_red);}
+.xuzhenxi_name{font-size:13.5px;font-weight:600;}
+.xuzhenxi_cls{
+  font-family:var(--xuzhenxi_mono);font-size:11px;
+  color:var(--xuzhenxi_muted);word-break:break-all;text-align:center;
+}
+
+/* ---------- 字重 / 字体对比行 ---------- */
+.xuzhenxi_row{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  background:var(--xuzhenxi_surface);
+  border:1px solid var(--xuzhenxi_line);
+  border-radius:var(--xuzhenxi_radius);
+  padding:14px 18px;
+  margin-bottom:var(--xuzhenxi_gap);
+}
+.xuzhenxi_rowtag{
+  font-family:var(--xuzhenxi_mono);font-size:12px;white-space:nowrap;
+  color:var(--xuzhenxi_red);background:#ece4d1;
+  padding:4px 11px;border-radius:999px;
+}
+.xuzhenxi_icons{
+  display:flex;gap:22px;flex-wrap:wrap;
+  font-size:28px;color:var(--xuzhenxi_teal);
+}
+.xuzhenxi_icons i{transition:color .18s ease,transform .18s ease;}
+.xuzhenxi_icons i:hover{color:var(--xuzhenxi_red);transform:translateY(-3px);}
+
+/* ---------- 代码块 ---------- */
+.xuzhenxi_code{
+  font-family:var(--xuzhenxi_mono);font-size:13.5px;line-height:1.85;
+  background:#222b28;color:#d9e4df;
+  border-radius:var(--xuzhenxi_radius);padding:18px 20px;
+  overflow:auto;white-space:pre;margin-top:28px;
+}
+.xuzhenxi_code b{color:#e8b96a;font-weight:600;}
+.xuzhenxi_code i{color:#7fc6b8;font-style:normal;}
+
+/* ---------- 说明 ---------- */
+.xuzhenxi_note{margin-top:24px;font-size:14px;color:var(--xuzhenxi_muted);}
+.xuzhenxi_note b{color:var(--xuzhenxi_red);}
+.xuzhenxi_note code{
+  font-family:var(--xuzhenxi_mono);font-size:12.5px;
+  background:#ece4d1;color:#2a6b62;padding:1px 6px;border-radius:5px;
+}
+
+/* ---------- 窄屏 ---------- */
+@media (max-width:560px){
+  .xuzhenxi_item i{font-size:28px;}
+  .xuzhenxi_icons{gap:16px;font-size:24px;}
+}
+
+.xuzhenxi_foot{
+  text-align:center;color:var(--xuzhenxi_muted);font-size:13.5px;
+  border-top:1px solid var(--xuzhenxi_line);padding-top:18px;margin-top:34px;
+}
+.xuzhenxi_foot b{color:var(--xuzhenxi_red);}
+</style>
+</head>
+<body>
+
+<div class="xuzhenxi_wrap">
+
+  <header class="xuzhenxi_hero">
+    <p class="xuzhenxi_kicker">Font Awesome 6 Free · 字体图标</p>
+    <h1><em>许镇玺</em> · Font Awesome 字体图标</h1>
+    <p>图标即字体：woff2 字体文件 + 字符编码，用 color / font-size 像文字一样自由控制。</p>
+  </header>
+
+  <!-- 实心图标网格 -->
+  <section class="xuzhenxi_block" aria-label="Font Awesome 实心图标">
+    <h2 class="xuzhenxi_title">实心图标 · <code>fa-solid</code>（font-weight: 900）</h2>
+    <div class="xuzhenxi_grid">
+      <div class="xuzhenxi_item"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="xuzhenxi_name">首页</span><span class="xuzhenxi_cls">fa-house</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-user" aria-hidden="true"></i><span class="xuzhenxi_name">用户</span><span class="xuzhenxi_cls">fa-user</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-heart" aria-hidden="true"></i><span class="xuzhenxi_name">爱心</span><span class="xuzhenxi_cls">fa-heart</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-bell" aria-hidden="true"></i><span class="xuzhenxi_name">铃铛</span><span class="xuzhenxi_cls">fa-bell</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="xuzhenxi_name">搜索</span><span class="xuzhenxi_cls">fa-magnifying-glass</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-gear" aria-hidden="true"></i><span class="xuzhenxi_name">设置</span><span class="xuzhenxi_cls">fa-gear</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span class="xuzhenxi_name">邮件</span><span class="xuzhenxi_cls">fa-envelope</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-star" aria-hidden="true"></i><span class="xuzhenxi_name">星标</span><span class="xuzhenxi_cls">fa-star</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-calendar" aria-hidden="true"></i><span class="xuzhenxi_name">日历</span><span class="xuzhenxi_cls">fa-calendar</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-camera" aria-hidden="true"></i><span class="xuzhenxi_name">相机</span><span class="xuzhenxi_cls">fa-camera</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-cloud" aria-hidden="true"></i><span class="xuzhenxi_name">云朵</span><span class="xuzhenxi_cls">fa-cloud</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-download" aria-hidden="true"></i><span class="xuzhenxi_name">下载</span><span class="xuzhenxi_cls">fa-download</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-trash" aria-hidden="true"></i><span class="xuzhenxi_name">删除</span><span class="xuzhenxi_cls">fa-trash</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-lock" aria-hidden="true"></i><span class="xuzhenxi_name">锁定</span><span class="xuzhenxi_cls">fa-lock</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-moon" aria-hidden="true"></i><span class="xuzhenxi_name">月亮</span><span class="xuzhenxi_cls">fa-moon</span></div>
+      <div class="xuzhenxi_item"><i class="fa-solid fa-music" aria-hidden="true"></i><span class="xuzhenxi_name">音乐</span><span class="xuzhenxi_cls">fa-music</span></div>
+    </div>
+  </section>
+
+  <!-- 同一图标两种字重 -->
+  <section class="xuzhenxi_block" aria-label="字重对比">
+    <h2 class="xuzhenxi_title">同一段编码 · 两种字重（solid 900 / regular 400）</h2>
+    <div class="xuzhenxi_row">
+      <span class="xuzhenxi_rowtag">fa-solid · 900</span>
+      <span class="xuzhenxi_icons">
+        <i class="fa-solid fa-star" aria-hidden="true"></i>
+        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+        <i class="fa-solid fa-bell" aria-hidden="true"></i>
+        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+      </span>
+    </div>
+    <div class="xuzhenxi_row">
+      <span class="xuzhenxi_rowtag">fa-regular · 400</span>
+      <span class="xuzhenxi_icons">
+        <i class="fa-regular fa-star" aria-hidden="true"></i>
+        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        <i class="fa-regular fa-bell" aria-hidden="true"></i>
+        <i class="fa-regular fa-moon" aria-hidden="true"></i>
+        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+        <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+      </span>
+    </div>
+  </section>
+
+  <!-- 品牌字体 -->
+  <section class="xuzhenxi_block" aria-label="品牌图标">
+    <h2 class="xuzhenxi_title">品牌图标 · <code>fa-brands</code>（独立的品牌字体文件）</h2>
+    <div class="xuzhenxi_row">
+      <span class="xuzhenxi_rowtag">fa-brands · 400</span>
+      <span class="xuzhenxi_icons">
+        <i class="fa-brands fa-github" aria-hidden="true"></i>
+        <i class="fa-brands fa-html5" aria-hidden="true"></i>
+        <i class="fa-brands fa-chrome" aria-hidden="true"></i>
+        <i class="fa-brands fa-firefox" aria-hidden="true"></i>
+      </span>
+    </div>
+  </section>
+
+  <!-- 对应代码 -->
+  <section class="xuzhenxi_code"><b>&lt;!-- ① 引用下载到本地的 Font Awesome 样式表 --&gt;</b>
+<b>&lt;link</b> rel="stylesheet" href=<i>"cdn/fontawesome/css/all.min.css"</i><b>&gt;</b>
+
+<b>&lt;!-- ② 类名 = 字体族(fa-solid/fa-regular/fa-brands) + 图标名 --&gt;</b>
+<b>&lt;i class=</b>"fa-solid fa-house"<b>&gt;&lt;/i&gt;</b>
+<b>&lt;i class=</b>"fa-regular fa-star"<b>&gt;&lt;/i&gt;</b>
+<b>&lt;i class=</b>"fa-brands fa-github"<b>&gt;&lt;/i&gt;</b>
+
+<b>.xuzhenxi_item i</b> {
+  font-family: <i>"Font Awesome 6 Free"</i>;  <i>/* @font-face 加载的本地字体 */</i>
+  font-weight: <i>900</i>;                   <i>/* 900 实心 solid · 400 常规 regular */</i>
+  font-size: <i>32px</i>;                     <i>/* 文字属性缩放，任意倍数都不失真 */</i>
+  color: <i>#154943</i>;                      <i>/* 文字属性上色，无需改图片 */</i>
+}
+<b>.xuzhenxi_item:hover i</b> { color: <i>#b23c28</i>; }</section>
+
+  <p class="xuzhenxi_note">
+    <b>说明：</b>字体图标的本质是「字体文件 + 编码映射」——Font Awesome 把图标绘制进
+    <code>woff2 / ttf</code> 字体，浏览器经 <code>@font-face</code> 加载后，
+    <code>fa-house</code> 这类类名通过 <code>::before</code> 输出对应字符编码
+    （房子 = <code>f015</code>），再由字体渲染成图形。
+    所以图标天生具备文字特性：<b>color 换色、font-size 缩放、font-weight 换粗细</b>，放大也不会模糊。
+    本页全部资源来自本地 <code>cdn/fontawesome/</code>（css/all.min.css + webfonts 下 6 个字体文件），不联网。
+  </p>
+
+  <footer class="xuzhenxi_foot">
+    <b>许镇玺</b> ·《高级网页设计》课堂实践 — Font Awesome 6 字体图标，CDN 资源已下载至本地 cdn/ 目录
+  </footer>
+
+</div>
+
+</body>
+</html>
