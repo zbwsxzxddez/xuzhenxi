@@ -1,3 +1,4 @@
+﻿<!-- 姓名：许镇玺，日期：CSS变量 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -13,218 +14,218 @@
 
 /* ---------- 全局变量：定义在 :root 上 ---------- */
 :root{
-  --xuzhenxi_bg:        #f5f1e8;
-  --xuzhenxi_surface:   #fbf8f1;
-  --xuzhenxi_text:      #222b28;
-  --xuzhenxi_muted:     #7d7666;
-  --xuzhenxi_line:      #e2dac6;
-  --xuzhenxi_primary:   #b23c28;   /* 朱砂，可交互切换 */
-  --xuzhenxi_primary-2: #93301f;
-  --xuzhenxi_accent:    #154943;   /* 松青 */
-  --xuzhenxi_radius:    12px;      /* 可交互调节 */
-  --xuzhenxi_gap:       22px;      /* 可交互调节 */
-  --xuzhenxi_font:      "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
-  --xuzhenxi_mono:      Consolas,"Courier New",monospace;
-  --xuzhenxi_shadow:    0 12px 30px -16px rgba(31,42,40,.35);
+  --xzx_bg:        #f5f1e8;
+  --xzx_surface:   #fbf8f1;
+  --xzx_text:      #222b28;
+  --xzx_muted:     #7d7666;
+  --xzx_line:      #e2dac6;
+  --xzx_primary:   #b23c28;   /* 朱砂，可交互切换 */
+  --xzx_primary-2: #93301f;
+  --xzx_accent:    #154943;   /* 松青 */
+  --xzx_radius:    12px;      /* 可交互调节 */
+  --xzx_gap:       22px;      /* 可交互调节 */
+  --xzx_font:      "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:      Consolas,"Courier New",monospace;
+  --xzx_shadow:    0 12px 30px -16px rgba(31,42,40,.35);
 }
 
 /* ---------- 深色主题：重定义同名变量即可整体换肤 ---------- */
-:root.xuzhenxi_dark{
-  --xuzhenxi_bg:      #161b1a;
-  --xuzhenxi_surface: #1e2523;
-  --xuzhenxi_text:    #ece7dc;
-  --xuzhenxi_muted:   #9aa39c;
-  --xuzhenxi_line:    #333d3a;
-  --xuzhenxi_accent:  #7fc6b8;
+:root.xzx_dark{
+  --xzx_bg:      #161b1a;
+  --xzx_surface: #1e2523;
+  --xzx_text:    #ece7dc;
+  --xzx_muted:   #9aa39c;
+  --xzx_line:    #333d3a;
+  --xzx_accent:  #7fc6b8;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-  font-family:var(--xuzhenxi_font);
-  color:var(--xuzhenxi_text);
-  background:var(--xuzhenxi_bg);
+  font-family:var(--xzx_font);
+  color:var(--xzx_text);
+  background:var(--xzx_bg);
   line-height:1.7;
   padding:40px 18px 64px;
   transition:background .3s ease, color .3s ease;
 }
-.xuzhenxi_wrap{width:min(1000px,94%);margin:0 auto;}
+.xzx_wrap{width:min(1000px,94%);margin:0 auto;}
 
 /* ---------- 头部 ---------- */
-.xuzhenxi_hero{text-align:center;margin-bottom:34px;}
-.xuzhenxi_kicker{
-  font-family:var(--xuzhenxi_mono);
+.xzx_hero{text-align:center;margin-bottom:34px;}
+.xzx_kicker{
+  font-family:var(--xzx_mono);
   font-size:12px;letter-spacing:.34em;text-transform:uppercase;
-  color:var(--xuzhenxi_primary);margin-bottom:14px;
+  color:var(--xzx_primary);margin-bottom:14px;
 }
-.xuzhenxi_hero h1{
+.xzx_hero h1{
   font-size:clamp(26px,4.6vw,44px);line-height:1.3;letter-spacing:.04em;
 }
-.xuzhenxi_hero h1 em{
-  font-style:normal;color:var(--xuzhenxi_primary);
+.xzx_hero h1 em{
+  font-style:normal;color:var(--xzx_primary);
   background:linear-gradient(transparent 62%, rgba(178,60,40,.18) 62%);
 }
-.xuzhenxi_hero p{color:var(--xuzhenxi_muted);margin-top:14px;font-size:15px;}
+.xzx_hero p{color:var(--xzx_muted);margin-top:14px;font-size:15px;}
 
 /* ---------- 控制面板 ---------- */
-.xuzhenxi_panel{
-  display:flex;flex-wrap:wrap;gap:var(--xuzhenxi_gap);
+.xzx_panel{
+  display:flex;flex-wrap:wrap;gap:var(--xzx_gap);
   align-items:center;justify-content:center;
-  background:var(--xuzhenxi_surface);
-  border:1px solid var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
   padding:18px 22px;margin-bottom:34px;
-  box-shadow:var(--xuzhenxi_shadow);
+  box-shadow:var(--xzx_shadow);
   transition:background .3s ease,border-color .3s ease,border-radius .25s ease;
 }
-.xuzhenxi_ctrl{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--xuzhenxi_muted);}
-.xuzhenxi_ctrl input[type="range"]{width:130px;accent-color:var(--xuzhenxi_primary);}
-.xuzhenxi_ctrl input[type="color"]{
-  width:38px;height:28px;border:1px solid var(--xuzhenxi_line);
+.xzx_ctrl{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--xzx_muted);}
+.xzx_ctrl input[type="range"]{width:130px;accent-color:var(--xzx_primary);}
+.xzx_ctrl input[type="color"]{
+  width:38px;height:28px;border:1px solid var(--xzx_line);
   border-radius:6px;background:none;cursor:pointer;
 }
-.xuzhenxi_btn{
-  font-family:var(--xuzhenxi_font);font-size:13.5px;font-weight:600;cursor:pointer;
-  color:var(--xuzhenxi_surface);
-  background:var(--xuzhenxi_primary);
+.xzx_btn{
+  font-family:var(--xzx_font);font-size:13.5px;font-weight:600;cursor:pointer;
+  color:var(--xzx_surface);
+  background:var(--xzx_primary);
   border:none;border-radius:999px;padding:9px 20px;
   transition:background .2s ease,transform .12s ease;
 }
-.xuzhenxi_btn:hover{background:var(--xuzhenxi_primary-2);}
-.xuzhenxi_btn:active{transform:scale(.96);}
+.xzx_btn:hover{background:var(--xzx_primary-2);}
+.xzx_btn:active{transform:scale(.96);}
 
-/* ---------- 卡片网格：间距由变量 --xuzhenxi_gap 控制 ---------- */
-.xuzhenxi_grid{
+/* ---------- 卡片网格：间距由变量 --xzx_gap 控制 ---------- */
+.xzx_grid{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:var(--xuzhenxi_gap);margin-bottom:34px;
+  gap:var(--xzx_gap);margin-bottom:34px;
 }
-.xuzhenxi_card{
-  background:var(--xuzhenxi_surface);
-  border:1px solid var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);
-  padding:22px;box-shadow:var(--xuzhenxi_shadow);
+.xzx_card{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:22px;box-shadow:var(--xzx_shadow);
   transition:transform .22s ease,border-radius .25s ease,background .3s ease;
 }
-.xuzhenxi_card:hover{transform:translateY(-5px);}
-.xuzhenxi_card::before{
+.xzx_card:hover{transform:translateY(-5px);}
+.xzx_card::before{
   content:"";display:block;width:34px;height:6px;border-radius:999px;
-  background:var(--xuzhenxi_primary);margin-bottom:14px;
+  background:var(--xzx_primary);margin-bottom:14px;
 }
-.xuzhenxi_card h3{font-size:17px;margin-bottom:8px;color:var(--xuzhenxi_accent);}
-.xuzhenxi_card p{font-size:14px;color:var(--xuzhenxi_muted);}
-.xuzhenxi_swatch{
-  margin-top:14px;height:44px;border-radius:calc(var(--xuzhenxi_radius) - 4px);
-  background:linear-gradient(120deg,var(--xuzhenxi_primary),var(--xuzhenxi_accent));
+.xzx_card h3{font-size:17px;margin-bottom:8px;color:var(--xzx_accent);}
+.xzx_card p{font-size:14px;color:var(--xzx_muted);}
+.xzx_swatch{
+  margin-top:14px;height:44px;border-radius:calc(var(--xzx_radius) - 4px);
+  background:linear-gradient(120deg,var(--xzx_primary),var(--xzx_accent));
 }
 
 /* ---------- 局部作用域演示：在容器内重定义变量 ---------- */
-.xuzhenxi_scope{
-  --xuzhenxi_primary: #a98238;   /* 只在本容器内生效 */
-  --xuzhenxi_radius: 26px;
-  border:1px dashed var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);
-  padding:26px;background:var(--xuzhenxi_surface);margin-bottom:34px;
+.xzx_scope{
+  --xzx_primary: #a98238;   /* 只在本容器内生效 */
+  --xzx_radius: 26px;
+  border:1px dashed var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:26px;background:var(--xzx_surface);margin-bottom:34px;
 }
-.xuzhenxi_scope h2{
-  font-size:19px;color:var(--xuzhenxi_primary);margin-bottom:10px;
+.xzx_scope h2{
+  font-size:19px;color:var(--xzx_primary);margin-bottom:10px;
 }
-.xuzhenxi_scope p{font-size:14px;color:var(--xuzhenxi_muted);}
-.xuzhenxi_pill{
+.xzx_scope p{font-size:14px;color:var(--xzx_muted);}
+.xzx_pill{
   display:inline-block;margin-top:14px;
   font-size:13px;font-weight:600;color:#fff;
-  background:var(--xuzhenxi_primary);
-  border-radius:var(--xuzhenxi_radius);padding:8px 18px;
+  background:var(--xzx_primary);
+  border-radius:var(--xzx_radius);padding:8px 18px;
 }
 
 /* ---------- 代码块 ---------- */
-.xuzhenxi_code{
-  font-family:var(--xuzhenxi_mono);font-size:13px;line-height:1.8;
-  background:var(--xuzhenxi_text);color:#d9e4df;
-  border-radius:var(--xuzhenxi_radius);padding:18px 20px;overflow:auto;
+.xzx_code{
+  font-family:var(--xzx_mono);font-size:13px;line-height:1.8;
+  background:var(--xzx_text);color:#d9e4df;
+  border-radius:var(--xzx_radius);padding:18px 20px;overflow:auto;
   white-space:pre;
 }
-.xuzhenxi_code b{color:#e8b96a;font-weight:600;}
+.xzx_code b{color:#e8b96a;font-weight:600;}
 
 /* ---------- var() 回退值演示 ---------- */
-.xuzhenxi_fallback{
+.xzx_fallback{
   margin-top:14px;font-size:15px;
-  color:var(--xuzhenxi_not-defined, var(--xuzhenxi_primary));
+  color:var(--xzx_not-defined, var(--xzx_primary));
 }
 
 /* ---------- 页脚 ---------- */
-.xuzhenxi_foot{
-  text-align:center;color:var(--xuzhenxi_muted);font-size:13.5px;
-  border-top:1px solid var(--xuzhenxi_line);padding-top:20px;margin-top:10px;
+.xzx_foot{
+  text-align:center;color:var(--xzx_muted);font-size:13.5px;
+  border-top:1px solid var(--xzx_line);padding-top:20px;margin-top:10px;
 }
-.xuzhenxi_foot b{color:var(--xuzhenxi_primary);}
+.xzx_foot b{color:var(--xzx_primary);}
 </style>
 </head>
 <body>
 
-<div class="xuzhenxi_wrap">
+<div class="xzx_wrap">
 
-  <header class="xuzhenxi_hero">
-    <p class="xuzhenxi_kicker">CSS Custom Properties</p>
+  <header class="xzx_hero">
+    <p class="xzx_kicker">CSS Custom Properties</p>
     <h1><em>许镇玺</em> · CSS 变量演示</h1>
     <p>用 CSS 自定义属性（CSS 变量）统一管理颜色、圆角与间距，一处修改、全局生效。</p>
   </header>
 
   <!-- 交互控制 -->
-  <div class="xuzhenxi_panel">
-    <label class="xuzhenxi_ctrl">主题
-      <button class="xuzhenxi_btn" id="xuzhenxi_themeBtn">切换深色</button>
+  <div class="xzx_panel">
+    <label class="xzx_ctrl">主题
+      <button class="xzx_btn" id="xzx_themeBtn">切换深色</button>
     </label>
-    <label class="xuzhenxi_ctrl">主色
-      <input type="color" id="xuzhenxi_colorInput" value="#b23c28">
+    <label class="xzx_ctrl">主色
+      <input type="color" id="xzx_colorInput" value="#b23c28">
     </label>
-    <label class="xuzhenxi_ctrl">圆角 <input type="range" id="xuzhenxi_radiusInput" min="0" max="40" value="12"></label>
-    <label class="xuzhenxi_ctrl">间距 <input type="range" id="xuzhenxi_gapInput" min="8" max="48" value="22"></label>
+    <label class="xzx_ctrl">圆角 <input type="range" id="xzx_radiusInput" min="0" max="40" value="12"></label>
+    <label class="xzx_ctrl">间距 <input type="range" id="xzx_gapInput" min="8" max="48" value="22"></label>
   </div>
 
   <!-- 卡片：全部由变量驱动 -->
-  <div class="xuzhenxi_grid">
-    <article class="xuzhenxi_card">
+  <div class="xzx_grid">
+    <article class="xzx_card">
       <h3>颜色变量</h3>
       <p>文字、边框、主色都来自 <code>var()</code>，切换主色时整页同步改变。</p>
-      <div class="xuzhenxi_swatch"></div>
+      <div class="xzx_swatch"></div>
     </article>
-    <article class="xuzhenxi_card">
+    <article class="xzx_card">
       <h3>圆角变量</h3>
       <p>拖动上方“圆角”滑块，卡片、面板、代码块一起改变圆角。</p>
-      <div class="xuzhenxi_swatch"></div>
+      <div class="xzx_swatch"></div>
     </article>
-    <article class="xuzhenxi_card">
+    <article class="xzx_card">
       <h3>间距变量</h3>
-      <p>卡片之间的 <code>gap</code> 由 <code>--xuzhenxi_gap</code> 统一控制。</p>
-      <div class="xuzhenxi_swatch"></div>
+      <p>卡片之间的 <code>gap</code> 由 <code>--xzx_gap</code> 统一控制。</p>
+      <div class="xzx_swatch"></div>
     </article>
   </div>
 
   <!-- 局部作用域 -->
-  <section class="xuzhenxi_scope">
+  <section class="xzx_scope">
     <h2>局部作用域变量</h2>
-    <p>本容器重新定义了 <code>--xuzhenxi_primary</code> 与 <code>--xuzhenxi_radius</code>，
+    <p>本容器重新定义了 <code>--xzx_primary</code> 与 <code>--xzx_radius</code>，
        只影响自身及其后代，页面其他部分不受影响——这正是 CSS 变量继承与作用域的体现。</p>
-    <span class="xuzhenxi_pill">许镇玺</span>
+    <span class="xzx_pill">许镇玺</span>
   </section>
 
   <!-- var() 回退值 -->
-  <section class="xuzhenxi_card" style="margin-bottom:34px">
+  <section class="xzx_card" style="margin-bottom:34px">
     <h3>var() 回退值</h3>
     <p>当变量未定义时，<code>var(--a, 回退值)</code> 会使用回退值：</p>
-    <p class="xuzhenxi_fallback">这行文字使用了一个未定义的变量，因此回退到主色显示。</p>
+    <p class="xzx_fallback">这行文字使用了一个未定义的变量，因此回退到主色显示。</p>
   </section>
 
   <!-- 代码示例 -->
-  <section class="xuzhenxi_code"><b>:root</b>{
-  --xuzhenxi_primary: #b23c28;
-  --xuzhenxi_radius: 12px;
+  <section class="xzx_code"><b>:root</b>{
+  --xzx_primary: #b23c28;
+  --xzx_radius: 12px;
 }
-.xuzhenxi_card{
-  color: var(--xuzhenxi_primary);
-  border-radius: var(--xuzhenxi_radius);
+.xzx_card{
+  color: var(--xzx_primary);
+  border-radius: var(--xzx_radius);
 }</section>
 
-  <footer class="xuzhenxi_foot">
+  <footer class="xzx_foot">
     <b>许镇玺</b> ·《高级网页设计》课堂实践 — CSS 变量演示，原生代码手写，无 CDN 依赖
   </footer>
 
@@ -233,27 +234,27 @@ body{
 <script>
 /* 原生 JS：通过修改文档根元素上的 CSS 变量实现实时换肤 */
 (function(){
-  var xuzhenxi_root   = document.documentElement;
-  var xuzhenxi_theme  = document.getElementById('xuzhenxi_themeBtn');
-  var xuzhenxi_color  = document.getElementById('xuzhenxi_colorInput');
-  var xuzhenxi_radius = document.getElementById('xuzhenxi_radiusInput');
-  var xuzhenxi_gapIn  = document.getElementById('xuzhenxi_gapInput');
+  var xzx_root   = document.documentElement;
+  var xzx_theme  = document.getElementById('xzx_themeBtn');
+  var xzx_color  = document.getElementById('xzx_colorInput');
+  var xzx_radius = document.getElementById('xzx_radiusInput');
+  var xzx_gapIn  = document.getElementById('xzx_gapInput');
 
-  xuzhenxi_theme.addEventListener('click', function(){
-    var xuzhenxi_dark = xuzhenxi_root.classList.toggle('xuzhenxi_dark');
-    xuzhenxi_theme.textContent = xuzhenxi_dark ? '切换浅色' : '切换深色';
+  xzx_theme.addEventListener('click', function(){
+    var xzx_dark = xzx_root.classList.toggle('xzx_dark');
+    xzx_theme.textContent = xzx_dark ? '切换浅色' : '切换深色';
   });
 
-  xuzhenxi_color.addEventListener('input', function(){
-    xuzhenxi_root.style.setProperty('--xuzhenxi_primary', xuzhenxi_color.value);
+  xzx_color.addEventListener('input', function(){
+    xzx_root.style.setProperty('--xzx_primary', xzx_color.value);
   });
 
-  xuzhenxi_radius.addEventListener('input', function(){
-    xuzhenxi_root.style.setProperty('--xuzhenxi_radius', xuzhenxi_radius.value + 'px');
+  xzx_radius.addEventListener('input', function(){
+    xzx_root.style.setProperty('--xzx_radius', xzx_radius.value + 'px');
   });
 
-  xuzhenxi_gapIn.addEventListener('input', function(){
-    xuzhenxi_root.style.setProperty('--xuzhenxi_gap', xuzhenxi_gapIn.value + 'px');
+  xzx_gapIn.addEventListener('input', function(){
+    xzx_root.style.setProperty('--xzx_gap', xzx_gapIn.value + 'px');
   });
 })();
 </script>

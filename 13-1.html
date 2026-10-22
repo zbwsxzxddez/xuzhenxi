@@ -1,3 +1,4 @@
+﻿<!-- 姓名：许镇玺，日期：CSS Grid网格布局 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -17,45 +18,45 @@
    ============================================================ */
 
 :root{
-  --xuzhenxi_bg:      #f5f1e8;
-  --xuzhenxi_surface: #fbf8f1;
-  --xuzhenxi_text:    #222b28;
-  --xuzhenxi_muted:   #7d7666;
-  --xuzhenxi_line:    #e2dac6;
-  --xuzhenxi_radius:  14px;
-  --xuzhenxi_gap:     12px;
-  --xuzhenxi_font:    "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
-  --xuzhenxi_mono:    Consolas,"Courier New",monospace;
-  --xuzhenxi_shadow:  0 12px 30px -18px rgba(31,42,40,.4);
+  --xzx_bg:      #f5f1e8;
+  --xzx_surface: #fbf8f1;
+  --xzx_text:    #222b28;
+  --xzx_muted:   #7d7666;
+  --xzx_line:    #e2dac6;
+  --xzx_radius:  14px;
+  --xzx_gap:     12px;
+  --xzx_font:    "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:    Consolas,"Courier New",monospace;
+  --xzx_shadow:  0 12px 30px -18px rgba(31,42,40,.4);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-  font-family:var(--xuzhenxi_font);
-  color:var(--xuzhenxi_text);
-  background:var(--xuzhenxi_bg);
+  font-family:var(--xzx_font);
+  color:var(--xzx_text);
+  background:var(--xzx_bg);
   line-height:1.7;
   padding:40px 18px 60px;
 }
-.xuzhenxi_wrap{width:min(960px,94%);margin:0 auto;}
+.xzx_wrap{width:min(960px,94%);margin:0 auto;}
 
 /* ---------- 头部 ---------- */
-.xuzhenxi_hero{text-align:center;margin-bottom:30px;}
-.xuzhenxi_kicker{
-  font-family:var(--xuzhenxi_mono);font-size:12px;letter-spacing:.34em;
+.xzx_hero{text-align:center;margin-bottom:30px;}
+.xzx_kicker{
+  font-family:var(--xzx_mono);font-size:12px;letter-spacing:.34em;
   text-transform:uppercase;color:#154943;margin-bottom:12px;
 }
-.xuzhenxi_hero h1{font-size:clamp(26px,4.6vw,42px);letter-spacing:.04em;}
-.xuzhenxi_hero h1 em{
+.xzx_hero h1{font-size:clamp(26px,4.6vw,42px);letter-spacing:.04em;}
+.xzx_hero h1 em{
   font-style:normal;color:#b23c28;
   background:linear-gradient(transparent 62%,rgba(178,60,40,.18) 62%);
 }
-.xuzhenxi_hero p{color:var(--xuzhenxi_muted);margin-top:12px;font-size:15px;}
+.xzx_hero p{color:var(--xzx_muted);margin-top:12px;font-size:15px;}
 
 /* ============================================================
    核心：网格容器
    ============================================================ */
-.xuzhenxi_grid{
+.xzx_grid{
   display:grid;
   /* 三列四行 */
   grid-template-columns:1fr 1fr 1fr;
@@ -66,98 +67,98 @@ body{
     'c b b'
     'c d e'
     'c d f';
-  gap:var(--xuzhenxi_gap);
-  background:var(--xuzhenxi_surface);
-  border:1px solid var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);
-  padding:var(--xuzhenxi_gap);
-  box-shadow:var(--xuzhenxi_shadow);
+  gap:var(--xzx_gap);
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:var(--xzx_gap);
+  box-shadow:var(--xzx_shadow);
 }
 
 /* 每个区块通过 grid-area 认领自己的名称 */
-.xuzhenxi_a{grid-area:a;}
-.xuzhenxi_b{grid-area:b;}
-.xuzhenxi_c{grid-area:c;}
-.xuzhenxi_d{grid-area:d;}
-.xuzhenxi_e{grid-area:e;}
-.xuzhenxi_f{grid-area:f;}
+.xzx_a{grid-area:a;}
+.xzx_b{grid-area:b;}
+.xzx_c{grid-area:c;}
+.xzx_d{grid-area:d;}
+.xzx_e{grid-area:e;}
+.xzx_f{grid-area:f;}
 
 /* 区块通用外观 */
-.xuzhenxi_cell{
+.xzx_cell{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;border-radius:calc(var(--xuzhenxi_radius) - 6px);
+  gap:4px;border-radius:calc(var(--xzx_radius) - 6px);
   color:#fff;font-weight:700;letter-spacing:.04em;
   transition:transform .2s ease,filter .2s ease;
   user-select:none;
 }
-.xuzhenxi_cell:hover{transform:scale(1.02);filter:brightness(1.08);}
-.xuzhenxi_cell .xuzhenxi_letter{
-  font-family:var(--xuzhenxi_mono);font-size:30px;line-height:1;
+.xzx_cell:hover{transform:scale(1.02);filter:brightness(1.08);}
+.xzx_cell .xzx_letter{
+  font-family:var(--xzx_mono);font-size:30px;line-height:1;
 }
-.xuzhenxi_cell .xuzhenxi_desc{font-size:12.5px;font-weight:500;opacity:.9;}
+.xzx_cell .xzx_desc{font-size:12.5px;font-weight:500;opacity:.9;}
 
 /* 各区块配色 */
-.xuzhenxi_a{background:linear-gradient(140deg,#b23c28,#93301f);}
-.xuzhenxi_b{background:linear-gradient(140deg,#154943,#1f6b60);}
-.xuzhenxi_c{background:linear-gradient(140deg,#2a6b62,#154943);}
-.xuzhenxi_d{background:linear-gradient(140deg,#a98238,#8a6a2b);}
-.xuzhenxi_e{background:linear-gradient(140deg,#4d5650,#333b38);}
-.xuzhenxi_f{background:linear-gradient(140deg,#7d7666,#5f5a4d);}
+.xzx_a{background:linear-gradient(140deg,#b23c28,#93301f);}
+.xzx_b{background:linear-gradient(140deg,#154943,#1f6b60);}
+.xzx_c{background:linear-gradient(140deg,#2a6b62,#154943);}
+.xzx_d{background:linear-gradient(140deg,#a98238,#8a6a2b);}
+.xzx_e{background:linear-gradient(140deg,#4d5650,#333b38);}
+.xzx_f{background:linear-gradient(140deg,#7d7666,#5f5a4d);}
 
 /* ---------- 代码块 ---------- */
-.xuzhenxi_code{
-  font-family:var(--xuzhenxi_mono);font-size:13.5px;line-height:1.85;
+.xzx_code{
+  font-family:var(--xzx_mono);font-size:13.5px;line-height:1.85;
   background:#222b28;color:#d9e4df;
-  border-radius:var(--xuzhenxi_radius);padding:18px 20px;
+  border-radius:var(--xzx_radius);padding:18px 20px;
   overflow:auto;white-space:pre;margin-top:28px;
 }
-.xuzhenxi_code b{color:#e8b96a;font-weight:600;}
-.xuzhenxi_code i{color:#7fc6b8;font-style:normal;}
+.xzx_code b{color:#e8b96a;font-weight:600;}
+.xzx_code i{color:#7fc6b8;font-style:normal;}
 
 /* ---------- 说明 ---------- */
-.xuzhenxi_note{
-  margin-top:24px;font-size:14px;color:var(--xuzhenxi_muted);
+.xzx_note{
+  margin-top:24px;font-size:14px;color:var(--xzx_muted);
 }
-.xuzhenxi_note b{color:#b23c28;}
+.xzx_note b{color:#b23c28;}
 
 /* ---------- 响应式：窄屏改为单列堆叠 ---------- */
 @media (max-width:560px){
-  .xuzhenxi_grid{
+  .xzx_grid{
     grid-template-columns:1fr;
     grid-template-rows:repeat(6,72px);
     grid-template-areas:'a' 'b' 'c' 'd' 'e' 'f';
   }
 }
 
-.xuzhenxi_foot{
-  text-align:center;color:var(--xuzhenxi_muted);font-size:13.5px;
-  border-top:1px solid var(--xuzhenxi_line);padding-top:18px;margin-top:34px;
+.xzx_foot{
+  text-align:center;color:var(--xzx_muted);font-size:13.5px;
+  border-top:1px solid var(--xzx_line);padding-top:18px;margin-top:34px;
 }
-.xuzhenxi_foot b{color:#b23c28;}
+.xzx_foot b{color:#b23c28;}
 </style>
 </head>
 <body>
 
-<div class="xuzhenxi_wrap">
+<div class="xzx_wrap">
 
-  <header class="xuzhenxi_hero">
-    <p class="xuzhenxi_kicker">CSS Grid · grid-template-areas</p>
+  <header class="xzx_hero">
+    <p class="xzx_kicker">CSS Grid · grid-template-areas</p>
     <h1><em>许镇玺</em> · Grid 网格布局</h1>
     <p>用命名区块一次性排布页面结构，行列自动对齐。</p>
   </header>
 
   <!-- 网格布局主体 -->
-  <section class="xuzhenxi_grid" aria-label="CSS Grid 演示">
-    <div class="xuzhenxi_cell xuzhenxi_a"><span class="xuzhenxi_letter">a</span><span class="xuzhenxi_desc">头部</span></div>
-    <div class="xuzhenxi_cell xuzhenxi_b"><span class="xuzhenxi_letter">b</span><span class="xuzhenxi_desc">主视觉 2×2</span></div>
-    <div class="xuzhenxi_cell xuzhenxi_c"><span class="xuzhenxi_letter">c</span><span class="xuzhenxi_desc">侧边栏 3 行</span></div>
-    <div class="xuzhenxi_cell xuzhenxi_d"><span class="xuzhenxi_letter">d</span><span class="xuzhenxi_desc">内容 2 行</span></div>
-    <div class="xuzhenxi_cell xuzhenxi_e"><span class="xuzhenxi_letter">e</span><span class="xuzhenxi_desc">单元</span></div>
-    <div class="xuzhenxi_cell xuzhenxi_f"><span class="xuzhenxi_letter">f</span><span class="xuzhenxi_desc">单元</span></div>
+  <section class="xzx_grid" aria-label="CSS Grid 演示">
+    <div class="xzx_cell xzx_a"><span class="xzx_letter">a</span><span class="xzx_desc">头部</span></div>
+    <div class="xzx_cell xzx_b"><span class="xzx_letter">b</span><span class="xzx_desc">主视觉 2×2</span></div>
+    <div class="xzx_cell xzx_c"><span class="xzx_letter">c</span><span class="xzx_desc">侧边栏 3 行</span></div>
+    <div class="xzx_cell xzx_d"><span class="xzx_letter">d</span><span class="xzx_desc">内容 2 行</span></div>
+    <div class="xzx_cell xzx_e"><span class="xzx_letter">e</span><span class="xzx_desc">单元</span></div>
+    <div class="xzx_cell xzx_f"><span class="xzx_letter">f</span><span class="xzx_desc">单元</span></div>
   </section>
 
   <!-- 对应代码 -->
-  <section class="xuzhenxi_code"><b>.xuzhenxi_grid</b> {
+  <section class="xzx_code"><b>.xzx_grid</b> {
   display: <i>grid</i>;
   grid-template-columns: <i>1fr 1fr 1fr</i>;
   grid-template-rows: <i>90px 90px 90px 90px</i>;
@@ -168,20 +169,20 @@ body{
     <i>'c d f'</i>;
   gap: <i>12px</i>;
 }
-<b>.xuzhenxi_a</b> { grid-area: <i>a</i>; }
-<b>.xuzhenxi_b</b> { grid-area: <i>b</i>; }
-<b>.xuzhenxi_c</b> { grid-area: <i>c</i>; }
-<b>.xuzhenxi_d</b> { grid-area: <i>d</i>; }
-<b>.xuzhenxi_e</b> { grid-area: <i>e</i>; }
-<b>.xuzhenxi_f</b> { grid-area: <i>f</i>; }</section>
+<b>.xzx_a</b> { grid-area: <i>a</i>; }
+<b>.xzx_b</b> { grid-area: <i>b</i>; }
+<b>.xzx_c</b> { grid-area: <i>c</i>; }
+<b>.xzx_d</b> { grid-area: <i>d</i>; }
+<b>.xzx_e</b> { grid-area: <i>e</i>; }
+<b>.xzx_f</b> { grid-area: <i>f</i>; }</section>
 
-  <p class="xuzhenxi_note">
+  <p class="xzx_note">
     <b>说明：</b>重复出现的字母会让该区块自动跨行跨列——<b>b</b> 横跨 2×2，
     <b>c</b> 纵向跨越 3 行，<b>d</b> 跨越 2 行；其余 a、e、f 各占一格。
     窄屏下通过媒体查询把区域改为一列堆叠。
   </p>
 
-  <footer class="xuzhenxi_foot">
+  <footer class="xzx_foot">
     <b>许镇玺</b> ·《高级网页设计》课堂实践 — CSS Grid 网格布局，原生代码手写，无 CDN 依赖
   </footer>
 

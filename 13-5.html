@@ -1,3 +1,4 @@
+﻿<!-- 姓名：许镇玺，日期：iconfont SVG图标移动导航 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -10,7 +11,7 @@
    许镇玺 · iconfont SVG 图标 · 移动端固定底部导航（13-5）
    SVG 方案：
      1. 把 font/ 目录 iconfont.js 中的 SVG symbol 内联为隐藏 sprite
-     2. 导航图标通过 <use href="#xuzhenxi_icon-xxx"> 引用
+     2. 导航图标通过 <use href="#xzx_icon-xxx"> 引用
      3. path 上 fill="currentColor"，颜色跟随 CSS color
    导航为 position:fixed + 宽度 100% 的全屏固定底导，
    4 个导航项 flex:1 均分屏宽，自适应任意移动端宽度
@@ -18,113 +19,113 @@
    ============================================================ */
 
 :root{
-  --xuzhenxi_bg:      #f5f1e8;
-  --xuzhenxi_surface: #fbf8f1;
-  --xuzhenxi_text:    #222b28;
-  --xuzhenxi_muted:   #7d7666;
-  --xuzhenxi_line:    #e2dac6;
-  --xuzhenxi_radius:  14px;
-  --xuzhenxi_gap:     12px;
-  --xuzhenxi_font:    "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
-  --xuzhenxi_mono:    Consolas,"Courier New",monospace;
-  --xuzhenxi_shadow:  0 12px 30px -18px rgba(31,42,40,.4);
-  --xuzhenxi_teal:    #154943;
-  --xuzhenxi_red:     #b23c28;
+  --xzx_bg:      #f5f1e8;
+  --xzx_surface: #fbf8f1;
+  --xzx_text:    #222b28;
+  --xzx_muted:   #7d7666;
+  --xzx_line:    #e2dac6;
+  --xzx_radius:  14px;
+  --xzx_gap:     12px;
+  --xzx_font:    "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:    Consolas,"Courier New",monospace;
+  --xzx_shadow:  0 12px 30px -18px rgba(31,42,40,.4);
+  --xzx_teal:    #154943;
+  --xzx_red:     #b23c28;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-  font-family:var(--xuzhenxi_font);
-  color:var(--xuzhenxi_text);
-  background:var(--xuzhenxi_bg);
+  font-family:var(--xzx_font);
+  color:var(--xzx_text);
+  background:var(--xzx_bg);
   line-height:1.7;
 }
 /* 隐藏 SVG sprite（symbol 定义处） */
-.xuzhenxi_sprite{position:absolute;width:0;height:0;overflow:hidden;}
+.xzx_sprite{position:absolute;width:0;height:0;overflow:hidden;}
 
 /* 移动端页面容器（桌面端呈现为居中手机栏） */
-.xuzhenxi_app{
+.xzx_app{
   max-width:430px;margin:0 auto;min-height:100vh;
   background:#f8f6f0;
-  box-shadow:0 0 0 1px var(--xuzhenxi_line),0 0 44px rgba(31,42,40,.1);
+  box-shadow:0 0 0 1px var(--xzx_line),0 0 44px rgba(31,42,40,.1);
   display:flex;flex-direction:column;
 }
 
 /* ---------- 顶部栏 ---------- */
-.xuzhenxi_topbar{
-  background:#fff;border-bottom:1px solid var(--xuzhenxi_line);
+.xzx_topbar{
+  background:#fff;border-bottom:1px solid var(--xzx_line);
   padding:14px 16px;text-align:center;
   font-size:15px;font-weight:700;letter-spacing:.04em;
   position:sticky;top:0;z-index:10;
 }
-.xuzhenxi_topbar span{display:block;font-size:11px;font-weight:500;color:var(--xuzhenxi_muted);letter-spacing:.12em;margin-top:2px;}
+.xzx_topbar span{display:block;font-size:11px;font-weight:500;color:var(--xzx_muted);letter-spacing:.12em;margin-top:2px;}
 
 /* ---------- 内容区（给固定底导留出位置） ---------- */
-.xuzhenxi_content{flex:1;padding:18px 16px calc(84px + env(safe-area-inset-bottom));}
+.xzx_content{flex:1;padding:18px 16px calc(84px + env(safe-area-inset-bottom));}
 
-.xuzhenxi_intro{
-  background:var(--xuzhenxi_surface);
-  border:1px solid var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);
-  padding:18px;margin-bottom:var(--xuzhenxi_gap);
+.xzx_intro{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:18px;margin-bottom:var(--xzx_gap);
 }
-.xuzhenxi_kicker{
-  font-family:var(--xuzhenxi_mono);font-size:11px;letter-spacing:.3em;
-  text-transform:uppercase;color:var(--xuzhenxi_teal);margin-bottom:10px;
+.xzx_kicker{
+  font-family:var(--xzx_mono);font-size:11px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--xzx_teal);margin-bottom:10px;
 }
-.xuzhenxi_intro h1{font-size:clamp(20px,5vw,26px);letter-spacing:.03em;}
-.xuzhenxi_intro h1 em{
-  font-style:normal;color:var(--xuzhenxi_red);
+.xzx_intro h1{font-size:clamp(20px,5vw,26px);letter-spacing:.03em;}
+.xzx_intro h1 em{
+  font-style:normal;color:var(--xzx_red);
   background:linear-gradient(transparent 62%,rgba(178,60,40,.18) 62%);
 }
-.xuzhenxi_intro p{color:var(--xuzhenxi_muted);font-size:13.5px;margin-top:8px;}
+.xzx_intro p{color:var(--xzx_muted);font-size:13.5px;margin-top:8px;}
 
 /* 特性卡片 */
-.xuzhenxi_cells{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:var(--xuzhenxi_gap);}
-.xuzhenxi_cell{
-  border-radius:calc(var(--xuzhenxi_radius) - 6px);
+.xzx_cells{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:var(--xzx_gap);}
+.xzx_cell{
+  border-radius:calc(var(--xzx_radius) - 6px);
   color:#fff;font-weight:700;text-align:center;
   padding:14px 6px;display:flex;flex-direction:column;gap:4px;
-  box-shadow:var(--xuzhenxi_shadow);
+  box-shadow:var(--xzx_shadow);
 }
-.xuzhenxi_cell b{font-size:15px;}
-.xuzhenxi_cell span{font-size:11px;font-weight:500;opacity:.92;line-height:1.4;}
-.xuzhenxi_cell--a{background:linear-gradient(140deg,#b23c28,#93301f);}
-.xuzhenxi_cell--b{background:linear-gradient(140deg,#154943,#1f6b60);}
-.xuzhenxi_cell--c{background:linear-gradient(140deg,#a98238,#8a6a2b);}
+.xzx_cell b{font-size:15px;}
+.xzx_cell span{font-size:11px;font-weight:500;opacity:.92;line-height:1.4;}
+.xzx_cell--a{background:linear-gradient(140deg,#b23c28,#93301f);}
+.xzx_cell--b{background:linear-gradient(140deg,#154943,#1f6b60);}
+.xzx_cell--c{background:linear-gradient(140deg,#a98238,#8a6a2b);}
 
 /* 占位列表，制造滚动以展示固定底导 */
-.xuzhenxi_list{display:flex;flex-direction:column;gap:10px;}
-.xuzhenxi_card{
-  background:var(--xuzhenxi_surface);border:1px solid var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);padding:14px 16px;
+.xzx_list{display:flex;flex-direction:column;gap:10px;}
+.xzx_card{
+  background:var(--xzx_surface);border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);padding:14px 16px;
   display:flex;align-items:center;gap:12px;
 }
-.xuzhenxi_card .xuzhenxi_nav-svg{
+.xzx_card .xzx_nav-svg{
   width:24px;height:24px;flex:0 0 24px;
-  color:var(--xuzhenxi_teal);
+  color:var(--xzx_teal);
   background:#ece7d8;border-radius:12px;padding:8px;
   box-sizing:border-box;
 }
-.xuzhenxi_card b{font-size:14px;display:block;}
-.xuzhenxi_card span{font-size:12px;color:var(--xuzhenxi_muted);display:block;}
-.xuzhenxi_spacer{
-  text-align:center;color:var(--xuzhenxi_muted);font-size:12.5px;
+.xzx_card b{font-size:14px;display:block;}
+.xzx_card span{font-size:12px;color:var(--xzx_muted);display:block;}
+.xzx_spacer{
+  text-align:center;color:var(--xzx_muted);font-size:12.5px;
   padding:26px 0 6px;letter-spacing:.08em;
 }
 
 /* ============================================================
    固定底部导航：全屏宽度 + 4 项 flex 均分（SVG 版）
    ============================================================ */
-.xuzhenxi_nav{
+.xzx_nav{
   position:fixed;left:0;right:0;bottom:0;width:100%;
   display:flex;
-  background:#fff;border-top:1px solid var(--xuzhenxi_line);
+  background:#fff;border-top:1px solid var(--xzx_line);
   box-shadow:0 -6px 24px -14px rgba(31,42,40,.35);
   padding-bottom:env(safe-area-inset-bottom); /* 适配全面屏底部安全区 */
   z-index:50;
 }
-.xuzhenxi_nav-item{
+.xzx_nav-item{
   flex:1 1 0;              /* 4 项等分屏宽，随屏宽自适应 */
   min-width:0;
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -132,176 +133,176 @@ body{
   color:#8f8a7c;text-decoration:none;
   transition:color .15s ease,transform .15s ease;
 }
-.xuzhenxi_nav-item:active{transform:scale(.94);}
-.xuzhenxi_nav-item.xuzhenxi_active{color:var(--xuzhenxi_teal);}
-.xuzhenxi_nav-icon{
+.xzx_nav-item:active{transform:scale(.94);}
+.xzx_nav-item.xzx_active{color:var(--xzx_teal);}
+.xzx_nav-icon{
   position:relative;
   display:inline-block;width:28px;height:28px;
   color:inherit;
 }
 /* 内联 SVG 图标：fill="currentColor" 跟随 color */
-.xuzhenxi_nav-svg{
+.xzx_nav-svg{
   width:26px;height:26px;display:block;
   color:inherit;
 }
-.xuzhenxi_nav-label{font-size:11px;letter-spacing:.04em;}
-.xuzhenxi_nav-item.xuzhenxi_active .xuzhenxi_nav-label{font-weight:700;}
+.xzx_nav-label{font-size:11px;letter-spacing:.04em;}
+.xzx_nav-item.xzx_active .xzx_nav-label{font-weight:700;}
 
 /* 数字徽章：纯 CSS 覆盖层 */
-.xuzhenxi_badge{
+.xzx_badge{
   position:absolute;top:-6px;right:-10px;
   min-width:17px;height:17px;padding:0 5px;
   border-radius:999px;
-  background:var(--xuzhenxi_red);color:#fff;
+  background:var(--xzx_red);color:#fff;
   font-size:10px;font-weight:700;line-height:17px;text-align:center;
   box-shadow:0 2px 6px rgba(178,60,40,.4);
 }
 /* 右上角红点：纯 CSS 覆盖层 */
-.xuzhenxi_dot{
+.xzx_dot{
   position:absolute;top:-2px;right:-5px;
   width:8px;height:8px;border-radius:50%;
-  background:var(--xuzhenxi_red);
+  background:var(--xzx_red);
   border:1.5px solid #fff;
 }
 
 /* ---------- 代码块 ---------- */
-.xuzhenxi_codebox{
+.xzx_codebox{
   background:#222b28;color:#d9e4df;
-  border-radius:var(--xuzhenxi_radius);
-  overflow:hidden;margin-top:var(--xuzhenxi_gap);
+  border-radius:var(--xzx_radius);
+  overflow:hidden;margin-top:var(--xzx_gap);
 }
-.xuzhenxi_codebox summary{
+.xzx_codebox summary{
   cursor:pointer;user-select:none;
-  font-family:var(--xuzhenxi_mono);font-size:12.5px;
+  font-family:var(--xzx_mono);font-size:12.5px;
   color:#e8b96a;padding:11px 16px;list-style:none;
   background:rgba(255,255,255,.05);
 }
-.xuzhenxi_codebox pre{
-  font-family:var(--xuzhenxi_mono);font-size:12px;line-height:1.8;
+.xzx_codebox pre{
+  font-family:var(--xzx_mono);font-size:12px;line-height:1.8;
   padding:14px 16px;overflow:auto;white-space:pre;
   border-top:1px solid rgba(255,255,255,.08);
 }
-.xuzhenxi_codebox b{color:#e8b96a;font-weight:600;}
-.xuzhenxi_codebox i{color:#7fc6b8;font-style:normal;}
+.xzx_codebox b{color:#e8b96a;font-weight:600;}
+.xzx_codebox i{color:#7fc6b8;font-style:normal;}
 
-.xuzhenxi_note{
-  margin-top:14px;font-size:13px;color:var(--xuzhenxi_muted);
-  background:var(--xuzhenxi_surface);border:1px dashed var(--xuzhenxi_line);
-  border-radius:var(--xuzhenxi_radius);padding:14px 16px;
+.xzx_note{
+  margin-top:14px;font-size:13px;color:var(--xzx_muted);
+  background:var(--xzx_surface);border:1px dashed var(--xzx_line);
+  border-radius:var(--xzx_radius);padding:14px 16px;
 }
-.xuzhenxi_note b{color:var(--xuzhenxi_red);}
-.xuzhenxi_note code{
-  font-family:var(--xuzhenxi_mono);font-size:11.5px;
+.xzx_note b{color:var(--xzx_red);}
+.xzx_note code{
+  font-family:var(--xzx_mono);font-size:11.5px;
   background:#ece4d1;color:#2a6b62;padding:1px 6px;border-radius:5px;
 }
 
 @media (max-width:360px){
-  .xuzhenxi_nav-svg{width:24px;height:24px;}
-  .xuzhenxi_nav-label{font-size:10px;}
+  .xzx_nav-svg{width:24px;height:24px;}
+  .xzx_nav-label{font-size:10px;}
 }
 </style>
 </head>
 <body>
 
 <!-- SVG sprite：内联自 font/ 目录 iconfont.js 的 symbol（fill="currentColor"） -->
-<svg class="xuzhenxi_sprite" aria-hidden="true" focusable="false">
-  <symbol id="xuzhenxi_icon-shouye1" viewBox="0 0 1024 1024">
+<svg class="xzx_sprite" aria-hidden="true" focusable="false">
+  <symbol id="xzx_icon-shouye1" viewBox="0 0 1024 1024">
     <path fill="currentColor" d="M597.333333 768h170.666667v-221.866667l-256-256-256 256V768h170.666667v-170.666667h170.666666v170.666667z m298.666667-213.333333h-42.666667v298.666666H170.666667v-298.666666H128l384-384 384 384z"/>
   </symbol>
-  <symbol id="xuzhenxi_icon-faxian" viewBox="0 0 1024 1024">
+  <symbol id="xzx_icon-faxian" viewBox="0 0 1024 1024">
     <path fill="currentColor" d="M512 972.8c-253.44 0-460.8-207.36-460.8-460.8S258.56 51.2 512 51.2s460.8 207.36 460.8 460.8-207.36 460.8-460.8 460.8z m0-51.2c225.28 0 409.6-184.32 409.6-409.6S737.28 102.4 512 102.4 102.4 286.72 102.4 512s184.32 409.6 409.6 409.6z m0-204.8c-143.36 0-281.6-104.96-281.6-204.8s138.24-204.8 281.6-204.8 281.6 104.96 281.6 204.8-138.24 204.8-281.6 204.8z m0-51.2c117.76 0 230.4-87.04 230.4-153.6s-112.64-153.6-230.4-153.6-230.4 87.04-230.4 153.6 112.64 153.6 230.4 153.6z m0-51.2c-56.32 0-102.4-46.08-102.4-102.4s46.08-102.4 102.4-102.4 102.4 46.08 102.4 102.4-46.08 102.4-102.4 102.4z m0-51.2c28.16 0 51.2-23.04 51.2-51.2s-23.04-51.2-51.2-51.2-51.2 23.04-51.2 51.2 23.04 51.2 51.2 51.2z"/>
   </symbol>
-  <symbol id="xuzhenxi_icon-weixin" viewBox="0 0 1024 1024">
+  <symbol id="xzx_icon-weixin" viewBox="0 0 1024 1024">
     <path fill="currentColor" d="M337.387283 341.82659c-17.757225 0-35.514451 11.83815-35.514451 29.595375s17.757225 29.595376 35.514451 29.595376 29.595376-11.83815 29.595376-29.595376c0-18.49711-11.83815-29.595376-29.595376-29.595375zM577.849711 513.479769c-11.83815 0-22.936416 12.578035-22.936416 23.6763 0 12.578035 11.83815 23.676301 22.936416 23.676301 17.757225 0 29.595376-11.83815 29.595376-23.676301s-11.83815-23.676301-29.595376-23.6763zM501.641618 401.017341c17.757225 0 29.595376-12.578035 29.595376-29.595376 0-17.757225-11.83815-29.595376-29.595376-29.595375s-35.514451 11.83815-35.51445 29.595375 17.757225 29.595376 35.51445 29.595376zM706.589595 513.479769c-11.83815 0-22.936416 12.578035-22.936416 23.6763 0 12.578035 11.83815 23.676301 22.936416 23.676301 17.757225 0 29.595376-11.83815 29.595376-23.676301s-11.83815-23.676301-29.595376-23.6763z"/>
     <path fill="currentColor" d="M510.520231 2.959538C228.624277 2.959538 0 231.583815 0 513.479769s228.624277 510.520231 510.520231 510.520231 510.520231-228.624277 510.520231-510.520231-228.624277-510.520231-510.520231-510.520231zM413.595376 644.439306c-29.595376 0-53.271676-5.919075-81.387284-12.578034l-81.387283 41.433526 22.936416-71.768786c-58.450867-41.433526-93.965318-95.445087-93.965317-159.815029 0-113.202312 105.803468-201.988439 233.803468-201.98844 114.682081 0 216.046243 71.028902 236.023121 166.473989-7.398844-0.739884-14.797688-1.479769-22.196532-1.479769-110.982659 1.479769-198.289017 85.086705-198.289017 188.67052 0 17.017341 2.959538 33.294798 7.398844 49.572255-7.398844 0.739884-15.537572 1.479769-22.936416 1.479768z m346.265896 82.867052l17.757225 59.190752-63.630058-35.514451c-22.936416 5.919075-46.612717 11.83815-70.289017 11.83815-111.722543 0-199.768786-76.947977-199.768786-172.393063-0.739884-94.705202 87.306358-171.653179 198.289017-171.65318 105.803468 0 199.028902 77.687861 199.028902 172.393064 0 53.271676-34.774566 100.624277-81.387283 136.138728z"/>
   </symbol>
-  <symbol id="xuzhenxi_icon-wode" viewBox="0 0 1024 1024">
+  <symbol id="xzx_icon-wode" viewBox="0 0 1024 1024">
     <path fill="currentColor" d="M512 82.922667a424.938667 424.938667 0 0 1 196.544 47.872C762.453333 107.573333 821.482667 96 885.333333 96c23.786667 0 39.253333 25.034667 28.618667 46.314667a7024.8 7024.8 0 0 0-56.917333 116.234666A424.853333 424.853333 0 0 1 938.666667 509.589333c0 235.637333-191.029333 426.666667-426.666667 426.666667s-426.666667-191.029333-426.666667-426.666667c0-235.648 191.029333-426.666667 426.666667-426.666666zM330.666667 362.666667a42.666667 42.666667 0 0 0-42.666667 42.666666v64a42.666667 42.666667 0 1 0 85.333333 0v-64a42.666667 42.666667 0 0 0-42.666666-42.666666z m170.666666 0a42.666667 42.666667 0 0 0-42.666666 42.666666v64a42.666667 42.666667 0 1 0 85.333333 0v-64a42.666667 42.666667 0 0 0-42.666667-42.666666z"/>
   </symbol>
 </svg>
 
-<div class="xuzhenxi_app">
+<div class="xzx_app">
 
-  <header class="xuzhenxi_topbar">许镇玺 · 移动导航<span>iconfont SVG 方案</span></header>
+  <header class="xzx_topbar">许镇玺 · 移动导航<span>iconfont SVG 方案</span></header>
 
-  <main class="xuzhenxi_content">
+  <main class="xzx_content">
 
-    <div class="xuzhenxi_intro">
-      <p class="xuzhenxi_kicker">移动端 · 固定底部导航</p>
+    <div class="xzx_intro">
+      <p class="xzx_kicker">移动端 · 固定底部导航</p>
       <h1><em>SVG 图标</em>版底部导航</h1>
       <p>同一套 iconfont 资源换一种用法：symbol 内联为隐藏 sprite，导航图标用 &lt;use&gt; 引用，颜色跟随 CSS color。</p>
     </div>
 
-    <div class="xuzhenxi_cells">
-      <div class="xuzhenxi_cell xuzhenxi_cell--a"><b>flex:1</b><span>4 项均分<br>自适应屏宽</span></div>
-      <div class="xuzhenxi_cell xuzhenxi_cell--b"><b>fixed</b><span>100% 宽<br>固定底部</span></div>
-      <div class="xuzhenxi_cell xuzhenxi_cell--c"><b>徽章+红点</b><span>纯 CSS<br>覆盖层实现</span></div>
+    <div class="xzx_cells">
+      <div class="xzx_cell xzx_cell--a"><b>flex:1</b><span>4 项均分<br>自适应屏宽</span></div>
+      <div class="xzx_cell xzx_cell--b"><b>fixed</b><span>100% 宽<br>固定底部</span></div>
+      <div class="xzx_cell xzx_cell--c"><b>徽章+红点</b><span>纯 CSS<br>覆盖层实现</span></div>
     </div>
 
-    <div class="xuzhenxi_list">
-      <div class="xuzhenxi_card"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-shouye1"></use></svg><div><b>首页</b><span>symbol: xuzhenxi_icon-shouye1 · 当前选中项</span></div></div>
-      <div class="xuzhenxi_card"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-faxian"></use></svg><div><b>发现</b><span>symbol: xuzhenxi_icon-faxian · 带数字徽章 5</span></div></div>
-      <div class="xuzhenxi_card"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-weixin"></use></svg><div><b>微信</b><span>symbol: xuzhenxi_icon-weixin · 带数字徽章 99+</span></div></div>
-      <div class="xuzhenxi_card"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-wode"></use></svg><div><b>我的</b><span>symbol: xuzhenxi_icon-wode · 带右上角红点</span></div></div>
+    <div class="xzx_list">
+      <div class="xzx_card"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-shouye1"></use></svg><div><b>首页</b><span>symbol: xzx_icon-shouye1 · 当前选中项</span></div></div>
+      <div class="xzx_card"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-faxian"></use></svg><div><b>发现</b><span>symbol: xzx_icon-faxian · 带数字徽章 5</span></div></div>
+      <div class="xzx_card"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-weixin"></use></svg><div><b>微信</b><span>symbol: xzx_icon-weixin · 带数字徽章 99+</span></div></div>
+      <div class="xzx_card"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-wode"></use></svg><div><b>我的</b><span>symbol: xzx_icon-wode · 带右上角红点</span></div></div>
     </div>
 
-    <p class="xuzhenxi_spacer">↓ 下滑页面，观察底部导航始终固定在全屏宽度 ↓</p>
+    <p class="xzx_spacer">↓ 下滑页面，观察底部导航始终固定在全屏宽度 ↓</p>
 
     <!-- 对应代码 -->
-    <details class="xuzhenxi_codebox">
+    <details class="xzx_codebox">
       <summary>查看实现代码（SVG sprite + use + 徽章 / 红点）</summary>
 <pre><b>&lt;!-- ① 隐藏 sprite：内联自 iconfont.js 的 symbol，fill="currentColor" --&gt;</b>
-<b>&lt;svg</b> class="xuzhenxi_sprite" aria-hidden="true"<b>&gt;</b>
-  <b>&lt;symbol</b> id="xuzhenxi_icon-shouye1" viewBox="0 0 1024 1024"<b>&gt;</b>
+<b>&lt;svg</b> class="xzx_sprite" aria-hidden="true"<b>&gt;</b>
+  <b>&lt;symbol</b> id="xzx_icon-shouye1" viewBox="0 0 1024 1024"<b>&gt;</b>
     <b>&lt;path</b> fill="currentColor" d="M597.333333 768h170.666667..."<b>/&gt;</b>
   <b>&lt;/symbol&gt;</b>
-  <b>&lt;symbol</b> id="xuzhenxi_icon-faxian" ...<b>&gt;&lt;/symbol&gt;</b>
+  <b>&lt;symbol</b> id="xzx_icon-faxian" ...<b>&gt;&lt;/symbol&gt;</b>
   ...
 <b>&lt;/svg&gt;</b>
 
 <b>&lt;!-- ② 固定底部导航：4 项，徽章与红点为 span 覆盖层 --&gt;</b>
-<b>&lt;nav class=</b>"xuzhenxi_nav"<b>&gt;</b>
-  <b>&lt;a class=</b>"xuzhenxi_nav-item xuzhenxi_active"<b>&gt;</b>
-    <b>&lt;span class=</b>"xuzhenxi_nav-icon"<b>&gt;</b>
-      <b>&lt;svg</b> class="xuzhenxi_nav-svg"<b>&gt;</b>
-        <b>&lt;use</b> href="#xuzhenxi_icon-shouye1"<b>&gt;&lt;/use&gt;</b>
+<b>&lt;nav class=</b>"xzx_nav"<b>&gt;</b>
+  <b>&lt;a class=</b>"xzx_nav-item xzx_active"<b>&gt;</b>
+    <b>&lt;span class=</b>"xzx_nav-icon"<b>&gt;</b>
+      <b>&lt;svg</b> class="xzx_nav-svg"<b>&gt;</b>
+        <b>&lt;use</b> href="#xzx_icon-shouye1"<b>&gt;&lt;/use&gt;</b>
       <b>&lt;/svg&gt;</b>
     <b>&lt;/span&gt;</b>
-    <b>&lt;span class=</b>"xuzhenxi_nav-label"<b>&gt;</b>首页<b>&lt;/span&gt;</b>
+    <b>&lt;span class=</b>"xzx_nav-label"<b>&gt;</b>首页<b>&lt;/span&gt;</b>
   <b>&lt;/a&gt;</b>
-  <b>&lt;a class=</b>"xuzhenxi_nav-item"<b>&gt;</b>
-    <b>&lt;span class=</b>"xuzhenxi_nav-icon"<b>&gt;</b>
-      <b>&lt;svg</b> class="xuzhenxi_nav-svg"<b>&gt;&lt;use</b> href="#xuzhenxi_icon-faxian"<b>&gt;&lt;/use&gt;&lt;/svg&gt;</b>
-      <b>&lt;span class=</b>"xuzhenxi_badge"<b>&gt;</b>5<b>&lt;/span&gt;</b>   <i>/* 数字徽章 */</i>
+  <b>&lt;a class=</b>"xzx_nav-item"<b>&gt;</b>
+    <b>&lt;span class=</b>"xzx_nav-icon"<b>&gt;</b>
+      <b>&lt;svg</b> class="xzx_nav-svg"<b>&gt;&lt;use</b> href="#xzx_icon-faxian"<b>&gt;&lt;/use&gt;&lt;/svg&gt;</b>
+      <b>&lt;span class=</b>"xzx_badge"<b>&gt;</b>5<b>&lt;/span&gt;</b>   <i>/* 数字徽章 */</i>
     <b>&lt;/span&gt;</b>
-    <b>&lt;span class=</b>"xuzhenxi_nav-label"<b>&gt;</b>发现<b>&lt;/span&gt;</b>
+    <b>&lt;span class=</b>"xzx_nav-label"<b>&gt;</b>发现<b>&lt;/span&gt;</b>
   <b>&lt;/a&gt;</b>
   ...
 <b>&lt;/nav&gt;</b>
 
-<b>.xuzhenxi_nav</b> {
+<b>.xzx_nav</b> {
   position: <i>fixed</i>; left: <i>0</i>; right: <i>0</i>; bottom: <i>0</i>;
   width: <i>100%</i>;                 <i>/* 全屏宽度 */</i>
   display: <i>flex</i>;
   padding-bottom: <i>env(safe-area-inset-bottom)</i>;  <i>/* 全面屏安全区 */</i>
 }
-<b>.xuzhenxi_nav-item</b> { flex: <i>1 1 0</i>; }   <i>/* 4 项等分，自适应屏宽 */</i>
-<b>.xuzhenxi_nav-svg</b> { width: <i>26px</i>; height: <i>26px</i>; fill: <i>currentColor</i>; }
-<b>.xuzhenxi_badge</b> {
+<b>.xzx_nav-item</b> { flex: <i>1 1 0</i>; }   <i>/* 4 项等分，自适应屏宽 */</i>
+<b>.xzx_nav-svg</b> { width: <i>26px</i>; height: <i>26px</i>; fill: <i>currentColor</i>; }
+<b>.xzx_badge</b> {
   position: <i>absolute</i>; top: <i>-6px</i>; right: <i>-10px</i>;
   background: <i>#b23c28</i>; border-radius: <i>999px</i>;
 }
-<b>.xuzhenxi_dot</b> {
+<b>.xzx_dot</b> {
   position: <i>absolute</i>; top: <i>-2px</i>; right: <i>-5px</i>;
   width: <i>8px</i>; height: <i>8px</i>; border-radius: <i>50%</i>;
   background: <i>#b23c28</i>;
 }</pre>
     </details>
 
-    <p class="xuzhenxi_note">
+    <p class="xzx_note">
       <b>说明：</b>SVG 方案 —— 从本地 <code>font/font_5244851_6n95j09brtj/iconfont.js</code>
       取出 4 个 symbol，内联为页面顶部的隐藏 sprite，导航图标用
-      <code>&lt;use href="#xuzhenxi_icon-xxx"&gt;</code> 引用；path 上
+      <code>&lt;use href="#xzx_icon-xxx"&gt;</code> 引用；path 上
       <code>fill="currentColor"</code> 让颜色跟随 CSS <code>color</code> 变化。
       与 13-4.html 的字体图标方案对比：<b>同一份 iconfont 资源，两种渲染形态</b>——
       字体走 <code>::before</code> 字符编码，SVG 走矢量路径。
@@ -312,22 +313,22 @@ body{
   </main>
 
   <!-- 固定底部导航：全屏宽度，4 项（SVG 图标版） -->
-  <nav class="xuzhenxi_nav" aria-label="底部导航">
-    <a class="xuzhenxi_nav-item xuzhenxi_active" href="#" aria-current="page">
-      <span class="xuzhenxi_nav-icon"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-shouye1"></use></svg></span>
-      <span class="xuzhenxi_nav-label">首页</span>
+  <nav class="xzx_nav" aria-label="底部导航">
+    <a class="xzx_nav-item xzx_active" href="#" aria-current="page">
+      <span class="xzx_nav-icon"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-shouye1"></use></svg></span>
+      <span class="xzx_nav-label">首页</span>
     </a>
-    <a class="xuzhenxi_nav-item" href="#">
-      <span class="xuzhenxi_nav-icon"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-faxian"></use></svg><span class="xuzhenxi_badge">5</span></span>
-      <span class="xuzhenxi_nav-label">发现</span>
+    <a class="xzx_nav-item" href="#">
+      <span class="xzx_nav-icon"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-faxian"></use></svg><span class="xzx_badge">5</span></span>
+      <span class="xzx_nav-label">发现</span>
     </a>
-    <a class="xuzhenxi_nav-item" href="#">
-      <span class="xuzhenxi_nav-icon"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-weixin"></use></svg><span class="xuzhenxi_badge">99+</span></span>
-      <span class="xuzhenxi_nav-label">微信</span>
+    <a class="xzx_nav-item" href="#">
+      <span class="xzx_nav-icon"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-weixin"></use></svg><span class="xzx_badge">99+</span></span>
+      <span class="xzx_nav-label">微信</span>
     </a>
-    <a class="xuzhenxi_nav-item" href="#">
-      <span class="xuzhenxi_nav-icon"><svg class="xuzhenxi_nav-svg" aria-hidden="true"><use href="#xuzhenxi_icon-wode"></use></svg><span class="xuzhenxi_dot"></span></span>
-      <span class="xuzhenxi_nav-label">我的</span>
+    <a class="xzx_nav-item" href="#">
+      <span class="xzx_nav-icon"><svg class="xzx_nav-svg" aria-hidden="true"><use href="#xzx_icon-wode"></use></svg><span class="xzx_dot"></span></span>
+      <span class="xzx_nav-label">我的</span>
     </a>
   </nav>
 

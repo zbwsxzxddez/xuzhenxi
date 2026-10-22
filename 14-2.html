@@ -1,0 +1,366 @@
+<!-- 姓名：许镇玺，日期：JavaScript六种基础数据类型 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>许镇玺 · JavaScript 六种基础数据类型</title>
+<style>
+/* ============================================================
+   许镇玺 · JavaScript 六种基础数据类型演示
+   纯原生 HTML/CSS/JavaScript，无 CDN 依赖
+   ============================================================ */
+
+:root{
+  --xzx_bg:        #f5f1e8;
+  --xzx_surface:   #fbf8f1;
+  --xzx_text:      #222b28;
+  --xzx_muted:     #7d7666;
+  --xzx_line:      #e2dac6;
+  --xzx_primary:   #b23c28;
+  --xzx_primary-2: #93301f;
+  --xzx_accent:    #154943;
+  --xzx_radius:    12px;
+  --xzx_font:      "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:      Consolas,"Courier New",monospace;
+  --xzx_shadow:    0 12px 30px -16px rgba(31,42,40,.35);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:var(--xzx_font);
+  color:var(--xzx_text);
+  background:var(--xzx_bg);
+  line-height:1.7;
+  padding:40px 18px 64px;
+}
+.xzx_wrap{width:min(1100px,94%);margin:0 auto;}
+
+/* ---------- 头部 ---------- */
+.xzx_hero{text-align:center;margin-bottom:34px;}
+.xzx_kicker{
+  font-family:var(--xzx_mono);
+  font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--xzx_primary);margin-bottom:14px;
+}
+.xzx_hero h1{
+  font-size:clamp(26px,4.6vw,44px);line-height:1.3;letter-spacing:.04em;
+}
+.xzx_hero h1 em{
+  font-style:normal;color:var(--xzx_primary);
+  background:linear-gradient(transparent 62%, rgba(178,60,40,.18) 62%);
+}
+.xzx_hero p{color:var(--xzx_muted);margin-top:14px;font-size:15px;}
+
+/* ---------- 概览面板 ---------- */
+.xzx_summary{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:20px 24px;margin-bottom:34px;
+  box-shadow:var(--xzx_shadow);
+}
+.xzx_summary h2{font-size:18px;color:var(--xzx_accent);margin-bottom:8px;}
+.xzx_summary p{font-size:14px;color:var(--xzx_muted);}
+.xzx_types{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;
+}
+.xzx_type_tag{
+  font-family:var(--xzx_mono);font-size:13px;font-weight:600;
+  padding:6px 14px;border-radius:999px;
+  background:rgba(178,60,40,.08);color:var(--xzx_primary);
+  border:1px solid rgba(178,60,40,.2);
+}
+
+/* ---------- 类型卡片网格 ---------- */
+.xzx_grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:22px;margin-bottom:34px;
+}
+.xzx_card{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:22px;box-shadow:var(--xzx_shadow);
+  transition:transform .22s ease;
+  display:flex;flex-direction:column;
+}
+.xzx_card:hover{transform:translateY(-5px);}
+.xzx_card_head{
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+}
+.xzx_card_num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--xzx_primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:16px;flex-shrink:0;
+}
+.xzx_card h3{font-size:19px;color:var(--xzx_accent);}
+.xzx_card_desc{font-size:14px;color:var(--xzx_muted);margin-bottom:14px;}
+
+/* 代码块 */
+.xzx_code{
+  font-family:var(--xzx_mono);font-size:13px;line-height:1.8;
+  background:var(--xzx_text);color:#d9e4df;
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:14px 16px;overflow:auto;white-space:pre-wrap;
+  margin-bottom:14px;
+}
+.xzx_code .xzx_key{color:#e8b96a;font-weight:600;}
+.xzx_code .xzx_str{color:#9ad18f;}
+.xzx_code .xzx_num{color:#f0a868;}
+.xzx_code .xzx_bool{color:#c792ea;}
+.xzx_code .xzx_comm{color:#6b7a72;font-style:italic;}
+
+/* 输出展示 */
+.xzx_output{
+  border:1px dashed var(--xzx_line);
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:12px 14px;background:rgba(21,73,67,.04);
+}
+.xzx_output_label{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--xzx_muted);margin-bottom:6px;
+}
+.xzx_output_val{
+  font-family:var(--xzx_mono);font-size:14px;
+  color:var(--xzx_accent);word-break:break-all;
+}
+.xzx_typeof{
+  display:inline-block;margin-top:8px;
+  font-family:var(--xzx_mono);font-size:12px;
+  padding:3px 10px;border-radius:6px;
+  background:var(--xzx_accent);color:#fff;
+}
+
+/* ---------- 交互演示区 ---------- */
+.xzx_interactive{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:24px;margin-bottom:34px;
+  box-shadow:var(--xzx_shadow);
+}
+.xzx_interactive h2{font-size:19px;color:var(--xzx_accent);margin-bottom:8px;}
+.xzx_interactive>p{font-size:14px;color:var(--xzx_muted);margin-bottom:16px;}
+.xzx_btn{
+  font-family:var(--xzx_font);font-size:13.5px;font-weight:600;cursor:pointer;
+  color:#fff;background:var(--xzx_primary);
+  border:none;border-radius:999px;padding:10px 22px;
+  transition:background .2s ease,transform .12s ease;
+}
+.xzx_btn:hover{background:var(--xzx_primary-2);}
+.xzx_btn:active{transform:scale(.96);}
+.xzx_console{
+  margin-top:16px;font-family:var(--xzx_mono);font-size:13px;
+  background:var(--xzx_text);color:#d9e4df;
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:14px 16px;min-height:80px;
+  white-space:pre-wrap;line-height:1.8;
+}
+.xzx_console .xzx_log{color:#d9e4df;}
+.xzx_console .xzx_info{color:#7fc6b8;}
+.xzx_console .xzx_err{color:#f08070;}
+
+/* ---------- 页脚 ---------- */
+.xzx_foot{
+  text-align:center;color:var(--xzx_muted);font-size:13.5px;
+  border-top:1px solid var(--xzx_line);padding-top:20px;margin-top:10px;
+}
+.xzx_foot b{color:var(--xzx_primary);}
+</style>
+</head>
+<body>
+
+<div class="xzx_wrap">
+
+  <header class="xzx_hero">
+    <p class="xzx_kicker">JavaScript Primitive Types</p>
+    <h1><em>许镇玺</em> · JavaScript 六种基础数据类型</h1>
+    <p>JavaScript 有六种基础（原始）数据类型：String、Number、Boolean、Undefined、Null、Symbol。</p>
+  </header>
+
+  <!-- 概览 -->
+  <section class="xzx_summary">
+    <h2>六种基础数据类型一览</h2>
+    <p>使用 <code>typeof</code> 运算符可以检测一个值的数据类型。下面逐一演示每种类型的定义与使用。</p>
+    <div class="xzx_types" id="xzx_typeTags"></div>
+  </section>
+
+  <!-- 六种类型卡片 -->
+  <div class="xzx_grid" id="xzx_cards"></div>
+
+  <!-- 交互演示 -->
+  <section class="xzx_interactive">
+    <h2>交互演示：在控制台输出六种类型</h2>
+    <p>点击下方按钮，JavaScript 将依次输出六种基础数据类型的值及其 typeof 结果。</p>
+    <button class="xzx_btn" id="xzx_runBtn">运行演示</button>
+    <div class="xzx_console" id="xzx_console">// 点击"运行演示"按钮查看输出...</div>
+  </section>
+
+  <footer class="xzx_foot">
+    <b>许镇玺</b> ·《高级网页设计》课堂实践 — JavaScript 六种基础数据类型，原生代码手写，无 CDN 依赖
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · JavaScript 六种基础数据类型
+   所有变量以 xzx_ 开头，遵循项目命名规范
+   ============================================================ */
+
+// 六种基础数据类型的定义与演示数据
+var xzx_types = [
+  {
+    num: 1,
+    name: 'String',
+    cn: '字符串',
+    desc: '用单引号、双引号或反引号包裹的文本序列。',
+    code: 'var xzx_str = "许镇玺";\nvar xzx_tpl = `姓名：${xzx_str}`;',
+    value: '许镇玺'
+  },
+  {
+    num: 2,
+    name: 'Number',
+    cn: '数字',
+    desc: '整数和浮点数，包括 Infinity 和 NaN。',
+    code: 'var xzx_int = 115;\nvar xzx_float = 3.14;\nvar xzx_nan = NaN;',
+    value: 115
+  },
+  {
+    num: 3,
+    name: 'Boolean',
+    cn: '布尔值',
+    desc: '只有两个值：true 和 false，常用于条件判断。',
+    code: 'var xzx_isStudent = true;\nvar xzx_isPassed = false;',
+    value: true
+  },
+  {
+    num: 4,
+    name: 'Undefined',
+    cn: '未定义',
+    desc: '声明了变量但未赋值时，其值为 undefined。',
+    code: 'var xzx_undef;\n// xzx_undef 的值为 undefined',
+    value: undefined
+  },
+  {
+    num: 5,
+    name: 'Null',
+    cn: '空值',
+    desc: '表示一个空对象指针，typeof null 返回 "object"（历史遗留）。',
+    code: 'var xzx_empty = null;\n// 表示"没有值"',
+    value: null
+  },
+  {
+    num: 6,
+    name: 'Symbol',
+    cn: '符号',
+    desc: 'ES6 引入，表示独一无二的值，常用于对象属性键。',
+    code: 'var xzx_sym = Symbol("id");\n// 每次调用 Symbol() 都返回唯一值',
+    value: 'Symbol(id)'
+  }
+];
+
+// 渲染类型标签
+var xzx_tagBox = document.getElementById('xzx_typeTags');
+xzx_types.forEach(function(xzx_t){
+  var xzx_tag = document.createElement('span');
+  xzx_tag.className = 'xzx_type_tag';
+  xzx_tag.textContent = xzx_t.name + ' (' + xzx_t.cn + ')';
+  xzx_tagBox.appendChild(xzx_tag);
+});
+
+// 渲染类型卡片
+var xzx_cardBox = document.getElementById('xzx_cards');
+xzx_types.forEach(function(xzx_t){
+  var xzx_val = xzx_t.value;
+  var xzx_typeof = typeof xzx_val;
+
+  var xzx_card = document.createElement('article');
+  xzx_card.className = 'xzx_card';
+
+  xzx_card.innerHTML =
+    '<div class="xzx_card_head">' +
+      '<div class="xzx_card_num">' + xzx_t.num + '</div>' +
+      '<h3>' + xzx_t.name + ' · ' + xzx_t.cn + '</h3>' +
+    '</div>' +
+    '<p class="xzx_card_desc">' + xzx_t.desc + '</p>' +
+    '<div class="xzx_code">' + xzx_formatCode(xzx_t.code) + '</div>' +
+    '<div class="xzx_output">' +
+      '<div class="xzx_output_label">实际值</div>' +
+      '<div class="xzx_output_val" id="xzx_val_' + xzx_t.num + '"></div>' +
+      '<span class="xzx_typeof">typeof → ' + xzx_typeof + '</span>' +
+    '</div>';
+
+  xzx_cardBox.appendChild(xzx_card);
+
+  // 设置实际值（区分 null 和 undefined 的显示）
+  var xzx_valEl = document.getElementById('xzx_val_' + xzx_t.num);
+  if (xzx_val === null) {
+    xzx_valEl.textContent = 'null';
+  } else if (xzx_val === undefined) {
+    xzx_valEl.textContent = 'undefined';
+  } else if (typeof xzx_val === 'string') {
+    xzx_valEl.textContent = '"' + xzx_val + '"';
+  } else {
+    xzx_valEl.textContent = String(xzx_val);
+  }
+});
+
+// 简单的代码高亮函数
+function xzx_formatCode(xzx_code){
+  var xzx_out = xzx_code
+    .replace(/(\/\/.*$)/gm, '<span class="xzx_comm">$1</span>')
+    .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="xzx_str">$1</span>')
+    .replace(/\b(\d+\.?\d*)\b/g, '<span class="xzx_num">$1</span>')
+    .replace(/\b(var|true|false|null|undefined)\b/g, '<span class="xzx_key">$1</span>');
+  return xzx_out;
+}
+
+// 交互演示：输出六种类型
+var xzx_runBtn = document.getElementById('xzx_runBtn');
+var xzx_console = document.getElementById('xzx_console');
+
+xzx_runBtn.addEventListener('click', function(){
+  xzx_console.innerHTML = '';
+
+  var xzx_str = "许镇玺";
+  var xzx_num = 115;
+  var xzx_bool = true;
+  var xzx_undef;
+  var xzx_null = null;
+  var xzx_sym = Symbol("id");
+
+  var xzx_list = [
+    { label: 'String',  val: xzx_str },
+    { label: 'Number',  val: xzx_num },
+    { label: 'Boolean', val: xzx_bool },
+    { label: 'Undefined', val: xzx_undef },
+    { label: 'Null',    val: xzx_null },
+    { label: 'Symbol',  val: xzx_sym.toString() }
+  ];
+
+  xzx_list.forEach(function(xzx_item){
+    var xzx_line = document.createElement('div');
+    var xzx_valStr = (xzx_item.val === null) ? 'null'
+                   : (xzx_item.val === undefined) ? 'undefined'
+                   : (typeof xzx_item.val === 'string') ? '"' + xzx_item.val + '"'
+                   : String(xzx_item.val);
+    xzx_line.className = 'xzx_log';
+    xzx_line.innerHTML = '<span class="xzx_info">›</span> ' + xzx_item.label
+                       + ' = <span style="color:#e8b96a">' + xzx_valStr + '</span>'
+                       + '  <span style="color:#6b7a72">// typeof: ' + (xzx_item.label === 'Null' ? 'object' : xzx_item.label.toLowerCase()) + '</span>';
+    xzx_console.appendChild(xzx_line);
+  });
+
+  var xzx_done = document.createElement('div');
+  xzx_done.className = 'xzx_info';
+  xzx_done.style.marginTop = '10px';
+  xzx_done.textContent = '✓ 六种基础数据类型输出完成';
+  xzx_console.appendChild(xzx_done);
+});
+</script>
+</body>
+</html>

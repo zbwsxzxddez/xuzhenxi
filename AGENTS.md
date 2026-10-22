@@ -26,6 +26,25 @@ Static HTML/CSS practice site (coursework). Contains standalone HTML files, shar
 
 ## Project Rules
 
-- All CSS class names, ID names, and JavaScript variable names must start with `xuzhenxi_`.
-- All prompt content must be written to `xuzhenxi_prompt.md` before execution, in append mode (do not overwrite existing content).
-- Each appended entry in `xuzhenxi_prompt.md` must include: timestamp in `yyyy-mm-dd-hh-mm` format, the model used, and the full prompt content.
+### 命名规范
+- 所有变量名称、CSS 类名、ID 名称必须以 `xzx_` 开头。
+- CSS 动画名称（@keyframes）也必须以 `xzx_` 开头。
+
+### HTML 注释规范
+- 所有 HTML 页面顶部必须包含注释：`<!-- 姓名：许镇玺，日期：<功能名称> -->`
+- 其中 `<功能名称>` 替换为该页面的实际功能名称（如页面标题、章节名等）。
+
+### 技术栈
+- 项目使用原生的 HTML、CSS 和 JavaScript 实现。
+- 不使用任何第三方库和 CDN。
+
+### 图标
+- 图标使用 `font` 目录下的 iconfont 图标（`font/font_5244851_6n95j09brtj/iconfont.css`）。
+- 禁止使用外部图标库或 CDN 图标。
+
+### 数据请求
+- 使用 `fetch` 获取服务器端数据。
+
+### 提示词记录
+- 所有提示词内容必须在执行前以追加模式写入 `xuzhenxi_prompt.md`（不得覆盖已有内容）。
+- 每条追加记录必须包含：`yyyy-mm-dd-hh-mm` 格式的时间戳、使用的模型、完整的提示词内容。

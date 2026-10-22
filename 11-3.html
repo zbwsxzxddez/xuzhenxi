@@ -1,3 +1,4 @@
+﻿<!-- 姓名：许镇玺，日期：CSS3 3D动画 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -23,13 +24,13 @@
             color: #fff;
         }
 
-        .xuzhenxi_header {
+        .xzx_header {
             text-align: center;
             padding: 40px 20px 20px;
-            animation: xuzhenxi_fadeInDown 1s ease-out;
+            animation: xzx_fadeInDown 1s ease-out;
         }
 
-        .xuzhenxi_header h1 {
+        .xzx_header h1 {
             font-size: clamp(2em, 5vw, 3.5em);
             margin-bottom: 10px;
             background: linear-gradient(45deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
@@ -37,15 +38,15 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: xuzhenxi_gradientShift 3s ease infinite;
+            animation: xzx_gradientShift 3s ease infinite;
         }
 
-        .xuzhenxi_header p {
+        .xzx_header p {
             font-size: clamp(0.9em, 2vw, 1.2em);
             opacity: 0.85;
         }
 
-        .xuzhenxi_container {
+        .xzx_container {
             width: 100%;
             max-width: 1200px;
             padding: 20px;
@@ -56,7 +57,7 @@
             gap: 80px;
         }
 
-        .xuzhenxi_scene {
+        .xzx_scene {
             width: 200px;
             height: 200px;
             perspective: 1000px;
@@ -64,15 +65,15 @@
         }
 
         /* 3D立方体 */
-        .xuzhenxi_cube {
+        .xzx_cube {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            animation: xuzhenxi_cubeRotate 8s linear infinite;
+            animation: xzx_cubeRotate 8s linear infinite;
         }
 
-        .xuzhenxi_cube_face {
+        .xzx_cube_face {
             position: absolute;
             width: 200px;
             height: 200px;
@@ -88,36 +89,36 @@
             box-shadow: 0 0 30px rgba(79, 172, 254, 0.4) inset;
         }
 
-        .xuzhenxi_cube_front {
+        .xzx_cube_front {
             transform: rotateY(0deg) translateZ(100px);
         }
 
-        .xuzhenxi_cube_back {
+        .xzx_cube_back {
             transform: rotateY(180deg) translateZ(100px);
             background: rgba(0, 242, 254, 0.15);
         }
 
-        .xuzhenxi_cube_right {
+        .xzx_cube_right {
             transform: rotateY(90deg) translateZ(100px);
             background: rgba(67, 233, 123, 0.15);
         }
 
-        .xuzhenxi_cube_left {
+        .xzx_cube_left {
             transform: rotateY(-90deg) translateZ(100px);
             background: rgba(255, 119, 48, 0.15);
         }
 
-        .xuzhenxi_cube_top {
+        .xzx_cube_top {
             transform: rotateX(90deg) translateZ(100px);
             background: rgba(255, 205, 48, 0.15);
         }
 
-        .xuzhenxi_cube_bottom {
+        .xzx_cube_bottom {
             transform: rotateX(-90deg) translateZ(100px);
             background: rgba(255, 75, 75, 0.15);
         }
 
-        @keyframes xuzhenxi_cubeRotate {
+        @keyframes xzx_cubeRotate {
             0% {
                 transform: rotateX(0deg) rotateY(0deg);
             }
@@ -127,17 +128,17 @@
         }
 
         /* 翻转卡片 */
-        .xuzhenxi_flip_card {
+        .xzx_flip_card {
             width: 200px;
             height: 250px;
             position: relative;
             transform-style: preserve-3d;
-            animation: xuzhenxi_flip 4s ease-in-out infinite;
+            animation: xzx_flip 4s ease-in-out infinite;
             cursor: pointer;
         }
 
-        .xuzhenxi_flip_front,
-        .xuzhenxi_flip_back {
+        .xzx_flip_front,
+        .xzx_flip_back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -152,18 +153,18 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .xuzhenxi_flip_front {
+        .xzx_flip_front {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transform: rotateY(0deg);
         }
 
-        .xuzhenxi_flip_back {
+        .xzx_flip_back {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             color: #333;
             transform: rotateY(180deg);
         }
 
-        @keyframes xuzhenxi_flip {
+        @keyframes xzx_flip {
             0%, 100% {
                 transform: rotateY(0deg);
             }
@@ -173,15 +174,15 @@
         }
 
         /* 3D 圆环 */
-        .xuzhenxi_ring {
+        .xzx_ring {
             width: 150px;
             height: 150px;
             position: relative;
             transform-style: preserve-3d;
-            animation: xuzhenxi_ringRotate 6s linear infinite;
+            animation: xzx_ringRotate 6s linear infinite;
         }
 
-        .xuzhenxi_ring_item {
+        .xzx_ring_item {
             position: absolute;
             width: 150px;
             height: 150px;
@@ -191,47 +192,47 @@
             box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
         }
 
-        .xuzhenxi_ring_item:nth-child(1) {
+        .xzx_ring_item:nth-child(1) {
             transform: rotateY(0deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(2) {
+        .xzx_ring_item:nth-child(2) {
             transform: rotateY(36deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(3) {
+        .xzx_ring_item:nth-child(3) {
             transform: rotateY(72deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(4) {
+        .xzx_ring_item:nth-child(4) {
             transform: rotateY(108deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(5) {
+        .xzx_ring_item:nth-child(5) {
             transform: rotateY(144deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(6) {
+        .xzx_ring_item:nth-child(6) {
             transform: rotateY(180deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(7) {
+        .xzx_ring_item:nth-child(7) {
             transform: rotateY(216deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(8) {
+        .xzx_ring_item:nth-child(8) {
             transform: rotateY(252deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(9) {
+        .xzx_ring_item:nth-child(9) {
             transform: rotateY(288deg) translateZ(180px);
         }
 
-        .xuzhenxi_ring_item:nth-child(10) {
+        .xzx_ring_item:nth-child(10) {
             transform: rotateY(324deg) translateZ(180px);
         }
 
-        @keyframes xuzhenxi_ringRotate {
+        @keyframes xzx_ringRotate {
             0% {
                 transform: rotateY(0deg) rotateX(0deg);
             }
@@ -244,21 +245,21 @@
         }
 
         /* 3D 翻转文字 */
-        .xuzhenxi_text3d {
+        .xzx_text3d {
             font-size: clamp(2em, 4vw, 3em);
             font-weight: 700;
             perspective: 500px;
-            animation: xuzhenxi_textWave 2.5s ease-in-out infinite;
+            animation: xzx_textWave 2.5s ease-in-out infinite;
         }
 
-        .xuzhenxi_text_char {
+        .xzx_text_char {
             display: inline-block;
             transform-style: preserve-3d;
-            animation: xuzhenxi_charRotate 3s ease-in-out infinite;
-            animation-delay: calc(var(--xuzhenxi_delay) * 0.1s);
+            animation: xzx_charRotate 3s ease-in-out infinite;
+            animation-delay: calc(var(--xzx_delay) * 0.1s);
         }
 
-        @keyframes xuzhenxi_charRotate {
+        @keyframes xzx_charRotate {
             0%, 100% {
                 transform: translateZ(0px) rotateX(0deg);
             }
@@ -267,7 +268,7 @@
             }
         }
 
-        @keyframes xuzhenxi_textWave {
+        @keyframes xzx_textWave {
             0%, 100% {
                 transform: translateY(0px);
             }
@@ -277,17 +278,17 @@
         }
 
         /* 弹跳方块 */
-        .xuzhenxi_bounce_box {
+        .xzx_bounce_box {
             width: 120px;
             height: 120px;
             background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 100%);
             border-radius: 20px;
             transform-style: preserve-3d;
-            animation: xuzhenxi_bounce3d 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            animation: xzx_bounce3d 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
             box-shadow: 0 30px 60px rgba(255, 154, 158, 0.4);
         }
 
-        @keyframes xuzhenxi_bounce3d {
+        @keyframes xzx_bounce3d {
             0%, 100% {
                 transform: translateY(0) rotateX(0deg) rotateY(0deg) scale(1);
             }
@@ -302,7 +303,7 @@
             }
         }
 
-        @keyframes xuzhenxi_fadeInDown {
+        @keyframes xzx_fadeInDown {
             from {
                 opacity: 0;
                 transform: translateY(-30px);
@@ -313,7 +314,7 @@
             }
         }
 
-        @keyframes xuzhenxi_gradientShift {
+        @keyframes xzx_gradientShift {
             0% {
                 background-position: 0% 50%;
             }
@@ -325,7 +326,7 @@
             }
         }
 
-        .xuzhenxi_back_link {
+        .xzx_back_link {
             margin-top: 40px;
             padding: 15px 40px;
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -335,15 +336,15 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
-            animation: xuzhenxi_fadeInDown 1.5s ease-out;
+            animation: xzx_fadeInDown 1.5s ease-out;
         }
 
-        .xuzhenxi_back_link:hover {
+        .xzx_back_link:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(79, 172, 254, 0.6);
         }
 
-        .xuzhenxi_tip {
+        .xzx_tip {
             margin-top: 20px;
             padding: 10px 20px;
             background: rgba(255, 255, 255, 0.1);
@@ -357,32 +358,32 @@
     </style>
 </head>
 <body>
-    <header class="xuzhenxi_header">
+    <header class="xzx_header">
         <h1>CSS3 3D 动画展示</h1>
         <p>运用 transform、perspective、preserve-3d 与 @keyframes 实现 3D 效果</p>
     </header>
 
-    <div class="xuzhenxi_container">
+    <div class="xzx_container">
         <!-- 3D立方体 -->
-        <div class="xuzhenxi_scene">
-            <div class="xuzhenxi_cube">
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_front">前</div>
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_back">后</div>
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_right">右</div>
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_left">左</div>
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_top">上</div>
-                <div class="xuzhenxi_cube_face xuzhenxi_cube_bottom">下</div>
+        <div class="xzx_scene">
+            <div class="xzx_cube">
+                <div class="xzx_cube_face xzx_cube_front">前</div>
+                <div class="xzx_cube_face xzx_cube_back">后</div>
+                <div class="xzx_cube_face xzx_cube_right">右</div>
+                <div class="xzx_cube_face xzx_cube_left">左</div>
+                <div class="xzx_cube_face xzx_cube_top">上</div>
+                <div class="xzx_cube_face xzx_cube_bottom">下</div>
             </div>
         </div>
 
         <!-- 翻转卡片 -->
-        <div class="xuzhenxi_scene">
-            <div class="xuzhenxi_flip_card">
-                <div class="xuzhenxi_flip_front">
+        <div class="xzx_scene">
+            <div class="xzx_flip_card">
+                <div class="xzx_flip_front">
                     <h3>3D 翻转卡片</h3>
                     <p style="margin-top: 15px; font-size: 0.9em;">鼠标悬停也能观察效果</p>
                 </div>
-                <div class="xuzhenxi_flip_back">
+                <div class="xzx_flip_back">
                     <h3>翻转成功！</h3>
                     <p style="margin-top: 15px; font-size: 0.9em;">CSS3 3D Transform</p>
                 </div>
@@ -390,54 +391,54 @@
         </div>
 
         <!-- 3D圆环 -->
-        <div class="xuzhenxi_scene" style="perspective: 1200px;">
-            <div class="xuzhenxi_ring">
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
-                <div class="xuzhenxi_ring_item"></div>
+        <div class="xzx_scene" style="perspective: 1200px;">
+            <div class="xzx_ring">
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
+                <div class="xzx_ring_item"></div>
             </div>
         </div>
 
         <!-- 3D弹跳方块 -->
-        <div class="xuzhenxi_scene" style="display: flex; align-items: center; justify-content: center; height: 250px;">
-            <div class="xuzhenxi_bounce_box"></div>
+        <div class="xzx_scene" style="display: flex; align-items: center; justify-content: center; height: 250px;">
+            <div class="xzx_bounce_box"></div>
         </div>
 
         <!-- 3D文字 -->
-        <div class="xuzhenxi_scene" style="width: 100%; height: 120px; perspective: 800px;">
-            <div class="xuzhenxi_text3d" style="text-align: center;">
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 0;">C</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 1;">S</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 2;">S</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 3;">3</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 4;">&nbsp;</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 5;">3</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 6;">D</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 7;">&nbsp;</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 8;">A</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 9;">N</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 10;">I</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 11;">M</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 12;">A</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 13;">T</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 14;">I</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 15;">O</span>
-                <span class="xuzhenxi_text_char" style="--xuzhenxi_delay: 16;">N</span>
+        <div class="xzx_scene" style="width: 100%; height: 120px; perspective: 800px;">
+            <div class="xzx_text3d" style="text-align: center;">
+                <span class="xzx_text_char" style="--xzx_delay: 0;">C</span>
+                <span class="xzx_text_char" style="--xzx_delay: 1;">S</span>
+                <span class="xzx_text_char" style="--xzx_delay: 2;">S</span>
+                <span class="xzx_text_char" style="--xzx_delay: 3;">3</span>
+                <span class="xzx_text_char" style="--xzx_delay: 4;">&nbsp;</span>
+                <span class="xzx_text_char" style="--xzx_delay: 5;">3</span>
+                <span class="xzx_text_char" style="--xzx_delay: 6;">D</span>
+                <span class="xzx_text_char" style="--xzx_delay: 7;">&nbsp;</span>
+                <span class="xzx_text_char" style="--xzx_delay: 8;">A</span>
+                <span class="xzx_text_char" style="--xzx_delay: 9;">N</span>
+                <span class="xzx_text_char" style="--xzx_delay: 10;">I</span>
+                <span class="xzx_text_char" style="--xzx_delay: 11;">M</span>
+                <span class="xzx_text_char" style="--xzx_delay: 12;">A</span>
+                <span class="xzx_text_char" style="--xzx_delay: 13;">T</span>
+                <span class="xzx_text_char" style="--xzx_delay: 14;">I</span>
+                <span class="xzx_text_char" style="--xzx_delay: 15;">O</span>
+                <span class="xzx_text_char" style="--xzx_delay: 16;">N</span>
             </div>
         </div>
     </div>
 
-    <div class="xuzhenxi_tip">
+    <div class="xzx_tip">
         <p><strong>核心属性：</strong> perspective（透视）、transform-style: preserve-3d（保留3D空间）、transform（旋转/位移/缩放）、@keyframes（关键帧动画）</p>
     </div>
 
-    <a href="index.html" class="xuzhenxi_back_link">← 返回首页</a>
+    <a href="index.html" class="xzx_back_link">← 返回首页</a>
 </body>
 </html>
