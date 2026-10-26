@@ -1,0 +1,430 @@
+<!-- 姓名：许镇玺，日期：JavaScript条件与循环 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>许镇玺 · JavaScript 条件与循环</title>
+<style>
+/* ============================================================
+   许镇玺 · JavaScript 程序结构：条件与循环
+   纯原生 HTML/CSS/JavaScript，无 CDN 依赖
+   ============================================================ */
+
+:root{
+  --xzx_bg:        #f5f1e8;
+  --xzx_surface:   #fbf8f1;
+  --xzx_text:      #222b28;
+  --xzx_muted:     #7d7666;
+  --xzx_line:      #e2dac6;
+  --xzx_primary:   #b23c28;
+  --xzx_primary-2: #93301f;
+  --xzx_accent:    #154943;
+  --xzx_radius:    12px;
+  --xzx_font:      "PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:      Consolas,"Courier New",monospace;
+  --xzx_shadow:    0 12px 30px -16px rgba(31,42,40,.35);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:var(--xzx_font);
+  color:var(--xzx_text);
+  background:var(--xzx_bg);
+  line-height:1.7;
+  padding:40px 18px 64px;
+}
+.xzx_wrap{width:min(1100px,94%);margin:0 auto;}
+
+/* ---------- 头部 ---------- */
+.xzx_hero{text-align:center;margin-bottom:34px;}
+.xzx_kicker{
+  font-family:var(--xzx_mono);
+  font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--xzx_primary);margin-bottom:14px;
+}
+.xzx_hero h1{
+  font-size:clamp(26px,4.6vw,44px);line-height:1.3;letter-spacing:.04em;
+}
+.xzx_hero h1 em{
+  font-style:normal;color:var(--xzx_primary);
+  background:linear-gradient(transparent 62%, rgba(178,60,40,.18) 62%);
+}
+.xzx_hero p{color:var(--xzx_muted);margin-top:14px;font-size:15px;}
+
+/* ---------- 章节 ---------- */
+.xzx_section{margin-bottom:34px;}
+.xzx_section_head{
+  display:flex;align-items:center;gap:14px;margin-bottom:18px;
+}
+.xzx_section_num{
+  font-family:var(--xzx_mono);font-size:24px;font-weight:700;color:var(--xzx_primary);
+  border-top:2px solid var(--xzx_primary);padding-top:4px;line-height:1;
+}
+.xzx_section_head h2{
+  font-size:22px;color:var(--xzx_accent);letter-spacing:.04em;
+}
+
+/* ---------- 卡片网格 ---------- */
+.xzx_grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+  gap:22px;
+}
+.xzx_card{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:22px;box-shadow:var(--xzx_shadow);
+  display:flex;flex-direction:column;
+}
+.xzx_card h3{
+  font-size:18px;color:var(--xzx_accent);margin-bottom:6px;
+}
+.xzx_card .xzx_sub{
+  font-size:13px;color:var(--xzx_muted);margin-bottom:14px;
+}
+.xzx_code{
+  font-family:var(--xzx_mono);font-size:13px;line-height:1.8;
+  background:var(--xzx_text);color:#d9e4df;
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:14px 16px;overflow:auto;white-space:pre-wrap;
+  margin-bottom:14px;flex:1;
+}
+.xzx_code .xzx_key{color:#e8b96a;font-weight:600;}
+.xzx_code .xzx_str{color:#9ad18f;}
+.xzx_code .xzx_num{color:#f0a868;}
+.xzx_code .xzx_bool{color:#c792ea;}
+.xzx_code .xzx_comm{color:#6b7a72;font-style:italic;}
+
+/* 输出区 */
+.xzx_output{
+  border:1px dashed var(--xzx_line);
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:12px 14px;background:rgba(21,73,67,.04);
+  font-family:var(--xzx_mono);font-size:13px;
+  color:var(--xzx_accent);min-height:50px;
+  white-space:pre-wrap;word-break:break-all;
+}
+.xzx_output .xzx_out_label{
+  display:block;font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--xzx_muted);margin-bottom:6px;
+  font-family:var(--xzx_font);
+}
+
+/* ---------- 交互演示区 ---------- */
+.xzx_interactive{
+  background:var(--xzx_surface);
+  border:1px solid var(--xzx_line);
+  border-radius:var(--xzx_radius);
+  padding:24px;margin-bottom:34px;
+  box-shadow:var(--xzx_shadow);
+}
+.xzx_interactive h2{font-size:19px;color:var(--xzx_accent);margin-bottom:8px;}
+.xzx_interactive>p{font-size:14px;color:var(--xzx_muted);margin-bottom:16px;}
+.xzx_ctrls{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;
+}
+.xzx_ctrl{
+  display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--xzx_muted);
+}
+.xzx_ctrl input[type="number"]{
+  width:90px;padding:7px 10px;font-size:14px;
+  border:1px solid var(--xzx_line);border-radius:8px;
+  font-family:var(--xzx_mono);background:var(--xzx_bg);color:var(--xzx_text);
+}
+.xzx_btn{
+  font-family:var(--xzx_font);font-size:13.5px;font-weight:600;cursor:pointer;
+  color:#fff;background:var(--xzx_primary);
+  border:none;border-radius:999px;padding:10px 22px;
+  transition:background .2s ease,transform .12s ease;
+}
+.xzx_btn:hover{background:var(--xzx_primary-2);}
+.xzx_btn:active{transform:scale(.96);}
+.xzx_console{
+  font-family:var(--xzx_mono);font-size:13px;
+  background:var(--xzx_text);color:#d9e4df;
+  border-radius:calc(var(--xzx_radius) - 4px);
+  padding:14px 16px;min-height:120px;max-height:300px;overflow:auto;
+  white-space:pre-wrap;line-height:1.8;
+}
+.xzx_console .xzx_log{color:#d9e4df;}
+.xzx_console .xzx_info{color:#7fc6b8;}
+.xzx_console .xzx_err{color:#f08070;}
+
+/* ---------- 姓名展示 ---------- */
+.xzx_name_badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:16px;font-weight:700;color:var(--xzx_primary);
+  background:rgba(178,60,40,.08);
+  border:1px solid rgba(178,60,40,.2);
+  border-radius:999px;padding:8px 20px;
+  margin:0 auto 24px;
+}
+.xzx_name_badge::before{
+  content:"";width:10px;height:10px;border-radius:50%;
+  background:var(--xzx_primary);
+}
+
+/* ---------- 页脚 ---------- */
+.xzx_foot{
+  text-align:center;color:var(--xzx_muted);font-size:13.5px;
+  border-top:1px solid var(--xzx_line);padding-top:20px;margin-top:10px;
+}
+.xzx_foot b{color:var(--xzx_primary);}
+</style>
+</head>
+<body>
+
+<div class="xzx_wrap">
+
+  <header class="xzx_hero">
+    <p class="xzx_kicker">JavaScript Control Flow</p>
+    <h1><em>许镇玺</em> · JavaScript 条件与循环</h1>
+    <p>JavaScript 程序的基本结构：条件语句（if / else / switch）与循环语句（for / while / do-while）。</p>
+  </header>
+
+  <!-- ===== 第一部分：条件语句 ===== -->
+  <section class="xzx_section">
+    <div class="xzx_section_head">
+      <span class="xzx_section_num">01</span>
+      <h2>条件语句</h2>
+    </div>
+
+    <div class="xzx_grid">
+
+      <!-- if / else if / else -->
+      <article class="xzx_card">
+        <h3>if / else if / else</h3>
+        <p class="xzx_sub">多分支条件判断</p>
+        <div class="xzx_code"><span class="xzx_key">var</span> xzx_score = <span class="xzx_num">85</span>;
+<span class="xzx_key">if</span> (xzx_score >= <span class="xzx_num">90</span>) {
+  <span class="xzx_comm">// 优秀</span>
+} <span class="xzx_key">else if</span> (xzx_score >= <span class="xzx_num">60</span>) {
+  <span class="xzx_comm">// 及格</span>
+} <span class="xzx_key">else</span> {
+  <span class="xzx_comm">// 不及格</span>
+}</div>
+        <div class="xzx_output" id="xzx_out_if">
+          <span class="xzx_out_label">输出</span>
+        </div>
+      </article>
+
+      <!-- switch -->
+      <article class="xzx_card">
+        <h3>switch</h3>
+        <p class="xzx_sub">多值匹配，break 防止穿透</p>
+        <div class="xzx_code"><span class="xzx_key">var</span> xzx_day = <span class="xzx_num">3</span>;
+<span class="xzx_key">switch</span> (xzx_day) {
+  <span class="xzx_key">case</span> <span class="xzx_num">1</span>: xzx_result = <span class="xzx_str">"周一"</span>; <span class="xzx_key">break</span>;
+  <span class="xzx_key">case</span> <span class="xzx_num">3</span>: xzx_result = <span class="xzx_str">"周三"</span>; <span class="xzx_key">break</span>;
+  <span class="xzx_key">default</span>:  xzx_result = <span class="xzx_str">"其他"</span>;
+}</div>
+        <div class="xzx_output" id="xzx_out_switch">
+          <span class="xzx_out_label">输出</span>
+        </div>
+      </article>
+
+      <!-- 三元运算符 -->
+      <article class="xzx_card">
+        <h3>三元运算符</h3>
+        <p class="xzx_sub">条件 ? 值1 : 值2</p>
+        <div class="xzx_code"><span class="xzx_key">var</span> xzx_age = <span class="xzx_num">20</span>;
+<span class="xzx_key">var</span> xzx_status =
+  xzx_age >= <span class="xzx_num">18</span>
+    ? <span class="xzx_str">"成年"</span>
+    : <span class="xzx_str">"未成年"</span>;</div>
+        <div class="xzx_output" id="xzx_out_ternary">
+          <span class="xzx_out_label">输出</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== 第二部分：循环语句 ===== -->
+  <section class="xzx_section">
+    <div class="xzx_section_head">
+      <span class="xzx_section_num">02</span>
+      <h2>循环语句</h2>
+    </div>
+
+    <div class="xzx_grid">
+
+      <!-- for -->
+      <article class="xzx_card">
+        <h3>for 循环</h3>
+        <p class="xzx_sub">初始化; 条件; 更新</p>
+        <div class="xzx_code"><span class="xzx_key">for</span> (<span class="xzx_key">var</span> xzx_i = <span class="xzx_num">1</span>;
+     xzx_i <= <span class="xzx_num">5</span>; xzx_i++) {
+  <span class="xzx_comm">// 执行 5 次</span>
+}</div>
+        <div class="xzx_output" id="xzx_out_for">
+          <span class="xzx_out_label">输出（1~5）</span>
+        </div>
+      </article>
+
+      <!-- while -->
+      <article class="xzx_card">
+        <h3>while 循环</h3>
+        <p class="xzx_sub">先判断条件，再执行</p>
+        <div class="xzx_code"><span class="xzx_key">var</span> xzx_n = <span class="xzx_num">5</span>;
+<span class="xzx_key">while</span> (xzx_n > <span class="xzx_num">0</span>) {
+  <span class="xzx_comm">// 倒序输出</span>
+  xzx_n--;
+}</div>
+        <div class="xzx_output" id="xzx_out_while">
+          <span class="xzx_out_label">输出（5~1）</span>
+        </div>
+      </article>
+
+      <!-- do-while -->
+      <article class="xzx_card">
+        <h3>do-while 循环</h3>
+        <p class="xzx_sub">先执行一次，再判断条件</p>
+        <div class="xzx_code"><span class="xzx_key">var</span> xzx_k = <span class="xzx_num">1</span>;
+<span class="xzx_key">do</span> {
+  <span class="xzx_comm">// 至少执行 1 次</span>
+  xzx_k++;
+} <span class="xzx_key">while</span> (xzx_k <= <span class="xzx_num">3</span>);</div>
+        <div class="xzx_output" id="xzx_out_dowhile">
+          <span class="xzx_out_label">输出</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== 交互演示 ===== -->
+  <section class="xzx_interactive">
+    <h2>交互演示：计算 1 到 N 的累加和</h2>
+    <p>输入一个正整数 N，使用 for 循环计算 1+2+...+N 的和，并在控制台输出每一步的累加过程。</p>
+    <div class="xzx_ctrls">
+      <label class="xzx_ctrl">N =
+        <input type="number" id="xzx_nInput" value="10" min="1" max="1000">
+      </label>
+      <button class="xzx_btn" id="xzx_runBtn">运行累加</button>
+      <button class="xzx_btn" id="xzx_clearBtn" style="background:var(--xzx_muted)">清空</button>
+    </div>
+    <div class="xzx_console" id="xzx_console">// 输入 N 后点击"运行累加"查看循环过程...</div>
+  </section>
+
+  <!-- 姓名展示 -->
+  <div style="text-align:center;">
+    <span class="xzx_name_badge">许镇玺</span>
+  </div>
+
+  <footer class="xzx_foot">
+    <b>许镇玺</b> ·《高级网页设计》课堂实践 — JavaScript 条件与循环，原生代码手写，无 CDN 依赖
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · JavaScript 条件与循环
+   所有变量以 xzx_ 开头
+   ============================================================ */
+
+/* ---------- 条件语句演示 ---------- */
+
+// if / else if / else
+var xzx_score = 85;
+var xzx_ifResult;
+if (xzx_score >= 90) {
+  xzx_ifResult = '优秀';
+} else if (xzx_score >= 60) {
+  xzx_ifResult = '及格';
+} else {
+  xzx_ifResult = '不及格';
+}
+document.getElementById('xzx_out_if').textContent +=
+  '分数 ' + xzx_score + ' → ' + xzx_ifResult;
+
+// switch
+var xzx_day = 3;
+var xzx_switchResult;
+switch (xzx_day) {
+  case 1: xzx_switchResult = '周一'; break;
+  case 2: xzx_switchResult = '周二'; break;
+  case 3: xzx_switchResult = '周三'; break;
+  case 4: xzx_switchResult = '周四'; break;
+  case 5: xzx_switchResult = '周五'; break;
+  case 6: xzx_switchResult = '周六'; break;
+  case 7: xzx_switchResult = '周日'; break;
+  default: xzx_switchResult = '其他';
+}
+document.getElementById('xzx_out_switch').textContent +=
+  '数字 ' + xzx_day + ' → ' + xzx_switchResult;
+
+// 三元运算符
+var xzx_age = 20;
+var xzx_ternaryResult = xzx_age >= 18 ? '成年' : '未成年';
+document.getElementById('xzx_out_ternary').textContent +=
+  '年龄 ' + xzx_age + ' → ' + xzx_ternaryResult;
+
+/* ---------- 循环语句演示 ---------- */
+
+// for 循环
+var xzx_forStr = '';
+for (var xzx_i = 1; xzx_i <= 5; xzx_i++) {
+  xzx_forStr += xzx_i + ' ';
+}
+document.getElementById('xzx_out_for').textContent += xzx_forStr;
+
+// while 循环
+var xzx_n = 5;
+var xzx_whileStr = '';
+while (xzx_n > 0) {
+  xzx_whileStr += xzx_n + ' ';
+  xzx_n--;
+}
+document.getElementById('xzx_out_while').textContent += xzx_whileStr;
+
+// do-while 循环
+var xzx_k = 1;
+var xzx_doStr = '';
+do {
+  xzx_doStr += xzx_k + ' ';
+  xzx_k++;
+} while (xzx_k <= 3);
+document.getElementById('xzx_out_dowhile').textContent += xzx_doStr;
+
+/* ---------- 交互：累加演示 ---------- */
+var xzx_nInput = document.getElementById('xzx_nInput');
+var xzx_runBtn = document.getElementById('xzx_runBtn');
+var xzx_clearBtn = document.getElementById('xzx_clearBtn');
+var xzx_console = document.getElementById('xzx_console');
+
+xzx_runBtn.addEventListener('click', function(){
+  var xzx_n = parseInt(xzx_nInput.value, 10);
+  if (isNaN(xzx_n) || xzx_n < 1) {
+    xzx_console.innerHTML = '<span class="xzx_err">✗ 请输入大于等于 1 的正整数</span>';
+    return;
+  }
+
+  xzx_console.innerHTML = '';
+  var xzx_sum = 0;
+  for (var xzx_i = 1; xzx_i <= xzx_n; xzx_i++) {
+    xzx_sum += xzx_i;
+    var xzx_line = document.createElement('div');
+    xzx_line.className = 'xzx_log';
+    xzx_line.innerHTML = 'i = ' + xzx_i
+      + '，sum += ' + xzx_i
+      + ' → sum = <span style="color:#e8b96a">' + xzx_sum + '</span>';
+    xzx_console.appendChild(xzx_line);
+  }
+
+  var xzx_done = document.createElement('div');
+  xzx_done.className = 'xzx_info';
+  xzx_done.style.marginTop = '10px';
+  xzx_done.textContent = '✓ 1 到 ' + xzx_n + ' 的累加和 = ' + xzx_sum;
+  xzx_console.appendChild(xzx_done);
+});
+
+xzx_clearBtn.addEventListener('click', function(){
+  xzx_console.innerHTML = '// 已清空，点击"运行累加"重新执行...';
+});
+</script>
+</body>
+</html>
