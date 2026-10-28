@@ -1,73 +1,130 @@
-﻿<!-- 姓名：许镇玺，日期：左图右文 -->
+﻿<!-- 姓名：许镇玺，日期：左图右文-网易新闻卡片 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style> 
+    <title>左图右文-网易新闻卡片</title>
+    <style>
+        /*全局CSS*/
         *{margin: 0;padding: 0;}
-        .box{}
-        .zy{
-            display: flex;
-            padding: 5px 10px;
-            margin-bottom:5px;
-            border-bottom: 1px dashed #ccc;
+        img{display: block;}
+        a{text-decoration: none;color: inherit;}
+
+        .xzx_container{
+            max-width: 600px;
+            margin: 20px;
         }
-        .zy img{
-            width: 100px;
-        }
-        .text{
-            margin-left:10px;
+
+        /* 新闻卡片 - 左图右文 */
+        .xzx_news_card{
             display: flex;
-            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e8e8e8;
+            cursor: pointer;
+        }
+
+        /* 左边缩略图 */
+        .xzx_news_thumb{
+            flex-shrink: 0;
+            width: 160px;
+            height: 110px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f4f4f4;
+        }
+
+        .xzx_news_thumb img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 右边文字区域 */
+        .xzx_news_content{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .xzx_news_title{
+            font-size: 17px;
+            line-height: 24px;
+            color: #222;
+            font-weight: 600;
+            /* 两行截断 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .xzx_news_desc{
+            margin-top: 6px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #888;
+            /* 两行截断 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .xzx_news_meta{
+            margin-top: auto;
+            padding-top: 8px;
             font-size: 12px;
-            color:#999;
-            flex-grow:1;
-        }
-        .text h3{
-            width:100%;
-            font-size: 16px;
-            color:#333;
-            height: 36PX;
-        }
-        .author{
-            flex-grow:1;
-        }
-        .time{
-            margin-right: 5px;
+            color: #999;
+            display: flex;
+            gap: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <div class="zy">
-            <img src="./img/a1.jpg">
-            <div class="text">
-                <h3>标题</h3>
-                <span class="author">许镇玺</span>
-                <span class="time">2020-10-10</span>
+    <div class="xzx_container">
+        <div class="xzx_news_card">
+            <div class="xzx_news_thumb">
+                <img src="./img/a1.jpg" alt="新闻缩略图">
+            </div>
+            <div class="xzx_news_content">
+                <h3 class="xzx_news_title">一紧张就想拉屎的怪病，正在逼疯中国年轻人</h3>
+                <p class="xzx_news_desc">脊柱侧弯，压垮中国学生；中国南方的毒蚊子，正在集体"北上"</p>
+                <div class="xzx_news_meta">
+                    <span>许镇玺</span>
+                    <span>2026-10-28</span>
+                </div>
             </div>
         </div>
 
-        <div class="zy">
-            <img src="./img/a1.jpg">
-            <div class="text">
-                <h3>标题</h3>
-                <span class="author">许镇玺</span>
-                <span class="time">2020-10-10</span>
+        <div class="xzx_news_card">
+            <div class="xzx_news_thumb">
+                <img src="./img/a2.jpg" alt="新闻缩略图">
+            </div>
+            <div class="xzx_news_content">
+                <h3 class="xzx_news_title">好大的胆子！侮辱中国已故伟大领袖，法国球星姆巴佩必须付出代价</h3>
+                <p class="xzx_news_desc">姆巴佩事件处理难有硬核先例；孙颖莎伤病史恢复时间线</p>
+                <div class="xzx_news_meta">
+                    <span>体育热搜</span>
+                    <span>10-27 17:36</span>
+                </div>
             </div>
         </div>
 
-        <div class="zy">
-            <img src="./img/a1.jpg">
-            <div class="text">
-                <h3>标题</h3>
-                <span class="author">许镇玺</span>
-                <span class="time">2020-10-10</span>
+        <div class="xzx_news_card">
+            <div class="xzx_news_thumb">
+                <img src="./img/a3.jpg" alt="新闻缩略图">
+            </div>
+            <div class="xzx_news_content">
+                <h3 class="xzx_news_title">吉格斯2011年言论被翻出 曼联排名英超第16</h3>
+                <p class="xzx_news_desc">今天 10:41 曼联 吉格斯 英超 利物浦</p>
+                <div class="xzx_news_meta">
+                    <span>国际足球</span>
+                    <span>今天 10:41</span>
+                </div>
             </div>
         </div>
-
     </div>
 </body>
 </html>

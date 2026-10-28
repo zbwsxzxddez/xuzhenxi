@@ -1,68 +1,130 @@
-﻿<!-- 姓名：许镇玺，日期：一左一右 -->
+﻿<!-- 姓名：许镇玺，日期：一左一右-tab导航栏 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一左一右</title>
+    <title>一左一右-tab导航栏</title>
     <style>
-        *{
-            margin: 0;
-            padding: 0;
+        /*全局CSS*/
+        *{margin: 0;padding: 0;}
+        a{text-decoration: none;color: inherit;}
+
+        .xzx_container{
+            max-width: 1000px;
+            margin: 20px;
         }
-        .title{
-            width: 500px;
-            height: 33px;
-            line-height:33px;
-            padding-left: 10px;
-        }
-        .title h2{
-            font-size: 14px;
-            color:#039;
-        }
-        .title a{
-            font-size: 12px;
-            color: #999;
-            text-decoration: none;
-        }
-        .title:first-child{
-            border:1px solid #ccc;
+
+        /* tab导航栏 - 一左一右布局 */
+        .xzx_tab_bar{
             display: flex;
-            justify-content:space-between;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #e8e8e8;
+            padding-bottom: 10px;
         }
-        .title:nth-child(2){
-            display: flex;
-            border-top:2px solid #ccc;
+
+        /* 左边主标题 */
+        .xzx_tab_title{
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: -12px;
         }
-        .title:nth-child(2) h2{
-            flex-grow: 1;
-            /*占剩余所有空间*/
-        }
-        .title:nth-child(3){
-            position:relative;
-            border-bottom: 2px solid #039;
-        }
-        .title:nth-child(3) a{
+
+        /* 选中状态的红色下划线 */
+        .xzx_tab_title::after{
+            content: "";
             position: absolute;
-            right: 16px;
-            top: 0;
-            
+            left: 0;
+            bottom: -12px;
+            width: 100%;
+            height: 2px;
+            background: #e02020;
+        }
+
+        /* 右边tab列表 */
+        .xzx_tab_list{
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .xzx_tab_list a{
+            transition: color 0.2s;
+        }
+
+        .xzx_tab_list a:hover{
+            color: #e02020;
+        }
+
+        /* 第二个示例：带"更多"的标题栏 */
+        .xzx_section_title{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .xzx_section_left{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 火焰图标效果 */
+        .xzx_section_left::before{
+            content: "🔥";
+            font-size: 18px;
+        }
+
+        .xzx_more_link{
+            font-size: 13px;
+            color: #999;
+        }
+
+        .xzx_more_link:hover{
+            color: #e02020;
         }
     </style>
 </head>
 <body>
-    <div class="title">
-        <h2>许镇玺的标题</h2>
-        <a href="#">更多</a>
-    </div>
-    <div class="title">
-        <h2>许镇玺的标题</h2>
-        <a href="#">更多</a>
-    </div>
-    <div class="title">
-        <h2>许镇玺的标题</h2>
-        <a href="#">更多</a>
-    </div>
+    <div class="xzx_container">
+        <!-- 第一种：tab切换式标题栏 -->
+        <div class="xzx_tab_bar">
+            <div class="xzx_tab_title">国际足球</div>
+            <nav class="xzx_tab_list">
+                <a href="#">中国足球</a>
+                <a href="#">NBA</a>
+                <a href="#">CBA</a>
+                <a href="#">综合</a>
+            </nav>
+        </div>
 
+        <!-- 第二种：左标题右"更多"标题栏 -->
+        <div class="xzx_section_title">
+            <div class="xzx_section_left">热门资讯</div>
+            <a href="#" class="xzx_more_link">更多 &gt;</a>
+        </div>
+
+        <!-- 第三种：左标题右tab -->
+        <div class="xzx_tab_bar" style="margin-top: 40px;">
+            <div class="xzx_tab_title">NBA</div>
+            <nav class="xzx_tab_list">
+                <a href="#">CBA</a>
+                <a href="#">英超</a>
+                <a href="#">西甲</a>
+                <a href="#">意甲</a>
+            </nav>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,61 +1,171 @@
-﻿<!-- 姓名：许镇玺，日期：上图下文 -->
+﻿<!-- 姓名：许镇玺，日期：上图下文-B站视频卡片 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>上图下文-B站视频卡片</title>
     <style>
         /*全局CSS*/
         *{margin: 0;padding: 0;}
         ul{list-style: none;}
-        img{
-            display: block;
+        img{display: block;}
+        a{text-decoration: none;color: inherit;}
+
+        .xzx_container{
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
         }
-        .slist{
+
+        /* 视频卡片列表 - flex三列 */
+        .xzx_video_list{
             display: flex;
-            margin: 8px;
+            gap: 16px;
         }
-        .slist li{
-            width:30%;
-            margin-right: 3px;
-            flex-grow:1;
-            /*相对*/
+
+        .xzx_video_item{
+            flex: 1;
+            cursor: pointer;
+        }
+
+        /* 封面图区域 */
+        .xzx_video_cover{
             position: relative;
-        }
-        .slist img{
             width: 100%;
+            padding-top: 56.25%; /* 16:9比例 */
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f4f4f4;
         }
-        .slist p{
-            font-size: 14px;
-            text-align: center;
-            line-height: 24px;
-            /*绝对定位*/
+
+        .xzx_video_cover img{
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
-            width:100%;
-            background: rgba(0,0,0,0.5);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 右下角时长标签 */
+        .xzx_video_duration{
+            position: absolute;
+            right: 6px;
+            bottom: 6px;
+            background: rgba(0,0,0,0.6);
             color: #fff;
+            font-size: 12px;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+
+        /* 左下角播放量弹幕 */
+        .xzx_video_stats{
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            display: flex;
+            gap: 10px;
+            color: #fff;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* 标题区域 */
+        .xzx_video_title{
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #18191c;
+            /* 两行截断 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 40px;
+        }
+
+        /* UP主信息 */
+        .xzx_video_up{
+            margin-top: 6px;
+            font-size: 12px;
+            color: #9499a0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .xzx_video_up::before{
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #9499a0;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* 平板端：两列布局 */
+        @media (max-width: 768px){
+            .xzx_video_list{
+                flex-wrap: wrap;
+            }
+            .xzx_video_item{
+                flex: 0 0 calc(50% - 8px);
+            }
+        }
+
+        /* 手机端：单列布局 */
+        @media (max-width: 480px){
+            .xzx_video_item{
+                flex: 0 0 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <ul class="slist">
-        <li>
-            <img src="./img/a1.jpg">
-            <p>许镇玺的标题1</p>
-        </li>
+    <div class="xzx_container">
+        <ul class="xzx_video_list">
+            <li class="xzx_video_item">
+                <div class="xzx_video_cover">
+                    <img src="./img/a1.jpg" alt="视频封面">
+                    <span class="xzx_video_duration">17:55</span>
+                    <div class="xzx_video_stats">
+                        <span>77.5万</span>
+                        <span>2175</span>
+                    </div>
+                </div>
+                <h3 class="xzx_video_title">提瓦特还有下一次轮回吗？被天理判为错误的文明，要怎么赢下这场试炼...</h3>
+                <div class="xzx_video_up">Jerryprpr · 10月24日</div>
+            </li>
 
-         <li>
-            <img src="./img/a1.jpg">
-            <p>许镇玺的标题2</p>
-        </li>
+            <li class="xzx_video_item">
+                <div class="xzx_video_cover">
+                    <img src="./img/a2.jpg" alt="视频封面">
+                    <span class="xzx_video_duration">22:38</span>
+                    <div class="xzx_video_stats">
+                        <span>15.5万</span>
+                        <span>2199</span>
+                    </div>
+                </div>
+                <h3 class="xzx_video_title">灵堂激情戏！如何把惊悚鬼片拍成搞笑神作？【京城81号】</h3>
+                <div class="xzx_video_up">老白者乎 · 2天前</div>
+            </li>
 
-         <li>
-            <img src="./img/a1.jpg">
-            <p>许镇玺的标题3</p>
-        </li>
-    </ul>
+            <li class="xzx_video_item">
+                <div class="xzx_video_cover">
+                    <img src="./img/a3.jpg" alt="视频封面">
+                    <span class="xzx_video_duration">02:04</span>
+                    <div class="xzx_video_stats">
+                        <span>90.7万</span>
+                        <span>294</span>
+                    </div>
+                </div>
+                <h3 class="xzx_video_title">体验全球最奢侈的网吧？！我打世界冠军真的假的？！</h3>
+                <div class="xzx_video_up">Superme · 3天前</div>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>
