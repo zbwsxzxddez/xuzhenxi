@@ -94,6 +94,22 @@
         .xzx_more_link:hover{
             color: #e02020;
         }
+
+        /* 手机端适配 */
+        @media (max-width: 480px){
+            .xzx_tab_bar{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .xzx_tab_list{
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .xzx_tab_title{
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
