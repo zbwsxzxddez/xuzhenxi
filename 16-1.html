@@ -1,0 +1,1213 @@
+<!-- 姓名：许镇玺，日期：JavaScript 数组方法形象展示 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS 数组方法形象展示 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 16-1 JavaScript 数组方法形象展示
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:       #1a1c2c;
+    --xzx-bg-2:     #242637;
+    --xzx-bg-3:     #2f3248;
+    --xzx-line:     #3d4060;
+    --xzx-text:     #e0e2f0;
+    --xzx-text-d:   #9a9eb8;
+    --xzx-accent:   #6ec1ff;
+    --xzx-accent-2: #f28fad;
+    --xzx-gold:     #e8d66b;
+    --xzx-green:    #88e4a7;
+    --xzx-purple:   #b8a0ff;
+    --xzx-orange:   #ffb86b;
+    --xzx-red:      #ff7b7b;
+    --xzx-shadow:   0 6px 24px rgba(0,0,0,.35);
+    --xzx-shadow-s: 0 2px 8px rgba(0,0,0,.25);
+    --xzx-radius:   10px;
+    --xzx-mon:      Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--xzx-bg);
+    color:var(--xzx-text);
+    line-height:1.6;
+    min-height:100vh;
+    padding:24px;
+    background-image:
+      radial-gradient(600px 400px at 10% -10%, rgba(110,193,255,.08), transparent 60%),
+      radial-gradient(500px 500px at 100% 100%, rgba(184,160,255,.08), transparent 60%);
+  }
+
+  /* ---------- 顶部标题 ---------- */
+  .xzx-header{
+    max-width:1200px;
+    margin:0 auto 24px;
+    text-align:center;
+  }
+  .xzx-header h1{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:6px;
+  }
+  .xzx-header h1 span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-accent-2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .xzx-header p{
+    color:var(--xzx-text-d);
+    font-size:13px;
+  }
+  .xzx-back{
+    display:inline-block;
+    margin-bottom:10px;
+    padding:4px 14px;
+    background:var(--xzx-bg-2);
+    border:1px solid var(--xzx-line);
+    border-radius:20px;
+    color:var(--xzx-text-d);
+    text-decoration:none;
+    font-size:12px;
+    transition:.2s;
+  }
+  .xzx-back:hover{color:var(--xzx-accent);border-color:var(--xzx-accent);}
+
+  /* ---------- 主布局 ---------- */
+  .xzx-main{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .xzx-card{
+    background:var(--xzx-bg-2);
+    border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);
+    padding:20px;
+    box-shadow:var(--xzx-shadow-s);
+  }
+  .xzx-card h2{
+    font-size:15px;
+    font-weight:600;
+    color:var(--xzx-accent);
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .xzx-card h2::before{
+    content:"";
+    width:3px;height:14px;
+    background:var(--xzx-accent);
+    border-radius:2px;
+  }
+
+  /* ---------- 数组可视化区域 ---------- */
+  .xzx-array-stage{
+    grid-column:1/-1;
+    min-height:180px;
+    position:relative;
+    overflow:hidden;
+  }
+  .xzx-array-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:20px 10px;
+    min-height:120px;
+    align-items:center;
+    justify-content:flex-start;
+  }
+  .xzx-array-item{
+    position:relative;
+    width:68px;
+    height:68px;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--xzx-mon);
+    font-size:18px;
+    font-weight:700;
+    color:#fff;
+    cursor:default;
+    transition:transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s, box-shadow .3s;
+    box-shadow:var(--xzx-shadow-s);
+  }
+  .xzx-array-item .xzx-idx{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:11px;
+    font-weight:400;
+    color:var(--xzx-text-d);
+    background:var(--xzx-bg-3);
+    padding:1px 6px;
+    border-radius:10px;
+    border:1px solid var(--xzx-line);
+    font-family:var(--xzx-mon);
+  }
+  .xzx-array-item:nth-child(5n+1){background:linear-gradient(135deg,#ff7b7b,#e04848);}
+  .xzx-array-item:nth-child(5n+2){background:linear-gradient(135deg,#ffb86b,#e88a3a);}
+  .xzx-array-item:nth-child(5n+3){background:linear-gradient(135deg,#88e4a7,#4cc07a);}
+  .xzx-array-item:nth-child(5n+4){background:linear-gradient(135deg,#6ec1ff,#3a8fd8);}
+  .xzx-array-item:nth-child(5n+5){background:linear-gradient(135deg,#b8a0ff,#8a6ed8);}
+
+  /* 动画类 */
+  .xzx-array-item.xzx-enter-right{animation:xzx_slide_right .4s cubic-bezier(.34,1.56,.64,1);}
+  .xzx-array-item.xzx-enter-left{animation:xzx_slide_left .4s cubic-bezier(.34,1.56,.64,1);}
+  .xzx-array-item.xzx-enter-bottom{animation:xzx_slide_bottom .4s cubic-bezier(.34,1.56,.64,1);}
+  .xzx-array-item.xzx-exit-right{animation:xzx_slide_out_right .3s forwards;}
+  .xzx-array-item.xzx-exit-left{animation:xzx_slide_out_left .3s forwards;}
+  .xzx-array-item.xzx-exit-top{animation:xzx_slide_out_top .3s forwards;}
+  .xzx-array-item.xzx-highlight{animation:xzx_pulse 1s infinite;box-shadow:0 0 0 3px var(--xzx-gold),0 0 20px rgba(232,214,107,.5);}
+  .xzx-array-item.xzx-selected{box-shadow:0 0 0 3px var(--xzx-green),0 0 20px rgba(136,228,167,.4);}
+  .xzx-array-item.xzx-mapped{transform:scale(.85);filter:grayscale(.5) brightness(1.1);}
+  .xzx-array-item.xzx-swap{animation:xzx_swap .4s;}
+
+  @keyframes xzx_slide_right{
+    from{transform:translateX(120px) scale(.5);opacity:0;}
+    to{transform:translateX(0) scale(1);opacity:1;}
+  }
+  @keyframes xzx_slide_left{
+    from{transform:translateX(-120px) scale(.5);opacity:0;}
+    to{transform:translateX(0) scale(1);opacity:1;}
+  }
+  @keyframes xzx_slide_bottom{
+    from{transform:translateY(60px) scale(.5);opacity:0;}
+    to{transform:translateY(0) scale(1);opacity:1;}
+  }
+  @keyframes xzx_slide_out_right{
+    to{transform:translateX(120px) scale(.5);opacity:0;}
+  }
+  @keyframes xzx_slide_out_left{
+    to{transform:translateX(-120px) scale(.5);opacity:0;}
+  }
+  @keyframes xzx_slide_out_top{
+    to{transform:translateY(-60px) scale(.5);opacity:0;}
+  }
+  @keyframes xzx_pulse{
+    0%,100%{box-shadow:0 0 0 3px var(--xzx-gold),0 0 20px rgba(232,214,107,.5);}
+    50%{box-shadow:0 0 0 6px var(--xzx-gold),0 0 30px rgba(232,214,107,.8);}
+  }
+  @keyframes xzx_swap{
+    0%{transform:translateY(0) rotate(0);}
+    50%{transform:translateY(-20px) rotate(5deg);}
+    100%{transform:translateY(0) rotate(0);}
+  }
+
+  .xzx-array-empty{
+    width:100%;text-align:center;color:var(--xzx-text-d);font-size:13px;
+    padding:30px 0;font-style:italic;
+  }
+  .xzx-array-info{
+    position:absolute;top:12px;right:14px;
+    font-family:var(--xzx-mon);font-size:12px;color:var(--xzx-text-d);
+    background:var(--xzx-bg-3);padding:4px 10px;border-radius:12px;border:1px solid var(--xzx-line);
+  }
+
+  /* ---------- 方法按钮区 ---------- */
+  .xzx-methods{display:flex;flex-wrap:wrap;gap:8px;}
+  .xzx-method-group{
+    width:100%;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--xzx-line);
+    margin-bottom:12px;
+  }
+  .xzx-method-group:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .xzx-group-title{
+    font-size:11px;
+    color:var(--xzx-text-d);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:8px;
+  }
+  .xzx-method-btn{
+    padding:8px 14px;
+    background:var(--xzx-bg-3);
+    border:1px solid var(--xzx-line);
+    border-radius:6px;
+    color:var(--xzx-text);
+    font-family:var(--xzx-mon);
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+    position:relative;
+  }
+  .xzx-method-btn:hover{
+    background:var(--xzx-bg);
+    border-color:var(--xzx-accent);
+    color:var(--xzx-accent);
+    transform:translateY(-2px);
+    box-shadow:var(--xzx-shadow-s);
+  }
+  .xzx-method-btn.xzx-active{
+    background:var(--xzx-accent);
+    border-color:var(--xzx-accent);
+    color:#fff;
+  }
+  .xzx-method-btn .xzx-short{
+    display:block;
+    font-size:9px;
+    color:var(--xzx-text-d);
+    font-family:inherit;
+    margin-top:2px;
+  }
+  .xzx-method-btn.xzx-active .xzx-short{color:rgba(255,255,255,.7);}
+  .xzx-method-btn[data-mutates="true"]::after{
+    content:"";
+    position:absolute;top:4px;right:4px;
+    width:6px;height:6px;border-radius:50%;background:var(--xzx-red);
+  }
+
+  /* ---------- 控制面板 ---------- */
+  .xzx-control{display:flex;flex-direction:column;gap:12px;}
+  .xzx-input-row{
+    display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  }
+  .xzx-input-row label{
+    font-size:12px;color:var(--xzx-text-d);min-width:70px;
+  }
+  .xzx-input-row input,.xzx-input-row select{
+    flex:1;min-width:80px;
+    padding:8px 10px;
+    background:var(--xzx-bg-3);
+    border:1px solid var(--xzx-line);
+    border-radius:6px;
+    color:var(--xzx-text);
+    font-family:var(--xzx-mon);
+    font-size:13px;
+    outline:none;
+    transition:.2s;
+  }
+  .xzx-input-row input:focus,.xzx-input-row select:focus{
+    border-color:var(--xzx-accent);
+  }
+  .xzx-btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .xzx-btn{
+    padding:9px 18px;
+    border:none;border-radius:6px;
+    font-size:13px;font-weight:600;
+    cursor:pointer;transition:.2s;
+  }
+  .xzx-btn-primary{
+    background:var(--xzx-accent);color:#fff;
+  }
+  .xzx-btn-primary:hover{background:#4da8e8;transform:translateY(-1px);}
+  .xzx-btn-secondary{
+    background:var(--xzx-bg-3);color:var(--xzx-text);border:1px solid var(--xzx-line);
+  }
+  .xzx-btn-secondary:hover{border-color:var(--xzx-purple);color:var(--xzx-purple);}
+  .xzx-btn-danger{
+    background:transparent;color:var(--xzx-red);border:1px solid var(--xzx-red);
+  }
+  .xzx-btn-danger:hover{background:var(--xzx-red);color:#fff;}
+
+  /* 预设数组 */
+  .xzx-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .xzx-preset{
+    padding:5px 12px;
+    background:var(--xzx-bg-3);
+    border:1px solid var(--xzx-line);
+    border-radius:14px;
+    font-family:var(--xzx-mon);font-size:11px;color:var(--xzx-text-d);
+    cursor:pointer;transition:.2s;
+  }
+  .xzx-preset:hover{color:var(--xzx-gold);border-color:var(--xzx-gold);}
+
+  /* ---------- 代码展示 ---------- */
+  .xzx-code-block{
+    background:#1e1f2e;
+    border:1px solid var(--xzx-line);
+    border-radius:8px;
+    padding:14px 16px;
+    font-family:var(--xzx-mon);
+    font-size:13px;
+    line-height:1.7;
+    overflow-x:auto;
+    min-height:60px;
+  }
+  .xzx-code-block .xzx-kw{color:var(--xzx-purple);}
+  .xzx-code-block .xzx-fn{color:var(--xzx-accent);}
+  .xzx-code-block .xzx-str{color:var(--xzx-green);}
+  .xzx-code-block .xzx-num{color:var(--xzx-orange);}
+  .xzx-code-block .xzx-com{color:#6b6e8a;font-style:italic;}
+  .xzx-code-block .xzx-var{color:var(--xzx-accent-2);}
+
+  /* ---------- 结果展示 ---------- */
+  .xzx-result{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  }
+  .xzx-result-box{
+    background:var(--xzx-bg-3);
+    border:1px solid var(--xzx-line);
+    border-radius:8px;
+    padding:12px;
+  }
+  .xzx-result-box .xzx-label{
+    font-size:10px;color:var(--xzx-text-d);
+    text-transform:uppercase;letter-spacing:1px;
+    margin-bottom:6px;
+  }
+  .xzx-result-box .xzx-val{
+    font-family:var(--xzx-mon);font-size:13px;color:var(--xzx-gold);
+    word-break:break-all;
+  }
+  .xzx-result-box .xzx-val.ok{color:var(--xzx-green);}
+  .xzx-result-box .xzx-val.err{color:var(--xzx-red);}
+
+  /* ---------- 日志 ---------- */
+  .xzx-log{
+    max-height:160px;overflow-y:auto;
+    background:#1a1b28;border:1px solid var(--xzx-line);
+    border-radius:8px;padding:10px;
+    font-family:var(--xzx-mon);font-size:12px;
+    line-height:1.8;
+  }
+  .xzx-log div{padding:2px 0;border-bottom:1px dashed var(--xzx-line);}
+  .xzx-log div:last-child{border-bottom:none;}
+  .xzx-log .xzx-t{color:var(--xzx-text-d);margin-right:6px;}
+  .xzx-log .xzx-l-info{color:var(--xzx-accent);}
+  .xzx-log .xzx-l-ret{color:var(--xzx-gold);}
+  .xzx-log .xzx-l-mut{color:var(--xzx-accent-2);}
+
+  /* 滚动条美化 */
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--xzx-text-d);}
+
+  /* 响应式 */
+  @media(max-width:800px){
+    .xzx-main{grid-template-columns:1fr;}
+    .xzx-array-item{width:54px;height:54px;font-size:15px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <a href="index.html" class="xzx-back">← 返回导航</a>
+  <h1><span>JavaScript 数组方法</span> · 形象展示</h1>
+  <p>点击方法按钮，实时观察数组变化与返回值 · 许镇玺</p>
+</div>
+
+<div class="xzx-main">
+
+  <!-- 可视化数组 -->
+  <div class="xzx-card xzx-array-stage">
+    <h2>当前数组 <span style="font-size:11px;color:var(--xzx-text-d);font-weight:400;">(红圆点 = 会修改原数组)</span></h2>
+    <div class="xzx-array-info" id="xzxArrInfo">length: 0</div>
+    <div class="xzx-array-wrap" id="xzxArrWrap">
+      <div class="xzx-array-empty">点击下方「预设数组」快速开始 →</div>
+    </div>
+    <div class="xzx-presets" style="padding:12px 10px 0;">
+      <span style="font-size:12px;color:var(--xzx-text-d);margin-right:4px;">预设 →</span>
+      <div class="xzx-preset" data-preset="nums">[1,2,3,4,5]</div>
+      <div class="xzx-preset" data-preset="mixed">['a','bb','ccc','dddd']</div>
+      <div class="xzx-preset" data-preset="scores">[85,92,78,90,88,95]</div>
+      <div class="xzx-preset" data-preset="desc">[5,4,3,2,1]</div>
+      <div class="xzx-preset" data-preset="empty">[]</div>
+    </div>
+  </div>
+
+  <!-- 方法选择 -->
+  <div class="xzx-card">
+    <h2>方法选择</h2>
+    <div class="xzx-methods" id="xzxMethods">
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">尾部增删 (Mutate)</div>
+        <button class="xzx-method-btn" data-fn="push" data-mutates="true">push<span class="xzx-short">尾部加一个</span></button>
+        <button class="xzx-method-btn" data-fn="pop" data-mutates="true">pop<span class="xzx-short">尾部删一个</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">头部增删 (Mutate)</div>
+        <button class="xzx-method-btn" data-fn="unshift" data-mutates="true">unshift<span class="xzx-short">头部加一个</span></button>
+        <button class="xzx-method-btn" data-fn="shift" data-mutates="true">shift<span class="xzx-short">头部删一个</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">任意位置 (Mutate)</div>
+        <button class="xzx-method-btn" data-fn="splice" data-mutates="true">splice<span class="xzx-short">切片式增删</span></button>
+        <button class="xzx-method-btn" data-fn="reverse" data-mutates="true">reverse<span class="xzx-short">反转数组</span></button>
+        <button class="xzx-method-btn" data-fn="sort" data-mutates="true">sort<span class="xzx-short">排序</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">查找 (不修改)</div>
+        <button class="xzx-method-btn" data-fn="indexOf">indexOf<span class="xzx-short">查索引</span></button>
+        <button class="xzx-method-btn" data-fn="find">find<span class="xzx-short">找元素</span></button>
+        <button class="xzx-method-btn" data-fn="findIndex">findIndex<span class="xzx-short">找第一个索引</span></button>
+        <button class="xzx-method-btn" data-fn="includes">includes<span class="xzx-short">包含?</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">遍历变换 (不修改)</div>
+        <button class="xzx-method-btn" data-fn="map">map<span class="xzx-short">映射变换</span></button>
+        <button class="xzx-method-btn" data-fn="filter">filter<span class="xzx-short">过滤</span></button>
+        <button class="xzx-method-btn" data-fn="forEach">forEach<span class="xzx-short">遍历执行</span></button>
+        <button class="xzx-method-btn" data-fn="some">some<span class="xzx-short">有一个?</span></button>
+        <button class="xzx-method-btn" data-fn="every">every<span class="xzx-short">全部满足?</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">归约 (不修改)</div>
+        <button class="xzx-method-btn" data-fn="reduce">reduce<span class="xzx-short">累加归约</span></button>
+      </div>
+
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">截取 / 合并 (不修改)</div>
+        <button class="xzx-method-btn" data-fn="slice">slice<span class="xzx-short">浅拷贝切片</span></button>
+        <button class="xzx-method-btn" data-fn="concat">concat<span class="xzx-short">拼接数组</span></button>
+        <button class="xzx-method-btn" data-fn="join">join<span class="xzx-short">连接成串</span></button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 控制面板 -->
+  <div class="xzx-card">
+    <h2>参数设置</h2>
+    <div class="xzx-control" id="xzxParams">
+      <div class="xzx-input-row">
+        <label>当前方法</label>
+        <input type="text" id="xzxCurrentFn" value="请在左侧选择方法" readonly>
+      </div>
+      <div class="xzx-input-row" id="xzxParamRow" style="display:none;">
+        <label>参数</label>
+        <input type="text" id="xzxParamInput" placeholder="根据方法输入参数">
+      </div>
+      <div class="xzx-btn-row">
+        <button class="xzx-btn xzx-btn-primary" id="xzxRunBtn">▶ 执行</button>
+        <button class="xzx-btn xzx-btn-secondary" id="xzxUndoBtn">↶ 撤销</button>
+        <button class="xzx-btn xzx-btn-danger" id="xzxResetBtn">✕ 清空</button>
+      </div>
+    </div>
+
+    <h2 style="margin-top:20px;">执行代码</h2>
+    <div class="xzx-code-block" id="xzxCodeBlock">
+      <span class="xzx-com">// 选择方法后自动生成</span>
+    </div>
+  </div>
+
+  <!-- 结果 + 日志 -->
+  <div class="xzx-card">
+    <h2>运行结果</h2>
+    <div class="xzx-result">
+      <div class="xzx-result-box">
+        <div class="xzx-label">返回值</div>
+        <div class="xzx-val" id="xzxRet">—</div>
+      </div>
+      <div class="xzx-result-box">
+        <div class="xzx-label">是否修改原数组</div>
+        <div class="xzx-val" id="xzxMutate">—</div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:20px;">操作日志</h2>
+    <div class="xzx-log" id="xzxLog"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 16-1 数组方法演示脚本
+   全部变量 / 函数均以 xzx_ 开头
+   ============================================================ */
+
+/* ---------- 状态 ---------- */
+let xzx_arr = [];          // 当前数组
+let xzx_history = [];      // 历史快照（用于撤销）
+let xzx_selectedFn = null; // 当前选中方法
+let xzx_animLock = false;  // 动画锁
+
+/* ---------- 预设数组 ---------- */
+const xzx_presets = {
+  nums:   [1, 2, 3, 4, 5],
+  mixed:  ['a', 'bb', 'ccc', 'dddd'],
+  scores: [85, 92, 78, 90, 88, 95],
+  desc:   [5, 4, 3, 2, 1],
+  empty:  []
+};
+
+/* ---------- 工具：颜色值 ---------- */
+function xzx_valueColor(v){
+  if(typeof v === 'string') return 'var(--xzx-green)';
+  if(typeof v === 'number') return 'var(--xzx-orange)';
+  if(typeof v === 'boolean') return v ? 'var(--xzx-green)' : 'var(--xzx-red)';
+  if(v === null) return 'var(--xzx-red)';
+  if(Array.isArray(v)) return 'var(--xzx-purple)';
+  return 'var(--xzx-text)';
+}
+
+/* ---------- 渲染数组可视化 ---------- */
+function xzx_renderArray(animDir = null, animType = null){
+  const wrap = document.getElementById('xzxArrWrap');
+  const info = document.getElementById('xzxArrInfo');
+
+  info.textContent = `length: ${xzx_arr.length}`;
+
+  if(xzx_arr.length === 0){
+    wrap.innerHTML = '<div class="xzx-array-empty">数组为空，试试 push 或选择预设吧 →</div>';
+    return;
+  }
+
+  // 收集原元素位置用于动画
+  const oldItems = [...wrap.children].filter(c => c.classList.contains('xzx-array-item'));
+  const oldMap = new Map();
+  oldItems.forEach(el => {
+    const key = el.textContent.trim();
+    if(!oldMap.has(key)) oldMap.set(key, []);
+    oldMap.get(key).push(el);
+  });
+
+  wrap.innerHTML = '';
+
+  xzx_arr.forEach((val, idx) => {
+    const box = document.createElement('div');
+    box.className = 'xzx-array-item';
+
+    const idxSpan = document.createElement('span');
+    idxSpan.className = 'xzx-idx';
+    idxSpan.textContent = idx;
+
+    const valText = (typeof val === 'string') ? `"${val}"` : val;
+    box.textContent = valText;
+    box.style.color = '#fff';
+
+    box.appendChild(idxSpan);
+
+    // 入场动画
+    if(animDir && animType === 'enter'){
+      box.classList.add(animDir);
+    }
+
+    wrap.appendChild(box);
+  });
+}
+
+/* ---------- 动画：从尾部进入 ---------- */
+function xzx_animatePush(newVal){
+  const wrap = document.getElementById('xzxArrWrap');
+  const box = document.createElement('div');
+  box.className = 'xzx-array-item xzx-enter-right';
+  const idxSpan = document.createElement('span');
+  idxSpan.className = 'xzx-idx';
+  idxSpan.textContent = xzx_arr.length;
+  box.textContent = (typeof newVal === 'string') ? `"${newVal}"` : newVal;
+  box.appendChild(idxSpan);
+  wrap.appendChild(box);
+  document.getElementById('xzxArrInfo').textContent = `length: ${xzx_arr.length}`;
+}
+
+/* ---------- 动画：从尾部出去 ---------- */
+function xzx_animatePop(){
+  const wrap = document.getElementById('xzxArrWrap');
+  const last = wrap.querySelector('.xzx-array-item:last-child');
+  if(!last) return Promise.resolve();
+  return new Promise(resolve => {
+    last.classList.add('xzx-exit-right');
+    setTimeout(() => {
+      last.remove();
+      xzx_updateIdx();
+      document.getElementById('xzxArrInfo').textContent = `length: ${xzx_arr.length}`;
+      resolve();
+    }, 300);
+  });
+}
+
+/* ---------- 动画：从头部进入 ---------- */
+function xzx_animateUnshift(newVal){
+  const wrap = document.getElementById('xzxArrWrap');
+  // 先给现有加整体平移动画
+  wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+    el.style.transition = 'transform .35s ease, opacity .3s';
+  });
+  const box = document.createElement('div');
+  box.className = 'xzx-array-item xzx-enter-left';
+  const idxSpan = document.createElement('span');
+  idxSpan.className = 'xzx-idx';
+  idxSpan.textContent = 0;
+  box.textContent = (typeof newVal === 'string') ? `"${newVal}"` : newVal;
+  box.appendChild(idxSpan);
+  wrap.insertBefore(box, wrap.firstChild);
+  setTimeout(() => xzx_updateIdx(), 100);
+  document.getElementById('xzxArrInfo').textContent = `length: ${xzx_arr.length}`;
+}
+
+/* ---------- 动画：从头部出去 ---------- */
+function xzx_animateShift(){
+  const wrap = document.getElementById('xzxArrWrap');
+  const first = wrap.querySelector('.xzx-array-item:first-child');
+  if(!first) return Promise.resolve();
+  return new Promise(resolve => {
+    first.classList.add('xzx-exit-left');
+    setTimeout(() => {
+      first.remove();
+      xzx_updateIdx();
+      document.getElementById('xzxArrInfo').textContent = `length: ${xzx_arr.length}`;
+      resolve();
+    }, 300);
+  });
+}
+
+/* ---------- 更新所有索引标签 ---------- */
+function xzx_updateIdx(){
+  const items = document.querySelectorAll('#xzxArrWrap .xzx-array-item');
+  items.forEach((el, i) => {
+    const idx = el.querySelector('.xzx-idx');
+    if(idx) idx.textContent = i;
+  });
+}
+
+/* ---------- 高亮指定元素 ---------- */
+function xzx_highlight(indices, className = 'xzx-highlight'){
+  const items = document.querySelectorAll('#xzxArrWrap .xzx-array-item');
+  items.forEach(el => el.classList.remove('xzx-highlight','xzx-selected'));
+  indices.forEach(i => {
+    if(items[i]) items[i].classList.add(className);
+  });
+}
+
+/* ---------- 日志 ---------- */
+function xzx_log(msg, type = 'info'){
+  const log = document.getElementById('xzxLog');
+  const time = new Date().toLocaleTimeString('zh-CN', {hour12: false});
+  const div = document.createElement('div');
+  let cls = 'xzx-l-info';
+  if(type === 'ret') cls = 'xzx-l-ret';
+  if(type === 'mut') cls = 'xzx-l-mut';
+  div.innerHTML = `<span class="xzx-t">[${time}]</span><span class="${cls}">${msg}</span>`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+/* ---------- 显示返回值 ---------- */
+function xzx_showReturn(val, isMutate){
+  const ret = document.getElementById('xzxRet');
+  const mut = document.getElementById('xzxMutate');
+  if(val === undefined){
+    ret.textContent = 'undefined';
+    ret.style.color = 'var(--xzx-text-d)';
+  } else {
+    let txt;
+    if(Array.isArray(val)) txt = JSON.stringify(val);
+    else if(typeof val === 'function') txt = val.toString().substring(0, 60) + '...';
+    else txt = String(val);
+    ret.textContent = txt.length > 120 ? txt.substring(0,120)+'...' : txt;
+    ret.style.color = xzx_valueColor(val);
+  }
+  mut.textContent = isMutate ? '是 ⚠' : '否 ✓';
+  mut.className = 'xzx-val ' + (isMutate ? 'err' : 'ok');
+}
+
+/* ---------- 代码高亮生成 ---------- */
+function xzx_genCode(fnName, args){
+  const arrName = '<span class="xzx-var">arr</span>';
+  let code = '';
+  const kw = (s) => `<span class="xzx-kw">${s}</span>`;
+  const fn = (s) => `<span class="xzx-fn">${s}</span>`;
+  const str = (s) => `<span class="xzx-str">${s}</span>`;
+  const num = (s) => `<span class="xzx-num">${s}</span>`;
+  const com = (s) => `<span class="xzx-com">${s}</span>`;
+
+  const a = args || '';
+
+  switch(fnName){
+    case 'push':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('push')}(${a});  ${com('// 尾部追加，返回新长度')}`;
+      break;
+    case 'pop':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('pop')}();  ${com('// 尾部删除并返回')}`;
+      break;
+    case 'unshift':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('unshift')}(${a});  ${com('// 头部插入，返回新长度')}`;
+      break;
+    case 'shift':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('shift')}();  ${com('// 头部删除并返回')}`;
+      break;
+    case 'splice':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('splice')}(${a});  ${com('// [start, deleteCount, ...items]')}`;
+      break;
+    case 'reverse':
+      code = `${arrName}.${fn('reverse')}();  ${com('// 反转原数组')}`;
+      break;
+    case 'sort':
+      code = `${arrName}.${fn('sort')}(${a || ''});  ${com('// 默认字典序，可传比较函数')}`;
+      break;
+    case 'indexOf':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('indexOf')}(${a});  ${com('// 返回索引，未找到 -1')}`;
+      break;
+    case 'includes':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('includes')}(${a});  ${com('// 是否包含某元素')}`;
+      break;
+    case 'find':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('find')}(${com('(v)=>v>3')});  ${com('// 返回第一个满足条件的元素')}`;
+      break;
+    case 'findIndex':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('findIndex')}(${com('(v)=>v>3')});  ${com('// 返回第一个满足条件的索引')}`;
+      break;
+    case 'map':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('map')}(${com('v=>v*2')});  ${com('// 映射变换，新数组')}`;
+      break;
+    case 'filter':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('filter')}(${com('v=>v>3')});  ${com('// 过滤，新数组')}`;
+      break;
+    case 'forEach':
+      code = `${arrName}.${fn('forEach')}(${com('(v,i)=>console.log(v,i)')});  ${com('// 遍历执行，无返回值')}`;
+      break;
+    case 'some':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('some')}(${com('v=>v>90')});  ${com('// 至少一个满足?')}`;
+      break;
+    case 'every':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('every')}(${com('v=>v>60')});  ${com('// 全部满足?')}`;
+      break;
+    case 'reduce':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('reduce')}(${com('(s,v)=>s+v')}, ${num('0')});  ${com('// 归约/累加')}`;
+      break;
+    case 'slice':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('slice')}(${a});  ${com('// [start, end) 浅拷贝')}`;
+      break;
+    case 'concat':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('concat')}(${a || '[]'});  ${com('// 拼接，新数组')}`;
+      break;
+    case 'join':
+      code = `${kw('const')} ${fn('ret')} = ${arrName}.${fn('join')}(${str('"'+(a||',')+'"')});  ${com('// 数组→字符串')}`;
+      break;
+    default:
+      code = `${com('// 请选择方法')}`;
+  }
+
+  document.getElementById('xzxCodeBlock').innerHTML = code;
+}
+
+/* ---------- 解析参数字符串 ---------- */
+function xzx_parseParam(inputStr, fnName){
+  const s = (inputStr || '').trim();
+  if(s === '') return null;
+
+  // 预定义回调表达式处理
+  const callbacks = {
+    find:      '(v) => v > 3',
+    findIndex: '(v) => v > 3',
+    map:       '(v) => v * 2',
+    filter:    '(v) => v > 3',
+    forEach:   '(v, i) => console.log(i, v)',
+    some:      '(v) => v > 90',
+    every:     '(v) => v > 60',
+    reduce:    '(s, v) => s + v',
+    sort:      '(a, b) => a - b'
+  };
+
+  if(callbacks[fnName] && !s.match(/[\(]/)){
+    // 用户没输入自定义参数，使用默认回调
+    return callbacks[fnName];
+  }
+
+  // 拼接 / slice 需要手动解析
+  try {
+    if(fnName === 'concat'){
+      // 直接 eval 数组字面量，如 "[6,7,8]"
+      if(s.startsWith('[')) return eval(s);
+    }
+    return s;
+  } catch(e) {
+    return s;
+  }
+}
+
+/* ---------- 执行方法 ---------- */
+async function xzx_runMethod(){
+  if(!xzx_selectedFn){
+    xzx_log('⚠ 请先选择一个方法', 'info');
+    return;
+  }
+  if(xzx_animLock){
+    xzx_log('⏳ 动画进行中...', 'info');
+    return;
+  }
+
+  const fnName = xzx_selectedFn;
+  const paramInput = document.getElementById('xzxParamInput').value;
+  const param = xzx_parseParam(paramInput, fnName);
+
+  // 保存历史
+  xzx_history.push([...xzx_arr]);
+  if(xzx_history.length > 30) xzx_history.shift();
+
+  const isMutateBtn = document.querySelector(`.xzx-method-btn[data-fn="${fnName}"]`)?.dataset.mutates === 'true';
+
+  xzx_animLock = true;
+  xzx_log(`▶ 执行 arr.${fnName}(${param !== null ? param : ''})`);
+
+  let ret;
+  const wrap = document.getElementById('xzxArrWrap');
+
+  try {
+    switch(fnName){
+
+      case 'push': {
+        const val = (param === null) ? 6 : xzx_toVal(param);
+        ret = xzx_arr.push(val);
+        xzx_animatePush(val);
+        break;
+      }
+
+      case 'pop': {
+        ret = xzx_arr.pop();
+        await xzx_animatePop();
+        break;
+      }
+
+      case 'unshift': {
+        const val = (param === null) ? 0 : xzx_toVal(param);
+        ret = xzx_arr.unshift(val);
+        xzx_animateUnshift(val);
+        break;
+      }
+
+      case 'shift': {
+        ret = xzx_arr.shift();
+        await xzx_animateShift();
+        break;
+      }
+
+      case 'splice': {
+        // 参数: start, deleteCount, ...items
+        const parts = (param || '1, 1').split(',').map(p => p.trim());
+        const start = parseInt(parts[0]);
+        const del = parts[1] !== undefined ? parseInt(parts[1]) : 1;
+        const items = parts.slice(2).map(xzx_toVal);
+        xzx_log(`  splice: start=${start}, del=${del}, items=${JSON.stringify(items)}`);
+
+        // 计算被删除索引
+        const delIdx = [];
+        for(let i=0; i<del; i++) delIdx.push(start + i);
+
+        // 高亮然后移除
+        xzx_highlight(delIdx, 'xzx-exit-right');
+        await new Promise(r => setTimeout(r, 300));
+        ret = xzx_arr.splice(start, del, ...items);
+        xzx_renderArray();
+        // 新增项高亮
+        setTimeout(() => {
+          const newIdx = [];
+          for(let i=0; i<items.length; i++) newIdx.push(start + i);
+          xzx_highlight(newIdx, 'xzx-selected');
+        }, 50);
+        break;
+      }
+
+      case 'reverse': {
+        ret = xzx_arr.reverse();
+        xzx_renderArray();
+        // 逐个闪一下
+        wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+          setTimeout(() => { el.classList.add('xzx-swap'); }, i * 30);
+          setTimeout(() => { el.classList.remove('xzx-swap'); }, i * 30 + 400);
+        });
+        break;
+      }
+
+      case 'sort': {
+        let cmp;
+        if(param && param.includes('=>')){
+          cmp = eval(param);
+        } else if(param === null){
+          cmp = (a,b) => a - b;
+        } else {
+          // 自定义：字母排序
+          cmp = (a,b) => String(a).localeCompare(String(b));
+        }
+        ret = xzx_arr.sort(cmp);
+        xzx_renderArray();
+        wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+          setTimeout(() => el.classList.add('xzx-swap'), i * 40);
+          setTimeout(() => el.classList.remove('xzx-swap'), i * 40 + 400);
+        });
+        break;
+      }
+
+      case 'indexOf': {
+        const val = xzx_toVal(param !== null ? param : 3);
+        ret = xzx_arr.indexOf(val);
+        if(ret !== -1) xzx_highlight([ret], 'xzx-highlight');
+        break;
+      }
+
+      case 'includes': {
+        const val = xzx_toVal(param !== null ? param : 3);
+        ret = xzx_arr.includes(val);
+        if(ret) xzx_highlight([xzx_arr.indexOf(val)], 'xzx-highlight');
+        break;
+      }
+
+      case 'find': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v > 3);
+        ret = xzx_arr.find(cb);
+        const idx = xzx_arr.findIndex(cb);
+        if(idx !== -1) xzx_highlight([idx], 'xzx-highlight');
+        break;
+      }
+
+      case 'findIndex': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v > 3);
+        ret = xzx_arr.findIndex(cb);
+        if(ret !== -1) xzx_highlight([ret], 'xzx-highlight');
+        break;
+      }
+
+      case 'map': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v * 2);
+        ret = xzx_arr.map(cb);
+        // 元素变灰效果
+        wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+          el.classList.add('xzx-mapped');
+          setTimeout(() => {
+            el.classList.remove('xzx-mapped');
+            const newText = (typeof ret[i] === 'string') ? `"${ret[i]}"` : ret[i];
+            // 保留原样式索引span
+            const idxSpan = el.querySelector('.xzx-idx');
+            el.textContent = newText;
+            el.appendChild(idxSpan);
+          }, 350);
+        });
+        xzx_log(`  新数组: [${ret.join(', ')}]`, 'ret');
+        break;
+      }
+
+      case 'filter': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v > 3);
+        ret = xzx_arr.filter(cb);
+        // 匹配的绿色，不匹配的红色然后淡出
+        const delIdx = [];
+        xzx_arr.forEach((v, i) => {
+          if(cb(v)){
+            wrap.children[i]?.classList.add('xzx-selected');
+          } else {
+            wrap.children[i]?.classList.add('xzx-exit-top');
+            delIdx.push(i);
+          }
+        });
+        await new Promise(r => setTimeout(r, 400));
+        xzx_log(`  保留 ${ret.length} 项: [${ret.join(', ')}]`, 'ret');
+        break;
+      }
+
+      case 'forEach': {
+        const cb = param && param.includes('=>') ? eval(param) : ((v, i) => {
+          xzx_log(`  [${i}] = ${v}`, 'info');
+        });
+        ret = xzx_arr.forEach(cb);
+        // 元素依次闪
+        wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+          setTimeout(() => {
+            el.classList.add('xzx-highlight');
+            setTimeout(() => el.classList.remove('xzx-highlight'), 300);
+          }, i * 150);
+        });
+        break;
+      }
+
+      case 'some': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v > 90);
+        ret = xzx_arr.some(cb);
+        const idx = xzx_arr.findIndex(cb);
+        if(idx !== -1) xzx_highlight([idx], 'xzx-highlight');
+        break;
+      }
+
+      case 'every': {
+        const cb = param && param.includes('=>') ? eval(param) : (v => v > 60);
+        ret = xzx_arr.every(cb);
+        const badIdx = xzx_arr.findIndex(v => !cb(v));
+        if(ret){
+          wrap.querySelectorAll('.xzx-array-item').forEach(el => el.classList.add('xzx-selected'));
+        } else if(badIdx !== -1){
+          xzx_highlight([badIdx], 'xzx-exit-top');
+        }
+        break;
+      }
+
+      case 'reduce': {
+        const parts = (param || '(s,v)=>s+v').split(',').map(s => s.trim());
+        let cbStr = parts[0];
+        let init = (parts.length > 1) ? xzx_toVal(parts[1]) : 0;
+        if(!cbStr.includes('=>')) cbStr = '(s,v)=>s+v';
+        const cb = eval(cbStr);
+        ret = xzx_arr.reduce(cb, init);
+        // 依次高亮累加
+        wrap.querySelectorAll('.xzx-array-item').forEach((el, i) => {
+          setTimeout(() => {
+            el.classList.add('xzx-highlight');
+            setTimeout(() => el.classList.remove('xzx-highlight'), 200);
+          }, i * 180);
+        });
+        setTimeout(() => xzx_log(`  归约结果 = ${ret}`, 'ret'), xzx_arr.length * 180 + 200);
+        break;
+      }
+
+      case 'slice': {
+        const parts = (param || '0').split(',').map(s => s.trim());
+        const a = parseInt(parts[0]) || 0;
+        const b = parts[1] !== undefined ? parseInt(parts[1]) : undefined;
+        ret = xzx_arr.slice(a, b);
+        const highIdx = [];
+        for(let i=a; i < (b !== undefined ? Math.min(b, xzx_arr.length) : xzx_arr.length); i++){
+          if(i >= 0) highIdx.push(i);
+        }
+        xzx_highlight(highIdx, 'xzx-selected');
+        xzx_log(`  切片 [${JSON.stringify(ret)}]`, 'ret');
+        break;
+      }
+
+      case 'concat': {
+        const extra = param ? (Array.isArray(param) ? param : [xzx_toVal(param)]) : [];
+        ret = xzx_arr.concat(extra);
+        xzx_log(`  拼接结果 [${ret.join(', ')}] (新数组)`, 'ret');
+        break;
+      }
+
+      case 'join': {
+        const sep = param !== null ? param : ',';
+        ret = xzx_arr.join(sep);
+        break;
+      }
+    }
+
+    // 更新 UI
+    xzx_showReturn(ret, isMutateBtn);
+    document.getElementById('xzxArrInfo').textContent = `length: ${xzx_arr.length}`;
+
+  } catch(err) {
+    xzx_log(`✗ 错误: ${err.message}`, 'mut');
+    xzx_showReturn('Error: ' + err.message, false);
+  }
+
+  setTimeout(() => { xzx_animLock = false; }, 500);
+}
+
+/* ---------- 解析字符串值为合适类型 ---------- */
+function xzx_toVal(s){
+  if(typeof s !== 'string') return s;
+  const t = s.trim();
+  if(t === '') return '';
+  if(t.toLowerCase() === 'true') return true;
+  if(t.toLowerCase() === 'false') return false;
+  if(t.toLowerCase() === 'null') return null;
+  if(!isNaN(Number(t)) && t !== '') return Number(t);
+  // 字符串
+  return t.replace(/^"|"$/g,'').replace(/^'|'$/g,'');
+}
+
+/* ---------- 事件绑定 ---------- */
+document.addEventListener('click', e => {
+
+  // 方法按钮
+  const btn = e.target.closest('.xzx-method-btn');
+  if(btn){
+    document.querySelectorAll('.xzx-method-btn').forEach(b => b.classList.remove('xzx-active'));
+    btn.classList.add('xzx-active');
+    xzx_selectedFn = btn.dataset.fn;
+    document.getElementById('xzxCurrentFn').value = xzx_selectedFn;
+    document.getElementById('xzxParamRow').style.display = 'flex';
+
+    // 预设参数占位
+    const phMap = {
+      push:      '如: 9 或 "x"',
+      pop:       '无需参数',
+      unshift:   '如: 0 或 "start"',
+      shift:     '无需参数',
+      splice:    'start, delCount, ...items  如: 1, 2, 99',
+      reverse:   '无需参数',
+      sort:      '(a,b)=>a-b 或 留空',
+      indexOf:   '如: 3',
+      includes:  '如: 3',
+      find:      '(v)=>v>3  (不填用默认)',
+      findIndex: '(v)=>v>3',
+      map:       '(v)=>v*2',
+      filter:    '(v)=>v>3',
+      forEach:   '(v,i)=>...',
+      some:      '(v)=>v>90',
+      every:     '(v)=>v>60',
+      reduce:    '(s,v)=>s+v, 0',
+      slice:     'start, end  如: 1, 3',
+      concat:    '[6,7,8] 或 6',
+      join:      '分隔符, 默认 ","'
+    };
+    document.getElementById('xzxParamInput').placeholder = phMap[xzx_selectedFn] || '';
+    document.getElementById('xzxParamInput').value = '';
+    xzx_genCode(xzx_selectedFn, '');
+    return;
+  }
+
+  // 预设
+  const preset = e.target.closest('.xzx-preset');
+  if(preset){
+    const k = preset.dataset.preset;
+    xzx_arr = [...xzx_presets[k]];
+    xzx_history = [];
+    xzx_renderArray();
+    xzx_log(`📦 加载预设: [${xzx_arr.join(', ')}]`);
+    return;
+  }
+
+  // 执行
+  if(e.target.id === 'xzxRunBtn'){
+    xzx_genCode(xzx_selectedFn, document.getElementById('xzxParamInput').value);
+    xzx_runMethod();
+    return;
+  }
+
+  // 撤销
+  if(e.target.id === 'xzxUndoBtn'){
+    if(xzx_history.length === 0){
+      xzx_log('没有可撤销的操作');
+      return;
+    }
+    xzx_arr = xzx_history.pop();
+    xzx_renderArray();
+    xzx_log('↶ 已撤销上一步');
+    return;
+  }
+
+  // 重置
+  if(e.target.id === 'xzxResetBtn'){
+    xzx_arr = [];
+    xzx_history = [];
+    xzx_renderArray();
+    document.getElementById('xzxLog').innerHTML = '';
+    xzx_log('✕ 数组已清空');
+    document.getElementById('xzxRet').textContent = '—';
+    document.getElementById('xzxMutate').textContent = '—';
+    document.getElementById('xzxMutate').className = 'xzx-val';
+    return;
+  }
+});
+
+/* ---------- 输入时实时更新代码 ---------- */
+document.getElementById('xzxParamInput').addEventListener('input', (e) => {
+  if(xzx_selectedFn) xzx_genCode(xzx_selectedFn, e.target.value);
+});
+
+/* ---------- 初始化 ---------- */
+xzx_arr = [1, 2, 3, 4, 5];
+xzx_renderArray();
+xzx_log('✨ 页面就绪，点击右侧「预设数组」或方法按钮开始');
+</script>
+
+</body>
+</html>

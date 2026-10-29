@@ -1,0 +1,731 @@
+<!-- 姓名：许镇玺，日期：京东热卖页面复刻 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>京东热卖 · 许镇玺</title>
+<link rel="stylesheet" href="font/font_5244851_6n95j09brtj/iconfont.css">
+<style>
+  /* ============================================================
+     许镇玺 · 16-3 京东热卖页面复刻
+     纯原生 HTML + CSS，使用 font/iconfont 图标
+     ============================================================ */
+  :root{
+    --xzx-red:     #e1251b;      /* 京东主红 */
+    --xzx-red-h:   #c81623;
+    --xzx-red-l:   #f66a62;
+    --xzx-yellow:  #ffd100;
+    --xzx-bg:      #f4f4f4;
+    --xzx-bg-white:#fff;
+    --xzx-text:    #333;
+    --xzx-text-d:  #666;
+    --xzx-text-l:  #999;
+    --xzx-line:    #e4e4e4;
+    --xzx-border:  #ddd;
+    --xzx-purple1: #5a2e82;
+    --xzx-purple2: #8b3fb4;
+    --xzx-purple3: #b57edc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background:var(--xzx-bg);
+    color:var(--xzx-text);
+    font-size:12px;
+    min-width:1190px;
+    line-height:1.5;
+  }
+  a{color:inherit;text-decoration:none;}
+  a:hover{color:var(--xzx-red);}
+  ul{list-style:none;}
+
+  /* ============================================================
+     顶部 mini nav
+     ============================================================ */
+  .xzx-topbar{
+    height:30px;background:#f7f7f7;border-bottom:1px solid var(--xzx-line);
+    font-size:12px;color:var(--xzx-text-d);
+  }
+  .xzx-topbar-inner{
+    width:1190px;margin:0 auto;height:100%;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .xzx-top-left{display:flex;gap:10px;align-items:center;}
+  .xzx-top-left .xzx-loc{color:var(--xzx-red);}
+  .xzx-top-left .xzx-loc i{margin-right:3px;}
+  .xzx-top-right{display:flex;gap:16px;}
+  .xzx-top-right a{color:var(--xzx-text-d);}
+  .xzx-top-right a:hover{color:var(--xzx-red);}
+  .xzx-top-right .xzx-login{color:var(--xzx-red);}
+  .xzx-top-right .sep{color:var(--xzx-border);}
+
+  /* ============================================================
+     红色头部区 (logo + search)
+     ============================================================ */
+  .xzx-header-red{
+    background:var(--xzx-red);
+  }
+  .xzx-header-inner{
+    width:1190px;margin:0 auto;padding:18px 0 12px;
+    display:flex;align-items:center;gap:30px;
+  }
+  /* Logo */
+  .xzx-logo{
+    display:flex;align-items:center;gap:6px;color:#fff;
+  }
+  .xzx-logo-bird{
+    width:60px;height:54px;position:relative;
+  }
+  .xzx-logo-bird svg{width:100%;height:100%;}
+  .xzx-logo-text{
+    font-size:28px;font-weight:800;letter-spacing:1px;line-height:1;
+    text-shadow:2px 2px 0 rgba(0,0,0,.15);
+  }
+  .xzx-logo-sub{
+    font-size:11px;color:#ffc8c3;margin-top:3px;letter-spacing:.5px;
+  }
+  .xzx-logo-group{display:flex;flex-direction:column;}
+
+  /* Search */
+  .xzx-search{flex:1;}
+  .xzx-search-bar{
+    display:flex;height:36px;border-radius:2px;overflow:hidden;
+    border:2px solid #fff;
+  }
+  .xzx-search-bar input{
+    flex:1;border:none;padding:0 12px;font-size:13px;outline:none;
+  }
+  .xzx-search-bar button{
+    width:80px;background:var(--xzx-red);color:#fff;border:none;
+    font-size:14px;font-weight:600;cursor:pointer;letter-spacing:3px;
+  }
+  .xzx-search-bar button i{margin-right:4px;font-size:15px;}
+  .xzx-hot-tags{
+    margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .xzx-hot-tags a{
+    color:#fff;font-size:12px;opacity:.9;
+  }
+  .xzx-hot-tags a:hover{color:var(--xzx-yellow);opacity:1;}
+  .xzx-hot-tags a.xzx-hot-key{color:var(--xzx-yellow);}
+
+  /* ============================================================
+     主导航 (分类 nav 红色条)
+     ============================================================ */
+  .xzx-mainnav{background:var(--xzx-red);height:40px;}
+  .xzx-mainnav-inner{
+    width:1190px;margin:0 auto;height:100%;
+    display:flex;align-items:center;gap:28px;padding-left:20px;
+  }
+  .xzx-mainnav-inner a{
+    color:#fff;font-size:14px;font-weight:500;
+  }
+  .xzx-mainnav-inner a:hover{color:var(--xzx-yellow);}
+  .xzx-mainnav-inner .xzx-cat-title{
+    font-size:14px;font-weight:700;
+    padding:0 20px;height:40px;line-height:40px;
+    background:var(--xzx-red-h);margin-left:-20px;
+  }
+
+  /* ============================================================
+     主内容区
+     ============================================================ */
+  .xzx-main{
+    width:1190px;margin:0 auto;padding-top:12px;
+    display:grid;grid-template-columns:190px 1fr 250px;gap:10px;
+  }
+
+  /* 左侧分类 */
+  .xzx-cat{
+    background:#fff;border:1px solid var(--xzx-line);border-top:none;
+    padding:10px 0;
+  }
+  .xzx-cat-title{
+    background:#fff;color:var(--xzx-red);font-size:14px;font-weight:700;
+    padding:8px 16px;border-bottom:1px solid var(--xzx-line);
+    display:flex;align-items:center;gap:6px;
+  }
+  .xzx-cat-title i{font-size:14px;}
+  .xzx-cat-item{
+    display:flex;align-items:center;gap:8px;
+    padding:7px 16px;font-size:13px;color:#333;cursor:pointer;
+    transition:.15s;
+  }
+  .xzx-cat-item:hover{
+    background:#fff5f5;color:var(--xzx-red);
+  }
+  .xzx-cat-item i{
+    width:16px;text-align:center;color:#888;font-size:14px;
+  }
+  .xzx-cat-item:hover i{color:var(--xzx-red);}
+  .xzx-cat-more{
+    text-align:center;padding:10px;font-size:12px;color:var(--xzx-text-d);
+    border-top:1px dashed var(--xzx-line);margin-top:6px;cursor:pointer;
+  }
+  .xzx-cat-more:hover{color:var(--xzx-red);}
+
+  /* 中间 banner + 右侧边栏 */
+  .xzx-mid-col{display:flex;flex-direction:column;gap:10px;}
+
+  /* Banner 区 */
+  .xzx-banner{
+    position:relative;height:340px;border-radius:4px;overflow:hidden;
+    background:linear-gradient(135deg, var(--xzx-purple1) 0%, var(--xzx-purple2) 50%, var(--xzx-purple3) 100%);
+  }
+  .xzx-banner::before{
+    content:"";position:absolute;top:-60px;right:-60px;width:300px;height:300px;
+    border-radius:50%;background:rgba(255,255,255,.05);
+  }
+  .xzx-banner::after{
+    content:"";position:absolute;bottom:-100px;left:-40px;width:260px;height:260px;
+    border-radius:50%;background:rgba(255,255,255,.04);
+  }
+  .xzx-banner-content{
+    position:relative;z-index:2;height:100%;
+    display:flex;align-items:center;padding:0 40px;gap:40px;
+  }
+  .xzx-banner-text{color:#fff;flex:1;}
+  .xzx-banner-text .xzx-tag{
+    display:inline-block;background:rgba(255,255,255,.2);padding:4px 12px;
+    border-radius:20px;font-size:12px;margin-bottom:14px;backdrop-filter:blur(6px);
+  }
+  .xzx-banner-text h2{
+    font-size:34px;font-weight:800;letter-spacing:2px;margin-bottom:10px;
+    text-shadow:0 2px 12px rgba(0,0,0,.3);
+  }
+  .xzx-banner-text p{
+    font-size:14px;color:rgba(255,255,255,.85);margin-bottom:20px;
+    letter-spacing:1px;
+  }
+  .xzx-banner-btn{
+    display:inline-block;padding:10px 30px;background:#fff;color:var(--xzx-purple2);
+    border-radius:24px;font-weight:700;font-size:14px;
+    box-shadow:0 4px 16px rgba(0,0,0,.2);
+  }
+  .xzx-banner-btn:hover{transform:translateY(-2px);}
+
+  .xzx-banner-img{
+    width:280px;height:260px;position:relative;
+  }
+  .xzx-banner-product{
+    position:absolute;
+  }
+  .xzx-bottle-1{
+    width:80px;height:140px;left:40px;bottom:20px;
+    background:linear-gradient(180deg,#fff8e7,#f0d9a8);
+    border-radius:8px 8px 20px 20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    position:relative;overflow:hidden;
+  }
+  .xzx-bottle-1::before{
+    content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+    width:30px;height:30px;background:#c9a05a;border-radius:4px;
+  }
+  .xzx-bottle-1::after{
+    content:"ULTRA FACIAL CREAM";position:absolute;bottom:20px;left:0;right:0;
+    text-align:center;font-size:8px;font-weight:700;color:#555;letter-spacing:.5px;
+  }
+  .xzx-bottle-2{
+    width:70px;height:180px;left:130px;bottom:20px;
+    background:linear-gradient(180deg,#e8d5f5,#b57edc);
+    border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.3);
+    position:relative;
+  }
+  .xzx-bottle-2::before{
+    content:"";position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    width:36px;height:24px;background:#7d4a9e;border-radius:6px 6px 2px 2px;
+  }
+  .xzx-box-gift{
+    width:70px;height:60px;left:210px;bottom:40px;
+    background:linear-gradient(135deg,#ff9a8b,#ff6a88);
+    border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.3);
+    position:relative;
+  }
+  .xzx-box-gift::before{
+    content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:10px;height:100%;background:rgba(255,255,255,.5);
+  }
+  .xzx-box-gift::after{
+    content:"";position:absolute;top:50%;left:0;right:0;height:10px;background:rgba(255,255,255,.5);transform:translateY(-50%);
+  }
+  .xzx-sparkle{
+    position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;
+    opacity:.8;box-shadow:0 0 16px 4px rgba(255,255,255,.6);
+    animation:xzx_pulse 2s infinite;
+  }
+  @keyframes xzx_pulse{
+    0%,100%{transform:scale(1);opacity:.8;}
+    50%{transform:scale(1.4);opacity:1;}
+  }
+  .xzx-666-badge{
+    position:absolute;top:20px;right:30px;color:#ffd700;font-weight:900;
+    font-size:22px;transform:rotate(-12deg);text-shadow:2px 2px 0 #ff6a00, -1px -1px 0 #fff;
+    font-family:"Impact",Arial,sans-serif;letter-spacing:2px;
+  }
+
+  /* Banner 指示器 */
+  .xzx-banner-dots{
+    position:absolute;bottom:14px;left:0;right:0;text-align:center;z-index:3;
+  }
+  .xzx-banner-dots span{
+    display:inline-block;width:8px;height:8px;border-radius:50%;
+    background:rgba(255,255,255,.5);margin:0 3px;cursor:pointer;transition:.2s;
+  }
+  .xzx-banner-dots span.active{background:#fff;width:22px;border-radius:4px;}
+
+  /* 底部入口 */
+  .xzx-mid-features{
+    background:#fff;border-radius:4px;padding:14px 20px;
+    display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+    border:1px solid var(--xzx-line);
+  }
+  .xzx-feature-item{
+    display:flex;align-items:center;gap:8px;color:var(--xzx-text-d);
+    font-size:13px;cursor:pointer;
+  }
+  .xzx-feature-item i{
+    width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--xzx-red),var(--xzx-red-l));
+    color:#fff;text-align:center;line-height:28px;font-size:14px;
+  }
+  .xzx-feature-item:hover{color:var(--xzx-red);}
+
+  /* 右侧栏 */
+  .xzx-right{display:flex;flex-direction:column;gap:10px;}
+
+  .xzx-card{
+    background:#fff;border:1px solid var(--xzx-line);border-radius:4px;overflow:hidden;
+  }
+  .xzx-card-head{
+    padding:10px 14px;border-bottom:1px solid var(--xzx-line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .xzx-card-head h3{
+    font-size:14px;color:var(--xzx-text);font-weight:700;
+    display:flex;align-items:center;gap:6px;
+  }
+  .xzx-card-head h3 i{color:var(--xzx-red);}
+  .xzx-card-head a{font-size:12px;color:var(--xzx-text-d);}
+  .xzx-card-body{padding:12px;}
+
+  .xzx-card-product{
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    padding:10px;cursor:pointer;transition:.2s;
+  }
+  .xzx-card-product:hover{transform:translateY(-2px);}
+  .xzx-card-img{
+    width:100%;aspect-ratio:1/1;border-radius:6px;margin-bottom:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:36px;
+  }
+  .xzx-card-title{
+    font-size:13px;font-weight:700;color:#333;margin-bottom:4px;
+    text-align:left;width:100%;
+  }
+  .xzx-card-desc{
+    font-size:11px;color:var(--xzx-text-d);text-align:left;width:100%;
+    line-height:1.4;
+  }
+
+  /* 国家补贴卡 */
+  .xzx-subsidy{
+    background:linear-gradient(135deg,#ff6b35,#ff4757);color:#fff;
+    padding:18px;position:relative;overflow:hidden;
+  }
+  .xzx-subsidy::before{
+    content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;
+    border-radius:50%;background:rgba(255,255,255,.15);
+  }
+  .xzx-subsidy::after{
+    content:"";position:absolute;bottom:-40px;right:20px;width:80px;height:80px;
+    border-radius:50%;background:rgba(255,255,255,.1);
+  }
+  .xzx-subsidy-top{font-size:13px;opacity:.9;position:relative;z-index:1;}
+  .xzx-subsidy h3{font-size:22px;font-weight:800;margin:4px 0;position:relative;z-index:1;}
+  .xzx-subsidy-bottom{font-size:13px;opacity:.9;position:relative;z-index:1;}
+  .xzx-subsidy-icon{
+    position:absolute;right:16px;top:50%;transform:translateY(-50%);
+    width:90px;height:110px;z-index:1;
+  }
+  .xzx-phone-icon{
+    width:90px;height:110px;background:#222;border-radius:12px;
+    position:relative;box-shadow:0 10px 24px rgba(0,0,0,.3);
+  }
+  .xzx-phone-icon::before{
+    content:"";position:absolute;top:8px;left:8px;right:8px;bottom:20px;
+    background:linear-gradient(180deg,#6ec1ff,#3a8fd8);border-radius:4px;
+  }
+  .xzx-phone-icon::after{
+    content:"";position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+    width:24px;height:4px;background:#444;border-radius:2px;
+  }
+
+  /* 右侧 mini 卡组 */
+  .xzx-mini-cards{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  }
+  .xzx-mini-card{
+    background:#fff;border:1px solid var(--xzx-line);border-radius:6px;
+    padding:10px;cursor:pointer;transition:.2s;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .xzx-mini-card:hover{border-color:var(--xzx-red);transform:translateY(-2px);}
+  .xzx-mini-img{
+    width:100%;aspect-ratio:1/1;border-radius:4px;
+    display:flex;align-items:center;justify-content:center;font-size:30px;
+  }
+  .xzx-mini-title{font-size:12px;font-weight:700;color:#333;}
+  .xzx-mini-desc{font-size:11px;color:var(--xzx-text-d);}
+
+  /* ============================================================
+     "为你推荐" 区
+     ============================================================ */
+  .xzx-recommend{
+    width:1190px;margin:20px auto 40px;
+  }
+  .xzx-rec-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 0;border-bottom:2px solid var(--xzx-red);margin-bottom:14px;
+  }
+  .xzx-rec-title{
+    font-size:22px;font-weight:800;color:#333;display:flex;align-items:center;gap:8px;
+  }
+  .xzx-rec-title::before{
+    content:"";width:6px;height:22px;background:var(--xzx-red);border-radius:3px;
+  }
+  .xzx-rec-title span{color:var(--xzx-red);}
+  .xzx-rec-head .xzx-more{font-size:12px;color:var(--xzx-text-d);}
+  .xzx-rec-head .xzx-more:hover{color:var(--xzx-red);}
+
+  .xzx-rec-grid{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:14px;
+  }
+  .xzx-rec-item{
+    background:#fff;border:1px solid var(--xzx-line);border-radius:6px;
+    padding:10px;cursor:pointer;transition:.2s;display:flex;flex-direction:column;
+  }
+  .xzx-rec-item:hover{
+    border-color:var(--xzx-red);transform:translateY(-3px);
+    box-shadow:0 6px 16px rgba(0,0,0,.08);
+  }
+  .xzx-rec-img{
+    width:100%;aspect-ratio:1/1;border-radius:4px;margin-bottom:8px;
+    display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  }
+  .xzx-rec-tag{
+    position:absolute;top:6px;left:6px;background:var(--xzx-red);color:#fff;
+    font-size:10px;padding:2px 6px;border-radius:2px;letter-spacing:1px;
+  }
+  .xzx-rec-title{
+    font-size:12px;color:#333;margin-bottom:6px;font-weight:500;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .xzx-rec-meta{
+    display:flex;justify-content:space-between;align-items:center;margin-top:auto;
+  }
+  .xzx-rec-price{
+    color:var(--xzx-red);font-size:16px;font-weight:700;
+  }
+  .xzx-rec-price small{font-size:11px;font-weight:400;margin-right:1px;}
+  .xzx-rec-brand{font-size:11px;color:var(--xzx-text-d);}
+
+  /* 各种图片占位 SVG/渐变 */
+  .xzx-img-pen{
+    background:linear-gradient(135deg,#f5f5dc,#d4c9a8);
+  }
+  .xzx-img-pen::after{
+    content:"🖍️";font-size:44px;
+  }
+  .xzx-img-shaver{
+    background:linear-gradient(135deg,#e8e8e8,#b0b0b0);
+  }
+  .xzx-img-shaver::after{content:"🪒";font-size:44px;}
+  .xzx-img-toy{
+    background:linear-gradient(135deg,#ffe0b2,#ffcc80);
+  }
+  .xzx-img-toy::after{content:"🧸";font-size:48px;}
+  .xzx-img-coat{
+    background:linear-gradient(135deg,#6d4c41,#4e342e);
+  }
+  .xzx-img-coat::after{content:"🧥";font-size:46px;filter:invert(1);}
+  .xzx-img-jacket{
+    background:linear-gradient(135deg,#fce4ec,#f8bbd0);
+  }
+  .xzx-img-jacket::after{content:"👚";font-size:48px;}
+  .xzx-img-dress{
+    background:linear-gradient(135deg,#e3f2fd,#bbdefb);
+  }
+  .xzx-img-dress::after{content:"👗";font-size:46px;}
+
+  .xzx-img-phone{background:linear-gradient(180deg,#222,#000);}
+  .xzx-img-phone::after{content:"📱";font-size:56px;}
+  .xzx-img-cosmetic{background:linear-gradient(135deg,#fce4ec,#f48fb1);}
+  .xzx-img-cosmetic::after{content:"💄";font-size:44px;}
+  .xzx-img-grocery{background:linear-gradient(135deg,#e8f5e9,#a5d6a7);}
+  .xzx-img-grocery::after{content:"🧴";font-size:44px;}
+  .xzx-img-tool{background:linear-gradient(135deg,#fff3e0,#ffcc80);}
+  .xzx-img-tool::after{content:"🔧";font-size:44px;}
+
+</style>
+</head>
+<body>
+
+<!-- 顶部 mini nav -->
+<div class="xzx-topbar">
+  <div class="xzx-topbar-inner">
+    <div class="xzx-top-left">
+      <span class="xzx-loc"><i class="iconfont icon-a-zu7115"></i>京东首页 > 辽宁</span>
+    </div>
+    <div class="xzx-top-right">
+      <a href="#" class="xzx-login">你好，请登录</a>
+      <span class="sep">|</span>
+      <a href="#">免费注册</a>
+      <span class="sep">|</span>
+      <a href="#">我的订单</a>
+      <span class="sep">|</span>
+      <a href="#">我的京东 <i class="iconfont icon-gengduo"></i></a>
+      <span class="sep">|</span>
+      <a href="#">企业采购 <i class="iconfont icon-gengduo"></i></a>
+      <span class="sep">|</span>
+      <a href="#">客户服务 <i class="iconfont icon-gengduo"></i></a>
+      <span class="sep">|</span>
+      <a href="#">网站导航 <i class="iconfont icon-gengduo"></i></a>
+      <span class="sep">|</span>
+      <a href="#">手机京东 <i class="iconfont icon-shouye"></i></a>
+      <span class="sep">|</span>
+      <a href="#">网站无障碍</a>
+    </div>
+  </div>
+</div>
+
+<!-- 红色头部 -->
+<div class="xzx-header-red">
+  <div class="xzx-header-inner">
+    <!-- Logo -->
+    <div class="xzx-logo">
+      <div class="xzx-logo-bird">
+        <!-- JD 小鸟 SVG -->
+        <svg viewBox="0 0 60 54" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="30" cy="34" rx="24" ry="18" fill="#fff"/>
+          <circle cx="38" cy="28" r="5" fill="#e1251b"/>
+          <circle cx="40" cy="26" r="1.5" fill="#fff"/>
+          <path d="M4 30 L20 24 L12 36 Z" fill="#ffd700"/>
+          <path d="M56 28 L44 24 L48 36 Z" fill="#ffd700"/>
+          <path d="M28 16 Q38 8 50 14" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M50 14 L54 10 M50 14 L54 18" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="xzx-logo-group">
+        <div class="xzx-logo-text">京东热卖</div>
+        <div class="xzx-logo-sub">re.jd.com</div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="xzx-search">
+      <div class="xzx-search-bar">
+        <input type="text" value="爱普生打印机">
+        <button><i class="iconfont icon-a-zu7115"></i>搜索</button>
+      </div>
+      <div class="xzx-hot-tags">
+        <a href="#">火锅底料</a>
+        <a href="#">自热火锅</a>
+        <a href="#">脱毛仪</a>
+        <a href="#">计算器</a>
+        <a href="#">拉面说</a>
+        <a href="#">一体机电脑</a>
+        <a href="#">双肩包</a>
+        <a href="#" class="xzx-hot-key">口口红</a>
+        <a href="#">安装防</a>
+        <a href="#">维生素c</a>
+        <a href="#">黄热水</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 主内容 -->
+<div class="xzx-main">
+
+  <!-- 左侧分类 -->
+  <div class="xzx-cat">
+    <div class="xzx-cat-title"><i class="iconfont icon-gengduo"></i>分类</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-shouye"></i>冰洗 / 空调 / 电视 / 厨卫大电</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-a-zu7115"></i>电脑 / 办公 / 文具用品</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-pingguo"></i>手机 / 运营商 / 数码</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-wode"></i>生活电器 / 厨房小电 / 个护健康</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-ego-fav"></i>食品 / 酒类 / 生鲜 / 特产</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-zhongxinshengcheng"></i>美妆 / 个护清洁 / 宠物</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-bianji"></i>元器件 / 劳保物资 / 五金机电</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-xinzeng"></i>家装 / 建材 / 家具</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-faxian"></i>家居日用 / 厨具</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-denglu"></i>男鞋 / 运动 / 户外</div>
+    <div class="xzx-cat-item"><i class="iconfont icon-shouye1"></i>男装 / 女装 / 童装 / 内衣</div>
+    <div class="xzx-cat-more">全部商品分类 <i class="iconfont icon-gengduo"></i></div>
+  </div>
+
+  <!-- 中间 -->
+  <div class="xzx-mid-col">
+    <!-- Banner -->
+    <div class="xzx-banner">
+      <!-- 666 角标 -->
+      <div class="xzx-666-badge">666</div>
+      <!-- 闪烁光点 -->
+      <span class="xzx-sparkle" style="top:30px;left:40px;animation-delay:0s;"></span>
+      <span class="xzx-sparkle" style="top:80px;left:200px;animation-delay:.6s;"></span>
+      <span class="xzx-sparkle" style="bottom:50px;left:80px;animation-delay:1.2s;"></span>
+
+      <div class="xzx-banner-content">
+        <div class="xzx-banner-text">
+          <span class="xzx-tag">限时特惠 · 大牌美妆</span>
+          <h2>宠爱自己呵护肌肤</h2>
+          <h2>每日焕新美丽相随</h2>
+          <p>臻选大牌 口碑之选</p>
+          <a href="#" class="xzx-banner-btn">立即抢购 →</a>
+        </div>
+        <div class="xzx-banner-img">
+          <div class="xzx-bottle-1 xzx-banner-product"></div>
+          <div class="xzx-bottle-2 xzx-banner-product"></div>
+          <div class="xzx-box-gift xzx-banner-product"></div>
+        </div>
+      </div>
+      <div class="xzx-banner-dots">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- 功能入口条 -->
+    <div class="xzx-mid-features">
+      <div class="xzx-feature-item"><i class="iconfont icon-a-zu7115"></i>智能搜索</div>
+      <div class="xzx-feature-item"><i class="iconfont icon-faxian"></i>发现好物</div>
+      <div class="xzx-feature-item"><i class="iconfont icon-ego-fav"></i>我的收藏</div>
+      <div class="xzx-feature-item"><i class="iconfont icon-denglu"></i>快速登录</div>
+      <div class="xzx-feature-item"><i class="iconfont icon-shouye"></i>回到首页</div>
+      <div class="xzx-feature-item"><i class="iconfont icon-gengduo"></i>更多服务</div>
+    </div>
+  </div>
+
+  <!-- 右侧栏 -->
+  <div class="xzx-right">
+
+    <!-- 国家补贴 -->
+    <div class="xzx-subsidy">
+      <div class="xzx-subsidy-icon">
+        <div class="xzx-phone-icon"></div>
+      </div>
+      <div class="xzx-subsidy-top">国家补贴</div>
+      <h3>惠享正品</h3>
+      <div class="xzx-subsidy-bottom">官方授权 · 品质保障</div>
+    </div>
+
+    <!-- 迷你卡组 -->
+    <div class="xzx-mini-cards">
+      <div class="xzx-mini-card">
+        <div class="xzx-mini-img xzx-img-cosmetic"></div>
+        <div class="xzx-mini-title">精致美妆</div>
+        <div class="xzx-mini-desc">品质之选</div>
+      </div>
+      <div class="xzx-mini-card">
+        <div class="xzx-mini-img xzx-img-grocery"></div>
+        <div class="xzx-mini-title">超值百货</div>
+        <div class="xzx-mini-desc">省心省钱</div>
+      </div>
+      <div class="xzx-mini-card" style="grid-column:span 2;">
+        <div class="xzx-mini-img xzx-img-tool" style="aspect-ratio:auto;height:100px;"></div>
+        <div class="xzx-mini-title">品质五金</div>
+        <div class="xzx-mini-desc">超值特惠</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 为你推荐 -->
+<div class="xzx-recommend">
+  <div class="xzx-rec-head">
+    <div class="xzx-rec-title">为你<span>推荐</span></div>
+    <a href="#" class="xzx-more">换一批 <i class="iconfont icon-gengduo"></i></a>
+  </div>
+  <div class="xzx-rec-grid">
+    <!-- 1 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-pen"><span class="xzx-rec-tag">自营</span></div>
+      <div class="xzx-rec-title">得力 (deli) 彩色铅笔 24色水溶性彩铅画笔套装 专业画画笔</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>39.90</span>
+        <span class="xzx-rec-brand">deli 得力</span>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-shaver"><span class="xzx-rec-tag">爆款</span></div>
+      <div class="xzx-rec-title">飞科 (FLYCO) 电动剃须刀 男士胡须刀 全身水洗 快充刮胡刀</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>159.00</span>
+        <span class="xzx-rec-brand">FLYCO 飞科</span>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-toy"><span class="xzx-rec-tag">新品</span></div>
+      <div class="xzx-rec-title">澳贝 (AUBY) 毛绒玩具 安抚巾 婴儿口水巾 宝宝睡觉神器</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>89.00</span>
+        <span class="xzx-rec-brand">澳贝</span>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-coat"><span class="xzx-rec-tag">自营</span></div>
+      <div class="xzx-rec-title">HLA 海澜之家 羊毛大衣 冬季保暖 修身中长款 毛呢外套</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>599.00</span>
+        <span class="xzx-rec-brand">HLA</span>
+      </div>
+    </div>
+    <!-- 5 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-jacket"><span class="xzx-rec-tag">品质</span></div>
+      <div class="xzx-rec-title">ONLY 女士短外套 春季新款 休闲百搭夹克 修身显瘦</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>369.00</span>
+        <span class="xzx-rec-brand">ONLY</span>
+      </div>
+    </div>
+    <!-- 6 -->
+    <div class="xzx-rec-item">
+      <div class="xzx-rec-img xzx-img-dress"><span class="xzx-rec-tag">热销</span></div>
+      <div class="xzx-rec-title">女士连衣裙 夏季新款 雪纺碎花裙 法式复古气质长裙</div>
+      <div class="xzx-rec-meta">
+        <span class="xzx-rec-price"><small>¥</small>229.00</span>
+        <span class="xzx-rec-brand">女装</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 许镇玺 · 16-3 简单交互 */
+// Banner 指示器切换
+const dots = document.querySelectorAll('.xzx-banner-dots span');
+dots.forEach((d,i) => {
+  d.addEventListener('click', () => {
+    dots.forEach(x => x.classList.remove('active'));
+    d.classList.add('active');
+  });
+});
+// 自动轮播
+let xzx_idx = 0;
+setInterval(() => {
+  xzx_idx = (xzx_idx + 1) % dots.length;
+  dots.forEach(x => x.classList.remove('active'));
+  dots[xzx_idx].classList.add('active');
+}, 3000);
+</script>
+
+</body>
+</html>

@@ -49,3 +49,23 @@
 ## 2026-10-26-16-30
 **Model:** trae
 **Prompt:** 完成15-2.html,展示javascript程序结构：条件，循环。然后提交到github
+
+## 2026-10-29-15-39
+**Model:** trae
+**Prompt:** 编写16-1.html,形象地展示javascript主要的数组方法
+
+## 2026-10-29-16-10
+**Model:** trae
+**Prompt:** 生成16-2.html,形象展示javascript对象和字符串
+
+## 2026-10-29-16-50
+**Model:** trae
+**Prompt:** 完成16-3.html,根据给定图片完成网页，尽可能和原图相似。所用图标在font目录中挑合适的图标。
+
+## 2026-10-29-17-00
+**Model:** trae
+**Prompt:** 完成16-4，完成tab选项卡效果，添加图片上下文（图生代码）。参考图片：课堂测试\5\1.jpg~4.jpg，展示每日/每周/每月/全部 电视剧TOP10排行切换
+
+## 2026-10-29-17-15
+**Model:** trae
+**Prompt:** 把所有项目发送到github仓库，`https://github.com/zbwsxzxddez/xuzhenxi`

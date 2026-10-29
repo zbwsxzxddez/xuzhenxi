@@ -1,0 +1,274 @@
+<!-- 姓名：许镇玺，日期：Tab选项卡 - 电视剧排行榜 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电视剧排行榜 · Tab选项卡 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 16-4 Tab选项卡 - 电视剧排行榜
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-red:       #e1251b;    /* 主红 */
+    --xzx-red-d:     #b21b15;
+    --xzx-red-l:     #ff4a3d;
+    --xzx-bg:        #f5f6f8;
+    --xzx-white:     #ffffff;
+    --xzx-text:      #222;
+    --xzx-text-d:    #555;
+    --xzx-text-l:    #999;
+    --xzx-line:      #ececec;
+    --xzx-shadow:    0 4px 20px rgba(0,0,0,.06);
+    --xzx-radius:    6px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    background:var(--xzx-bg);
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:30px 16px;
+  }
+
+  /* 容器 */
+  .xzx-wrap{
+    width:780px;background:#fff;border-radius:var(--xzx-radius);
+    box-shadow:var(--xzx-shadow);overflow:hidden;
+  }
+
+  /* 标题 */
+  .xzx-head{
+    padding:18px 24px;border-bottom:1px solid var(--xzx-line);
+    display:flex;align-items:baseline;gap:10px;
+  }
+  .xzx-head h1{font-size:22px;font-weight:800;color:var(--xzx-red);}
+  .xzx-head h1 span{color:#333;font-weight:500;}
+  .xzx-head .xzx-sub{margin-left:auto;font-size:12px;color:var(--xzx-text-l);}
+
+  /* Tab 栏 */
+  .xzx-tabs{
+    display:flex;border-bottom:1px solid var(--xzx-line);background:#fafafa;
+  }
+  .xzx-tab{
+    flex:1;padding:14px 0;text-align:center;font-size:15px;font-weight:500;
+    color:var(--xzx-text-d);cursor:pointer;position:relative;
+    transition:color .25s;user-select:none;
+  }
+  .xzx-tab:hover{color:var(--xzx-red);}
+  .xzx-tab.xzx-active{color:var(--xzx-red);font-weight:700;background:#fff;}
+  .xzx-tab.xzx-active::after{
+    content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);
+    width:36px;height:3px;background:var(--xzx-red);border-radius:2px;
+  }
+
+  /* 内容区 */
+  .xzx-panel{padding:22px 24px;min-height:440px;}
+  .xzx-panel-inner{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;
+  }
+
+  /* 单项 */
+  .xzx-item{
+    display:flex;align-items:center;gap:14px;padding:10px 4px;
+    border-bottom:1px dashed var(--xzx-line);transition:.2s;
+  }
+  .xzx-item:hover{background:#fff5f5;}
+  .xzx-item:hover .xzx-title{color:var(--xzx-red);}
+
+  /* 序号通用 */
+  .xzx-rank{
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+  }
+
+  /* 金牌 No.1 */
+  .xzx-item.xzx-top1 .xzx-rank{
+    width:40px;height:40px;border-radius:10px;
+    background:var(--xzx-red);color:#fff;
+    font-size:22px;font-family:"Impact",Arial Black,sans-serif;
+    box-shadow:0 4px 10px rgba(225,37,27,.35);
+  }
+  .xzx-item.xzx-top1{
+    position:relative;padding:14px 6px;border-radius:8px;
+    background:linear-gradient(90deg, rgba(225,37,27,.08), transparent 70%);
+  }
+  .xzx-item.xzx-top1::before{
+    content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;
+    background:var(--xzx-red);border-radius:2px;
+  }
+  .xzx-item.xzx-top1 .xzx-title{
+    font-size:16px;font-weight:800;color:#222;
+  }
+
+  /* 银牌 2 & 3 */
+  .xzx-item.xzx-top2 .xzx-rank,
+  .xzx-item.xzx-top3 .xzx-rank{
+    width:28px;height:28px;border-radius:6px;
+    background:#333;color:#fff;
+    font-size:14px;
+  }
+  .xzx-item.xzx-top2 .xzx-title,
+  .xzx-item.xzx-top3 .xzx-title{
+    font-size:15px;font-weight:700;color:#333;
+  }
+
+  /* 4~10 */
+  .xzx-item:not(.xzx-top1):not(.xzx-top2):not(.xzx-top3) .xzx-rank{
+    width:28px;font-size:14px;color:#bbb;
+  }
+  .xzx-item:not(.xzx-top1):not(.xzx-top2):not(.xzx-top3) .xzx-title{
+    font-size:14px;color:#444;
+  }
+
+  .xzx-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.2s;}
+  .xzx-idx{color:var(--xzx-text-l);font-size:11px;}
+
+  /* 切换动画 */
+  .xzx-panel.fade .xzx-item{
+    animation:xzx_fade_up .35s ease both;
+  }
+  .xzx-panel.fade .xzx-item:nth-child(1){animation-delay:.02s;}
+  .xzx-panel.fade .xzx-item:nth-child(2){animation-delay:.04s;}
+  .xzx-panel.fade .xzx-item:nth-child(3){animation-delay:.06s;}
+  .xzx-panel.fade .xzx-item:nth-child(4){animation-delay:.08s;}
+  .xzx-panel.fade .xzx-item:nth-child(5){animation-delay:.10s;}
+  .xzx-panel.fade .xzx-item:nth-child(6){animation-delay:.12s;}
+  .xzx-panel.fade .xzx-item:nth-child(7){animation-delay:.14s;}
+  .xzx-panel.fade .xzx-item:nth-child(8){animation-delay:.16s;}
+  .xzx-panel.fade .xzx-item:nth-child(9){animation-delay:.18s;}
+  .xzx-panel.fade .xzx-item:nth-child(10){animation-delay:.20s;}
+
+  @keyframes xzx_fade_up{
+    from{opacity:0;transform:translateY(12px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* 底部切换指示 */
+  .xzx-foot{
+    padding:12px 24px;border-top:1px solid var(--xzx-line);
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:var(--xzx-text-l);
+  }
+  .xzx-foot .xzx-update{color:var(--xzx-text-d);}
+  .xzx-foot .xzx-count{color:var(--xzx-red);font-weight:600;}
+
+  @media(max-width:640px){
+    .xzx-wrap{width:100%;}
+    .xzx-panel-inner{grid-template-columns:1fr;gap:4px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="xzx-wrap">
+  <div class="xzx-head">
+    <h1>电视剧<span>排行榜</span></h1>
+    <span class="xzx-sub">数据来源 · 许镇玺 整理</span>
+  </div>
+
+  <!-- Tab 栏 -->
+  <div class="xzx-tabs" id="xzxTabs">
+    <div class="xzx-tab xzx-active" data-tab="daily">每日</div>
+    <div class="xzx-tab" data-tab="weekly">每周</div>
+    <div class="xzx-tab" data-tab="monthly">每月</div>
+    <div class="xzx-tab" data-tab="all">全部</div>
+  </div>
+
+  <!-- 内容 -->
+  <div class="xzx-panel fade" id="xzxPanel">
+    <div class="xzx-panel-inner" id="xzxList"></div>
+  </div>
+
+  <div class="xzx-foot">
+    <span class="xzx-update" id="xzxUpdate">更新时间：2026-10-29</span>
+    <span>共 <span class="xzx-count">10</span> 部剧集</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 16-4 Tab选项卡 数据
+   根据 1.jpg ~ 4.jpg 四张参考图整理
+   ============================================================ */
+const xzx_data = {
+  daily: {
+    label:'每日',
+    list:[
+      '最美的时光','咱们结婚吧','渗透','继承者们','烽火佳人',
+      '极品女士第2季','爱闪亮','狼烟','钱多多大爱记','苍狼'
+    ]
+  },
+  weekly: {
+    label:'每周',
+    list:[
+      '咱们结婚吧','继承者们','最美的时光','爱闪亮','渗透',
+      '狼烟（2013）','三十岁，你好','钱多多炼爱记','特种兵之火凤凰','极品女士第2季'
+    ]
+  },
+  monthly: {
+    label:'每月',
+    list:[
+      '特种兵之火凤凰','咱们结婚吧','继承者们','金玉满堂','王的女人',
+      '爱闪亮','爱情面前谁怕谁','英雄联盟','小爸爸','我们这拨人'
+    ]
+  },
+  all: {
+    label:'全部',
+    list:[
+      '永不磨灭的番号','特种兵之火凤凰','新还珠格格','咱们结婚吧','小爸爸',
+      '心术','乡村爱情5','天天有喜','一不小心爱上你','夏日甜心'
+    ]
+  }
+};
+
+/* 渲染函数 */
+function xzx_render(key){
+  const data = xzx_data[key];
+  const list = document.getElementById('xzxList');
+  list.innerHTML = '';
+
+  data.list.forEach((title, i) => {
+    const rank = i + 1;
+    const item = document.createElement('div');
+    item.className = 'xzx-item';
+    if(rank === 1) item.classList.add('xzx-top1');
+    else if(rank === 2) item.classList.add('xzx-top2');
+    else if(rank === 3) item.classList.add('xzx-top3');
+
+    item.innerHTML = `
+      <div class="xzx-rank">${rank}</div>
+      <div class="xzx-title">${title}</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+/* Tab 点击 */
+document.getElementById('xzxTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.xzx-tab');
+  if(!tab || tab.classList.contains('xzx-active')) return;
+
+  document.querySelectorAll('.xzx-tab').forEach(t => t.classList.remove('xzx-active'));
+  tab.classList.add('xzx-active');
+
+  const key = tab.dataset.tab;
+
+  // 重放动画：移除 fade → 强制 reflow → 重新加
+  const panel = document.getElementById('xzxPanel');
+  panel.classList.remove('fade');
+  void panel.offsetWidth;
+  panel.classList.add('fade');
+
+  xzx_render(key);
+  document.getElementById('xzxUpdate').textContent = `当前榜单：${xzx_data[key].label}榜`;
+});
+
+/* 初始化 */
+xzx_render('daily');
+</script>
+
+</body>
+</html>

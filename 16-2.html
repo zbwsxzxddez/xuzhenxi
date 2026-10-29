@@ -1,0 +1,1053 @@
+<!-- 姓名：许镇玺，日期：JavaScript 对象与字符串形象展示 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS 对象 & 字符串 形象展示 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 16-2 JavaScript 对象与字符串形象展示
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:       #1a1c2c;
+    --xzx-bg-2:     #242637;
+    --xzx-bg-3:     #2f3248;
+    --xzx-line:     #3d4060;
+    --xzx-text:     #e0e2f0;
+    --xzx-text-d:   #9a9eb8;
+    --xzx-accent:   #6ec1ff;
+    --xzx-accent-2: #f28fad;
+    --xzx-gold:     #e8d66b;
+    --xzx-green:    #88e4a7;
+    --xzx-purple:   #b8a0ff;
+    --xzx-orange:   #ffb86b;
+    --xzx-red:      #ff7b7b;
+    --xzx-yellow:   #ffe066;
+    --xzx-shadow:   0 6px 24px rgba(0,0,0,.35);
+    --xzx-shadow-s: 0 2px 8px rgba(0,0,0,.25);
+    --xzx-radius:   10px;
+    --xzx-mon:      Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--xzx-bg);
+    color:var(--xzx-text);
+    line-height:1.6;
+    min-height:100vh;
+    padding:24px;
+    background-image:
+      radial-gradient(600px 400px at 10% -10%, rgba(110,193,255,.08), transparent 60%),
+      radial-gradient(500px 500px at 100% 100%, rgba(184,160,255,.08), transparent 60%);
+  }
+
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  /* ---------- 顶部标题 ---------- */
+  .xzx-header{
+    max-width:1280px;margin:0 auto 20px;text-align:center;
+  }
+  .xzx-header h1{font-size:26px;font-weight:700;letter-spacing:2px;margin-bottom:6px;}
+  .xzx-header h1 span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-accent-2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-header p{color:var(--xzx-text-d);font-size:13px;}
+  .xzx-back{
+    display:inline-block;margin-bottom:10px;padding:4px 14px;
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:20px;color:var(--xzx-text-d);text-decoration:none;font-size:12px;transition:.2s;
+  }
+  .xzx-back:hover{color:var(--xzx-accent);border-color:var(--xzx-accent);}
+
+  /* ---------- 主布局 ---------- */
+  .xzx-main{
+    max-width:1280px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  }
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);padding:18px;box-shadow:var(--xzx-shadow-s);
+  }
+  .xzx-card h2{
+    font-size:14px;font-weight:600;color:var(--xzx-accent);margin-bottom:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .xzx-card h2::before{
+    content:"";width:3px;height:14px;background:var(--xzx-accent);border-radius:2px;
+  }
+
+  /* ---------- Tab 切换 ---------- */
+  .xzx-tabs{display:flex;gap:4px;margin-bottom:14px;}
+  .xzx-tab{
+    padding:8px 22px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:8px 8px 0 0;color:var(--xzx-text-d);cursor:pointer;font-size:13px;
+    transition:.2s;font-weight:500;
+  }
+  .xzx-tab:hover{color:var(--xzx-text);}
+  .xzx-tab.xzx-active{
+    background:var(--xzx-bg);color:var(--xzx-gold);border-bottom-color:var(--xzx-bg);
+    box-shadow:0 -2px 10px rgba(232,214,107,.15);
+  }
+
+  /* ---------- 对象可视化 ---------- */
+  .xzx-obj-wrap{
+    background:#1e1f2e;border:1px solid var(--xzx-line);border-radius:10px;padding:16px;
+    font-family:var(--xzx-mon);font-size:14px;min-height:200px;max-height:260px;
+    overflow-y:auto;position:relative;
+  }
+  .xzx-obj-bracket{color:var(--xzx-text-d);font-size:20px;font-weight:700;}
+  .xzx-obj-prop{
+    display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:1px dashed var(--xzx-line);
+    transition:.2s;position:relative;border-radius:4px;
+  }
+  .xzx-obj-prop:last-child{border-bottom:none;}
+  .xzx-obj-prop.xzx-highlight{
+    background:rgba(232,214,107,.15);box-shadow:0 0 0 1px var(--xzx-gold);
+  }
+  .xzx-obj-prop.xzx-new{animation:xzx_fade_in .4s;}
+  .xzx-obj-prop.xzx-del{animation:xzx_fade_out .3s forwards;}
+  .xzx-key{
+    color:var(--xzx-accent-2);font-weight:600;min-width:80px;
+  }
+  .xzx-key::before{content:"\"";color:var(--xzx-text-d);}
+  .xzx-key::after{content:"\"";color:var(--xzx-text-d);}
+  .xzx-colon{color:var(--xzx-text-d);}
+  .xzx-val{
+    color:var(--xzx-gold);padding:1px 8px;border-radius:4px;background:rgba(232,214,107,.1);
+    font-weight:500;
+  }
+  .xzx-val.num{color:var(--xzx-orange);background:rgba(255,184,107,.1);}
+  .xzx-val.bool{color:var(--xzx-green);background:rgba(136,228,167,.1);}
+  .xzx-val.null{color:var(--xzx-red);background:rgba(255,123,123,.1);font-style:italic;}
+  .xzx-val.str{color:var(--xzx-green);background:rgba(136,228,167,.1);}
+  .xzx-val.big{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;}
+  .xzx-obj-info{
+    position:absolute;top:10px;right:14px;
+    font-size:11px;color:var(--xzx-text-d);background:var(--xzx-bg-3);
+    padding:3px 10px;border-radius:10px;border:1px solid var(--xzx-line);font-family:var(--xzx-mon);
+  }
+  .xzx-obj-frozen{
+    position:absolute;top:10px;left:14px;font-size:11px;
+    color:var(--xzx-red);background:rgba(255,123,123,.15);
+    padding:3px 10px;border-radius:10px;border:1px solid var(--xzx-red);
+  }
+
+  /* ---------- 字符串可视化 ---------- */
+  .xzx-str-wrap{
+    background:#1e1f2e;border:1px solid var(--xzx-line);border-radius:10px;padding:14px;
+    min-height:160px;max-height:220px;overflow-y:auto;
+  }
+  .xzx-str-chars{
+    display:flex;flex-wrap:wrap;gap:3px;padding:4px 0;
+  }
+  .xzx-str-item{
+    position:relative;width:36px;height:44px;border-radius:5px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--xzx-mon);font-size:15px;font-weight:700;color:#fff;
+    background:linear-gradient(135deg,#3a4060,#2a2e48);
+    border:1px solid var(--xzx-line);transition:.3s;
+  }
+  .xzx-str-item .xzx-si{
+    position:absolute;top:-16px;font-size:9px;font-weight:400;
+    color:var(--xzx-text-d);background:var(--xzx-bg-3);
+    padding:0 4px;border-radius:6px;border:1px solid var(--xzx-line);
+    font-family:var(--xzx-mon);
+  }
+  .xzx-str-item.xzx-picked{
+    background:linear-gradient(135deg,var(--xzx-gold),var(--xzx-orange));
+    box-shadow:0 0 0 2px var(--xzx-gold),0 0 18px rgba(232,214,107,.5);
+    color:#222;
+  }
+  .xzx-str-item.xzx-new{animation:xzx_fade_in .35s;}
+  .xzx-str-item.xzx-del{animation:xzx_fade_out .25s forwards;}
+  .xzx-str-item.xzx-high{
+    background:linear-gradient(135deg,var(--xzx-accent),var(--xzx-purple));
+  }
+  .xzx-str-item.xzx-found{
+    background:linear-gradient(135deg,var(--xzx-green),#4cc07a);
+    animation:xzx_pulse 1.2s infinite;
+  }
+  .xzx-str-empty{
+    text-align:center;color:var(--xzx-text-d);padding:40px 0;font-style:italic;font-size:13px;
+  }
+  .xzx-str-info{
+    font-family:var(--xzx-mon);font-size:12px;color:var(--xzx-text-d);
+    padding:6px 10px;background:var(--xzx-bg-3);border-radius:6px;border:1px solid var(--xzx-line);
+    display:inline-block;margin-bottom:6px;
+  }
+
+  @keyframes xzx_fade_in{
+    from{opacity:0;transform:translateY(-8px) scale(.8);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  @keyframes xzx_fade_out{
+    to{opacity:0;transform:translateX(20px) scale(.5);}
+  }
+  @keyframes xzx_pulse{
+    0%,100%{box-shadow:0 0 0 2px var(--xzx-green),0 0 18px rgba(136,228,167,.5);}
+    50%{box-shadow:0 0 0 4px var(--xzx-green),0 0 30px rgba(136,228,167,.8);}
+  }
+
+  /* ---------- 方法按钮 ---------- */
+  .xzx-method-group{
+    padding-bottom:12px;border-bottom:1px dashed var(--xzx-line);margin-bottom:12px;
+  }
+  .xzx-method-group:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .xzx-group-title{
+    font-size:11px;color:var(--xzx-text-d);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;
+  }
+  .xzx-methods{display:flex;flex-wrap:wrap;gap:8px;}
+  .xzx-method-btn{
+    padding:7px 12px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:6px;color:var(--xzx-text);font-family:var(--xzx-mon);font-size:12px;
+    cursor:pointer;transition:.2s;position:relative;
+  }
+  .xzx-method-btn:hover{
+    background:var(--xzx-bg);border-color:var(--xzx-accent);color:var(--xzx-accent);
+    transform:translateY(-1px);
+  }
+  .xzx-method-btn.xzx-active{background:var(--xzx-accent);border-color:var(--xzx-accent);color:#fff;}
+  .xzx-method-btn[data-mutates="true"]::after{
+    content:"";position:absolute;top:3px;right:3px;
+    width:5px;height:5px;border-radius:50%;background:var(--xzx-red);
+  }
+
+  /* ---------- 控制 ---------- */
+  .xzx-input-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .xzx-input-row label{font-size:12px;color:var(--xzx-text-d);min-width:72px;}
+  .xzx-input-row input,.xzx-input-row select,.xzx-input-row textarea{
+    flex:1;min-width:100px;padding:8px 10px;background:var(--xzx-bg-3);
+    border:1px solid var(--xzx-line);border-radius:6px;color:var(--xzx-text);
+    font-family:var(--xzx-mon);font-size:13px;outline:none;transition:.2s;resize:vertical;
+  }
+  .xzx-input-row input:focus,.xzx-input-row select:focus,.xzx-input-row textarea:focus{border-color:var(--xzx-accent);}
+  .xzx-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .xzx-btn{
+    padding:8px 16px;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;
+  }
+  .xzx-btn-primary{background:var(--xzx-accent);color:#fff;}
+  .xzx-btn-primary:hover{background:#4da8e8;}
+  .xzx-btn-secondary{background:var(--xzx-bg-3);color:var(--xzx-text);border:1px solid var(--xzx-line);}
+  .xzx-btn-secondary:hover{border-color:var(--xzx-purple);color:var(--xzx-purple);}
+  .xzx-btn-danger{background:transparent;color:var(--xzx-red);border:1px solid var(--xzx-red);}
+  .xzx-btn-danger:hover{background:var(--xzx-red);color:#fff;}
+
+  /* 预设 */
+  .xzx-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .xzx-preset{
+    padding:5px 10px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:12px;font-family:var(--xzx-mon);font-size:11px;color:var(--xzx-text-d);
+    cursor:pointer;transition:.2s;
+  }
+  .xzx-preset:hover{color:var(--xzx-gold);border-color:var(--xzx-gold);}
+  .xzx-preset-label{font-size:12px;color:var(--xzx-text-d);align-self:center;margin-right:2px;}
+
+  /* ---------- 代码 ---------- */
+  .xzx-code-block{
+    background:#1e1f2e;border:1px solid var(--xzx-line);border-radius:8px;padding:12px 14px;
+    font-family:var(--xzx-mon);font-size:13px;line-height:1.7;overflow-x:auto;min-height:50px;
+  }
+  .xzx-code-block .kw{color:var(--xzx-purple);}
+  .xzx-code-block .fn{color:var(--xzx-accent);}
+  .xzx-code-block .str{color:var(--xzx-green);}
+  .xzx-code-block .num{color:var(--xzx-orange);}
+  .xzx-code-block .com{color:#6b6e8a;font-style:italic;}
+  .xzx-code-block .var{color:var(--xzx-accent-2);}
+
+  /* ---------- 结果 ---------- */
+  .xzx-result{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .xzx-result-box{
+    background:var(--xzx-bg-3);border:1px solid var(--xzx-line);border-radius:8px;padding:10px 12px;
+  }
+  .xzx-result-box .xzx-label{font-size:10px;color:var(--xzx-text-d);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+  .xzx-result-box .xzx-val{font-family:var(--xzx-mon);font-size:13px;color:var(--xzx-gold);word-break:break-all;}
+  .xzx-result-box .xzx-val.ok{color:var(--xzx-green);}
+  .xzx-result-box .xzx-val.err{color:var(--xzx-red);}
+
+  /* ---------- 日志 ---------- */
+  .xzx-log{
+    max-height:160px;overflow-y:auto;background:#1a1b28;border:1px solid var(--xzx-line);
+    border-radius:8px;padding:10px;font-family:var(--xzx-mon);font-size:12px;line-height:1.9;
+  }
+  .xzx-log div{padding:1px 0;border-bottom:1px dashed var(--xzx-line);}
+  .xzx-log div:last-child{border-bottom:none;}
+  .xzx-log .t{color:var(--xzx-text-d);margin-right:5px;}
+  .xzx-log .l-info{color:var(--xzx-accent);}
+  .xzx-log .l-ret{color:var(--xzx-gold);}
+  .xzx-log .l-mut{color:var(--xzx-accent-2);}
+
+  @media(max-width:850px){
+    .xzx-main{grid-template-columns:1fr;}
+    .xzx-str-item{width:28px;height:36px;font-size:12px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <a href="index.html" class="xzx-back">← 返回导航</a>
+  <h1><span>JavaScript 对象 & 字符串</span> · 形象展示</h1>
+  <p>点击方法，实时观察键值对 / 字符的动画变化 · 许镇玺</p>
+</div>
+
+<div class="xzx-main">
+
+  <!-- 左侧：可视化舞台 -->
+  <div class="xzx-card" style="grid-row:span 2;">
+    <h2 id="xzxStageTitle">当前对象</h2>
+    <!-- 对象可视化 -->
+    <div id="xzxObjStage" style="position:relative;">
+      <div class="xzx-obj-wrap" id="xzxObjWrap">
+        <span class="xzx-obj-bracket">{</span>
+        <div id="xzxObjProps" style="padding-left:20px;"></div>
+        <span class="xzx-obj-bracket" style="display:block;padding-left:20px;">}</span>
+      </div>
+    </div>
+    <!-- 字符串可视化 -->
+    <div id="xzxStrStage" style="display:none;">
+      <span class="xzx-str-info" id="xzxStrLen">length: 0</span>
+      <div class="xzx-str-wrap">
+        <div class="xzx-str-chars" id="xzxStrChars">
+          <div class="xzx-str-empty">点击预设或直接在下方输入字符串</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 预设 -->
+    <div id="xzxObjPresets" style="margin-top:14px;">
+      <span class="xzx-preset-label">对象预设 →</span>
+      <div class="xzx-presets">
+        <div class="xzx-preset" data-opreset="user">用户对象</div>
+        <div class="xzx-preset" data-opreset="car">车辆对象</div>
+        <div class="xzx-preset" data-opreset="dict">中英词典</div>
+        <div class="xzx-preset" data-opreset="empty">空对象 {}</div>
+      </div>
+    </div>
+    <div id="xzxStrPresets" style="margin-top:14px;display:none;">
+      <span class="xzx-preset-label">字符串预设 →</span>
+      <div class="xzx-presets">
+        <div class="xzx-preset" data-spreset="hi">"Hello, World!"</div>
+        <div class="xzx-preset" data-spreset="js">"JavaScript真好用"</div>
+        <div class="xzx-preset" data-spreset="space">"  前后有空格  "</div>
+        <div class="xzx-preset" data-spreset="url">"https://example.com/path"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中间：方法选择 + 参数 -->
+  <div class="xzx-card">
+    <!-- Tab 切换 -->
+    <div class="xzx-tabs">
+      <div class="xzx-tab xzx-active" data-tab="obj">📘 对象 Object</div>
+      <div class="xzx-tab" data-tab="str">🔤 字符串 String</div>
+    </div>
+
+    <!-- 对象方法 -->
+    <div id="xzxObjMethods">
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">遍历 / 解构 (不修改)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="keys">Object.keys</button>
+          <button class="xzx-method-btn" data-fn="values">Object.values</button>
+          <button class="xzx-method-btn" data-fn="entries">Object.entries</button>
+          <button class="xzx-method-btn" data-fn="fromEntries">Object.fromEntries</button>
+        </div>
+      </div>
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">属性检查 (不修改)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="hasOwn">Object.hasOwn</button>
+          <button class="xzx-method-btn" data-fn="is">Object.is</button>
+        </div>
+      </div>
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">增 / 改 / 删 (Mutate)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="assign" data-mutates="true">Object.assign</button>
+          <button class="xzx-method-btn" data-fn="addProp" data-mutates="true">添加属性</button>
+          <button class="xzx-method-btn" data-fn="delProp" data-mutates="true">delete 属性</button>
+        </div>
+      </div>
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">锁定对象 (Mutate)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="freeze" data-mutates="true">Object.freeze</button>
+          <button class="xzx-method-btn" data-fn="seal" data-mutates="true">Object.seal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 字符串方法 -->
+    <div id="xzxStrMethods" style="display:none;">
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">查找 / 判断 (不修改)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="charAt">charAt</button>
+          <button class="xzx-method-btn" data-fn="indexOf">indexOf</button>
+          <button class="xzx-method-btn" data-fn="lastIndexOf">lastIndexOf</button>
+          <button class="xzx-method-btn" data-fn="includes">includes</button>
+          <button class="xzx-method-btn" data-fn="startsWith">startsWith</button>
+          <button class="xzx-method-btn" data-fn="endsWith">endsWith</button>
+        </div>
+      </div>
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">截取 (不修改)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="slice">slice</button>
+          <button class="xzx-method-btn" data-fn="substring">substring</button>
+          <button class="xzx-method-btn" data-fn="substr">substr</button>
+        </div>
+      </div>
+      <div class="xzx-method-group">
+        <div class="xzx-group-title">变换 / 生成 (不修改)</div>
+        <div class="xzx-methods">
+          <button class="xzx-method-btn" data-fn="toUpperCase">toUpperCase</button>
+          <button class="xzx-method-btn" data-fn="toLowerCase">toLowerCase</button>
+          <button class="xzx-method-btn" data-fn="replace">replace</button>
+          <button class="xzx-method-btn" data-fn="replaceAll">replaceAll</button>
+          <button class="xzx-method-btn" data-fn="trim">trim</button>
+          <button class="xzx-method-btn" data-fn="repeat">repeat</button>
+          <button class="xzx-method-btn" data-fn="padStart">padStart</button>
+          <button class="xzx-method-btn" data-fn="split">split</button>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:16px;">参数设置</h2>
+    <div id="xzxParams">
+      <div class="xzx-input-row">
+        <label>当前方法</label>
+        <input type="text" id="xzxCurrentFn" value="请先选择左侧方法" readonly>
+      </div>
+      <div class="xzx-input-row" id="xzxParamRow" style="display:none;">
+        <label>参数</label>
+        <input type="text" id="xzxParamInput" placeholder="根据方法输入参数">
+      </div>
+      <div class="xzx-btn-row">
+        <button class="xzx-btn xzx-btn-primary" id="xzxRunBtn">▶ 执行</button>
+        <button class="xzx-btn xzx-btn-secondary" id="xzxUndoBtn">↶ 撤销</button>
+        <button class="xzx-btn xzx-btn-danger" id="xzxResetBtn">✕ 重置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧：代码 + 结果 + 日志 -->
+  <div class="xzx-card">
+    <h2>执行代码</h2>
+    <div class="xzx-code-block" id="xzxCodeBlock"><span class="com">// 选择方法后自动生成</span></div>
+
+    <h2 style="margin-top:16px;">运行结果</h2>
+    <div class="xzx-result">
+      <div class="xzx-result-box">
+        <div class="xzx-label">返回值</div>
+        <div class="xzx-val" id="xzxRet">—</div>
+      </div>
+      <div class="xzx-result-box">
+        <div class="xzx-label">是否修改原数据</div>
+        <div class="xzx-val" id="xzxMutate">—</div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:16px;">操作日志</h2>
+    <div class="xzx-log" id="xzxLog"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 16-2 对象 + 字符串方法演示
+   所有变量 / 函数均以 xzx_ 开头
+   ============================================================ */
+
+/* ---------- 状态 ---------- */
+let xzx_tab = 'obj';          // 当前 tab
+let xzx_obj = {};             // 当前对象
+let xzx_str = '';             // 当前字符串
+let xzx_history = [];         // 历史快照
+let xzx_selectedFn = null;    // 当前选中方法
+let xzx_frozen = false;       // 对象是否被 freeze
+let xzx_sealed = false;       // 对象是否被 seal
+
+/* ---------- 预设 ---------- */
+const xzx_objPresets = {
+  user:   { name: '许镇玺', age: 21, isStudent: true, score: 95, major: 'CS' },
+  car:    { brand: 'BMW', model: '3系', year: 2024, price: 289900, electric: false },
+  dict:   { hello: '你好', world: '世界', code: '代码', js: 'JavaScript' },
+  empty:  {}
+};
+const xzx_strPresets = {
+  hi:   'Hello, World!',
+  js:   'JavaScript真好用',
+  space: '  前后有空格  ',
+  url:  'https://example.com/path'
+};
+
+/* ============================================================
+   通用工具
+   ============================================================ */
+function xzx_type(v){
+  if(v === null) return 'null';
+  if(Array.isArray(v)) return 'array';
+  return typeof v;
+}
+function xzx_valColor(v){
+  const t = xzx_type(v);
+  return { number:'var(--xzx-orange)', boolean:'var(--xzx-green)',
+           null:'var(--xzx-red)', string:'var(--xzx-green)',
+           array:'var(--xzx-purple)', object:'var(--xzx-accent-2)' }[t] || 'var(--xzx-text)';
+}
+function xzx_log(msg, type){
+  type = type || 'info';
+  const log = document.getElementById('xzxLog');
+  const time = new Date().toLocaleTimeString('zh-CN', {hour12:false});
+  const div = document.createElement('div');
+  const cls = type==='ret'?'l-ret':type==='mut'?'l-mut':'l-info';
+  div.innerHTML = `<span class="t">[${time}]</span><span class="${cls}">${msg}</span>`;
+  log.appendChild(div); log.scrollTop = log.scrollHeight;
+}
+function xzx_saveHistory(){
+  xzx_history.push({obj: JSON.parse(JSON.stringify(xzx_obj)), str: xzx_str, frozen: xzx_frozen, sealed: xzx_sealed, tab: xzx_tab});
+  if(xzx_history.length > 30) xzx_history.shift();
+}
+function xzx_showReturn(val, isMutate){
+  const ret = document.getElementById('xzxRet');
+  const mut = document.getElementById('xzxMutate');
+  let txt;
+  if(val === undefined) txt = 'undefined';
+  else if(Array.isArray(val)) txt = JSON.stringify(val);
+  else if(xzx_type(val) === 'object' && val !== null) txt = JSON.stringify(val);
+  else txt = String(val);
+  ret.textContent = txt.length > 140 ? txt.substring(0,140)+'…' : txt;
+  ret.style.color = xzx_valColor(val);
+  mut.textContent = isMutate ? '是 ⚠' : '否 ✓';
+  mut.className = 'xzx-val ' + (isMutate ? 'err' : 'ok');
+}
+function xzx_parseVal(s){
+  s = (s||'').trim();
+  if(s==='') return '';
+  if(s==='true') return true;
+  if(s==='false') return false;
+  if(s==='null') return null;
+  if(!isNaN(Number(s))) return Number(s);
+  // 字符串：去引号
+  return s.replace(/^"|"$/g,'').replace(/^'|'$/g,'');
+}
+function xzx_genCode(obj, fnName, args){
+  const kw = (s) => `<span class="kw">${s}</span>`;
+  const fn = (s) => `<span class="fn">${s}</span>`;
+  const str = (s) => `<span class="str">"${s}"</span>`;
+  const num = (s) => `<span class="num">${s}</span>`;
+  const com = (s) => `<span class="com">${s}</span>`;
+  const varr = (s) => `<span class="var">${s}</span>`;
+  let a = args || '';
+
+  if(obj === 'obj'){
+    switch(fnName){
+      case 'keys': case 'values': case 'entries':
+        document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${fn('Object.'+fnName)}(${varr('obj')});`; break;
+      case 'fromEntries': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${fn('Object.fromEntries')}(${varr('entries')});  ${com('// 数组 → 对象')}`; break;
+      case 'hasOwn': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${fn('Object.hasOwn')}(${varr('obj')}, ${str(a||'name')});`; break;
+      case 'is': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${fn('Object.is')}(${num('NaN')}, ${num('NaN')});`; break;
+      case 'assign': document.getElementById('xzxCodeBlock').innerHTML = `${fn('Object.assign')}(${varr('obj')}, ${com('{ color: "red" }')});  ${com('// 合并/覆盖')}`; break;
+      case 'addProp': document.getElementById('xzxCodeBlock').innerHTML = `${varr('obj')}.${str(a||'newKey')} = ${num('123')};  ${com('// 添加新属性')}`; break;
+      case 'delProp': document.getElementById('xzxCodeBlock').innerHTML = `${kw('delete')} ${varr('obj')}.${str(a||'name')};`; break;
+      case 'freeze': document.getElementById('xzxCodeBlock').innerHTML = `${fn('Object.freeze')}(${varr('obj')});  ${com('// 完全冻结，不能增删改')}`; break;
+      case 'seal': document.getElementById('xzxCodeBlock').innerHTML = `${fn('Object.seal')}(${varr('obj')});  ${com('// 密封，不能增删但可改值')}`; break;
+      default: document.getElementById('xzxCodeBlock').innerHTML = com('// 请选择方法');
+    }
+  } else {
+    switch(fnName){
+      case 'charAt': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('charAt')}(${num(a||'0')});`; break;
+      case 'indexOf': case 'lastIndexOf': case 'includes': case 'startsWith': case 'endsWith':
+        document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn(fnName)}(${str(a||'He')});`; break;
+      case 'slice': case 'substring': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn(fnName)}(${a||'0, 5'});`; break;
+      case 'substr': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('substr')}(${a||'0, 5'});  ${com('// ⚠ 已废弃但仍有参考价值')}`; break;
+      case 'toUpperCase': case 'toLowerCase': case 'trim': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn(fnName)}();`; break;
+      case 'replace': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('replace')}(${str(a.split('|')[0]||'World')}, ${str((a.includes('|')?a.split('|')[1]:(a.includes(',')?a.split(',',2)[1]:'JS'))||'JS')});`; break;
+      case 'replaceAll': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('replaceAll')}(${str(a.split('|')[0]||'o')}, ${str((a.includes('|')?a.split('|')[1]:'*')||'*')});`; break;
+      case 'repeat': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('repeat')}(${num(a||'3')});`; break;
+      case 'padStart': case 'padEnd': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn(fnName)}(${a||'10, "-"'});`; break;
+      case 'split': document.getElementById('xzxCodeBlock').innerHTML = `${kw('const')} ${varr('ret')} = ${varr('str')}.${fn('split')}(${str(a||',')});  ${com('// → 数组')}`; break;
+      default: document.getElementById('xzxCodeBlock').innerHTML = com('// 请选择方法');
+    }
+  }
+}
+
+/* ============================================================
+   对象可视化
+   ============================================================ */
+function xzx_renderObject(highlightKeys = []){
+  const props = document.getElementById('xzxObjProps');
+  const wrap = document.getElementById('xzxObjWrap');
+  const info = wrap.querySelector('.xzx-obj-info');
+  const frozenTag = wrap.querySelector('.xzx-obj-frozen');
+
+  // 移除状态标签
+  if(info) info.remove();
+  if(frozenTag) frozenTag.remove();
+
+  // 统计
+  const keys = Object.keys(xzx_obj);
+
+  // 插入 info 角标
+  const infoEl = document.createElement('div');
+  infoEl.className = 'xzx-obj-info';
+  infoEl.textContent = keys.length === 0 ? '{} 空对象' : `${keys.length} 个属性`;
+  wrap.appendChild(infoEl);
+
+  // 冻结 / 密封标签
+  if(xzx_frozen || xzx_sealed){
+    const tag = document.createElement('div');
+    tag.className = 'xzx-obj-frozen';
+    tag.textContent = xzx_frozen ? '🔒 FROZEN 冻结' : '🔒 SEALED 密封';
+    wrap.appendChild(tag);
+  }
+
+  if(keys.length === 0){
+    props.innerHTML = '';
+    return;
+  }
+
+  props.innerHTML = '';
+  keys.forEach(k => {
+    const v = xzx_obj[k];
+    const row = document.createElement('div');
+    row.className = 'xzx-obj-prop';
+    row.dataset.key = k;
+
+    if(highlightKeys.includes(k)) row.classList.add('xzx-highlight');
+
+    const keyEl = document.createElement('span');
+    keyEl.className = 'xzx-key';
+    keyEl.textContent = k;
+
+    const colon = document.createElement('span');
+    colon.className = 'xzx-colon';
+    colon.textContent = ':';
+
+    const valEl = document.createElement('span');
+    valEl.className = 'xzx-val ' + xzx_type(v) + ' ' + (String(v).length > 14 ? 'big' : '');
+    valEl.textContent = xzx_type(v) === 'string' ? `"${v}"` : String(v);
+
+    row.appendChild(keyEl); row.appendChild(colon); row.appendChild(valEl);
+    props.appendChild(row);
+  });
+}
+
+/* ============================================================
+   字符串可视化
+   ============================================================ */
+function xzx_renderString(highlightRanges = []){
+  // highlightRanges: [{start, end, class}]
+  const chars = document.getElementById('xzxStrChars');
+  const info = document.getElementById('xzxStrLen');
+  info.textContent = `length: ${xzx_str.length}`;
+
+  if(xzx_str.length === 0){
+    chars.innerHTML = '<div class="xzx-str-empty">字符串为空，请选择预设或输入字符串</div>';
+    return;
+  }
+
+  chars.innerHTML = '';
+  for(let i = 0; i < xzx_str.length; i++){
+    const c = xzx_str[i];
+    const el = document.createElement('div');
+    el.className = 'xzx-str-item';
+
+    const idx = document.createElement('span');
+    idx.className = 'xzx-si';
+    idx.textContent = i;
+
+    el.textContent = c === ' ' ? '·' : c; // 空格可视化
+    el.style.color = c === ' ' ? '#9a9eb8' : '#fff';
+    el.appendChild(idx);
+
+    // 高亮范围
+    highlightRanges.forEach(r => {
+      if(i >= r.start && i < r.end) el.classList.add(r.cls || 'xzx-picked');
+    });
+
+    chars.appendChild(el);
+  }
+}
+
+/* ============================================================
+   Tab 切换
+   ============================================================ */
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.xzx-tab');
+  if(tab){
+    document.querySelectorAll('.xzx-tab').forEach(t => t.classList.remove('xzx-active'));
+    tab.classList.add('xzx-active');
+    const which = tab.dataset.tab;
+    xzx_tab = which;
+    document.getElementById('xzxStageTitle').textContent = which === 'obj' ? '当前对象' : '当前字符串';
+    document.getElementById('xzxObjStage').style.display = which === 'obj' ? 'block' : 'none';
+    document.getElementById('xzxStrStage').style.display = which === 'str' ? 'block' : 'none';
+    document.getElementById('xzxObjPresets').style.display = which === 'obj' ? '' : 'none';
+    document.getElementById('xzxStrPresets').style.display = which === 'str' ? '' : 'none';
+    document.getElementById('xzxObjMethods').style.display = which === 'obj' ? '' : 'none';
+    document.getElementById('xzxStrMethods').style.display = which === 'str' ? '' : 'none';
+    // 重置方法按钮
+    document.querySelectorAll('.xzx-method-btn').forEach(b => b.classList.remove('xzx-active'));
+    xzx_selectedFn = null;
+    document.getElementById('xzxCurrentFn').value = '请先选择左侧方法';
+    document.getElementById('xzxParamRow').style.display = 'none';
+    document.getElementById('xzxCodeBlock').innerHTML = '<span class="com">// 选择方法后自动生成</span>';
+    return;
+  }
+
+  // 预设 - 对象
+  const opreset = e.target.closest('.xzx-preset[data-opreset]');
+  if(opreset){
+    xzx_obj = JSON.parse(JSON.stringify(xzx_objPresets[opreset.dataset.opreset]));
+    xzx_frozen = xzx_sealed = false;
+    xzx_history = [];
+    xzx_renderObject();
+    xzx_log(`📦 加载预设对象: ${JSON.stringify(xzx_obj)}`);
+    return;
+  }
+
+  // 预设 - 字符串
+  const spreset = e.target.closest('.xzx-preset[data-spreset]');
+  if(spreset){
+    xzx_str = xzx_strPresets[spreset.dataset.spreset];
+    xzx_history = [];
+    xzx_renderString();
+    xzx_log(`📦 加载预设字符串: "${xzx_str}"`);
+    return;
+  }
+
+  // 方法按钮
+  const btn = e.target.closest('.xzx-method-btn');
+  if(btn){
+    document.querySelectorAll('.xzx-method-btn').forEach(b => b.classList.remove('xzx-active'));
+    btn.classList.add('xzx-active');
+    xzx_selectedFn = btn.dataset.fn;
+    document.getElementById('xzxCurrentFn').value = xzx_selectedFn;
+    document.getElementById('xzxParamRow').style.display = 'flex';
+
+    // 参数占位
+    const phMapObj = {
+      keys:'无需参数', values:'无需参数', entries:'无需参数', fromEntries:'[["a",1],["b",2]]',
+      hasOwn:'属性名, 如: name', is:'两个值, 如: NaN, NaN',
+      assign:'扩展对象, 如: color:red', addProp:'key=val, 如: color=blue',
+      delProp:'要删除的 key, 如: age', freeze:'无需参数', seal:'无需参数'
+    };
+    const phMapStr = {
+      charAt:'索引, 如: 0', indexOf:'要查找的子串, 如: World', lastIndexOf:'子串',
+      includes:'子串', startsWith:'子串', endsWith:'子串',
+      slice:'start, end  如: 0, 5', substring:'start, end', substr:'start, length',
+      toUpperCase:'无需参数', toLowerCase:'无需参数',
+      replace:'旧值|新值  (如: World|JS  或  也可用逗号)', replaceAll:'旧值|新值  (如: o|*)',
+      trim:'无需参数', repeat:'次数, 如: 3',
+      padStart:'目标长度, 填充符  如: 12, *', padEnd:'目标长度, 填充符',
+      split:'分隔符, 如: ,'
+    };
+    document.getElementById('xzxParamInput').placeholder = (xzx_tab === 'obj' ? phMapObj : phMapStr)[xzx_selectedFn] || '';
+    document.getElementById('xzxParamInput').value = '';
+    xzx_genCode(xzx_tab, xzx_selectedFn, '');
+    return;
+  }
+
+  // 执行
+  if(e.target.id === 'xzxRunBtn'){
+    const input = document.getElementById('xzxParamInput').value;
+    xzx_genCode(xzx_tab, xzx_selectedFn, input);
+    xzx_runMethod(xzx_tab, xzx_selectedFn, input);
+    return;
+  }
+
+  // 撤销
+  if(e.target.id === 'xzxUndoBtn'){
+    if(xzx_history.length === 0){ xzx_log('没有可撤销的操作'); return; }
+    const h = xzx_history.pop();
+    xzx_tab = h.tab;
+    xzx_obj = h.obj; xzx_str = h.str;
+    xzx_frozen = h.frozen; xzx_sealed = h.sealed;
+    // 切换到对应 tab
+    document.querySelectorAll('.xzx-tab').forEach(t => t.classList.toggle('xzx-active', t.dataset.tab === xzx_tab));
+    document.getElementById('xzxStageTitle').textContent = xzx_tab === 'obj' ? '当前对象' : '当前字符串';
+    document.getElementById('xzxObjStage').style.display = xzx_tab === 'obj' ? 'block' : 'none';
+    document.getElementById('xzxStrStage').style.display = xzx_tab === 'str' ? 'block' : 'none';
+    document.getElementById('xzxObjPresets').style.display = xzx_tab === 'obj' ? '' : 'none';
+    document.getElementById('xzxStrPresets').style.display = xzx_tab === 'str' ? '' : 'none';
+    document.getElementById('xzxObjMethods').style.display = xzx_tab === 'obj' ? '' : 'none';
+    document.getElementById('xzxStrMethods').style.display = xzx_tab === 'str' ? '' : 'none';
+    xzx_tab === 'obj' ? xzx_renderObject() : xzx_renderString();
+    xzx_log('↶ 已撤销上一步');
+    return;
+  }
+
+  // 重置
+  if(e.target.id === 'xzxResetBtn'){
+    xzx_obj = {}; xzx_str = ''; xzx_history = [];
+    xzx_frozen = false; xzx_sealed = false;
+    xzx_renderObject(); xzx_renderString();
+    document.getElementById('xzxLog').innerHTML = '';
+    document.getElementById('xzxRet').textContent = '—';
+    document.getElementById('xzxMutate').textContent = '—';
+    document.getElementById('xzxMutate').className = 'xzx-val';
+    xzx_log('✕ 已重置');
+    return;
+  }
+});
+
+/* ---------- 参数输入联动代码 ---------- */
+document.getElementById('xzxParamInput').addEventListener('input', e => {
+  if(xzx_selectedFn) xzx_genCode(xzx_tab, xzx_selectedFn, e.target.value);
+});
+
+/* ============================================================
+   核心执行器
+   ============================================================ */
+function xzx_runMethod(tab, fnName, input){
+  if(!fnName){ xzx_log('⚠ 请先选择方法'); return; }
+
+  xzx_saveHistory();
+  const isMutate = document.querySelector(`.xzx-method-btn[data-fn="${fnName}"]`)?.dataset.mutates === 'true';
+
+  // freeze/seal 后会报错，先捕获
+  const cannotMutate = (isMutate && xzx_frozen) || (isMutate && xzx_sealed && fnName !== 'addProp' && fnName !== 'delProp' && fnName !== 'freeze' && fnName !== 'seal');
+  if(cannotMutate){
+    xzx_log(`✗ 对象已 ${xzx_frozen?'冻结':'密封'}，无法执行该修改操作！`, 'mut');
+    xzx_showReturn('TypeError', true);
+    return;
+  }
+
+  xzx_log(`▶ 执行 ${tab === 'obj' ? 'obj' : 'str'}.${fnName}(${input||''})`);
+
+  let ret;
+
+  try {
+    if(tab === 'obj'){
+      ret = xzx_runObj(fnName, input);
+    } else {
+      ret = xzx_runStr(fnName, input);
+    }
+
+    // 渲染可视化 + 返回值
+    if(tab === 'obj') xzx_renderObject(xzx_lastHighlight || []);
+    else xzx_renderString(xzx_lastHighlightRanges || []);
+    xzx_showReturn(ret, isMutate);
+    xzx_lastHighlight = [];
+    xzx_lastHighlightRanges = [];
+  } catch(err) {
+    xzx_log(`✗ 错误: ${err.message}`, 'mut');
+    xzx_showReturn('Error: ' + err.message, false);
+  }
+}
+
+/* ---------- 对象方法执行 ---------- */
+let xzx_lastHighlight = [];
+function xzx_runObj(fnName, input){
+  switch(fnName){
+    case 'keys':
+      return Object.keys(xzx_obj);
+    case 'values':
+      return Object.values(xzx_obj);
+    case 'entries':
+      return Object.entries(xzx_obj);
+    case 'fromEntries': {
+      // 解析 [["a",1],["b",2]]
+      let arr;
+      try { arr = eval(input || '[["a",1],["b",2]]'); }
+      catch(e) { arr = [['a', 1], ['b', 2]]; }
+      return Object.fromEntries(arr);
+    }
+    case 'hasOwn': {
+      const key = (input || 'name').trim();
+      return Object.hasOwn(xzx_obj, key);
+    }
+    case 'is': {
+      const parts = (input || 'NaN, NaN').split(',').map(s => s.trim());
+      let a, b;
+      try { a = eval(parts[0]); } catch(e) { a = xzx_parseVal(parts[0]); }
+      try { b = eval(parts[1]); } catch(e) { b = xzx_parseVal(parts[1]); }
+      return Object.is(a, b);
+    }
+    case 'assign': {
+      // 解析 color:red, age:30 这种
+      const src = {};
+      (input || 'color:red').split(',').forEach(p => {
+        const kv = p.trim().split(':');
+        if(kv.length >= 2) src[kv[0].trim()] = xzx_parseVal(kv.slice(1).join(':'));
+      });
+      Object.assign(xzx_obj, src);
+      xzx_lastHighlight = Object.keys(src);
+      return xzx_obj;
+    }
+    case 'addProp': {
+      // key=val  或 key:val
+      let parts = (input || 'color=blue').replace(/,/g,'|').split('|')[0];
+      let eq = parts.indexOf('=');
+      if(eq === -1) eq = parts.indexOf(':');
+      const k = parts.substring(0, eq).trim();
+      const v = xzx_parseVal(parts.substring(eq+1).trim());
+      xzx_obj[k] = v;
+      xzx_lastHighlight = [k];
+      return xzx_obj[k];
+    }
+    case 'delProp': {
+      const k = (input || 'name').trim();
+      if(!Object.hasOwn(xzx_obj, k)){
+        xzx_log(`  属性 "${k}" 不存在，无法删除`);
+        return undefined;
+      }
+      const existed = delete xzx_obj[k];
+      return existed;
+    }
+    case 'freeze':
+      Object.freeze(xzx_obj); xzx_frozen = true;
+      xzx_log('  🔒 对象已被完全冻结（不可增删改）', 'mut');
+      return xzx_obj;
+    case 'seal':
+      Object.seal(xzx_obj); xzx_sealed = true;
+      xzx_log('  🔒 对象已被密封（不可增删，但可改值）', 'mut');
+      return xzx_obj;
+  }
+}
+
+/* ---------- 字符串方法执行 ---------- */
+let xzx_lastHighlightRanges = [];
+function xzx_runStr(fnName, input){
+  switch(fnName){
+    case 'charAt': {
+      const i = parseInt(input) || 0;
+      xzx_lastHighlightRanges = [{start:i, end:i+1, cls:'xzx-found'}];
+      return xzx_str.charAt(i);
+    }
+    case 'indexOf': {
+      const sub = (input || 'He').replace(/^"|"$/g,'');
+      const idx = xzx_str.indexOf(sub);
+      if(idx !== -1) xzx_lastHighlightRanges = [{start:idx, end:idx+sub.length, cls:'xzx-found'}];
+      return idx;
+    }
+    case 'lastIndexOf': {
+      const sub = (input || 'o').replace(/^"|"$/g,'');
+      const idx = xzx_str.lastIndexOf(sub);
+      if(idx !== -1) xzx_lastHighlightRanges = [{start:idx, end:idx+sub.length, cls:'xzx-found'}];
+      return idx;
+    }
+    case 'includes': {
+      const sub = (input || 'He').replace(/^"|"$/g,'');
+      const found = xzx_str.includes(sub);
+      if(found){
+        const idx = xzx_str.indexOf(sub);
+        xzx_lastHighlightRanges = [{start:idx, end:idx+sub.length, cls:'xzx-found'}];
+      }
+      return found;
+    }
+    case 'startsWith': {
+      const sub = (input || 'Hel').replace(/^"|"$/g,'');
+      const ok = xzx_str.startsWith(sub);
+      if(ok) xzx_lastHighlightRanges = [{start:0, end:sub.length, cls:'xzx-found'}];
+      return ok;
+    }
+    case 'endsWith': {
+      const sub = (input || '!').replace(/^"|"$/g,'');
+      const ok = xzx_str.endsWith(sub);
+      if(ok) xzx_lastHighlightRanges = [{start:xzx_str.length-sub.length, end:xzx_str.length, cls:'xzx-found'}];
+      return ok;
+    }
+    case 'slice': {
+      const parts = (input || '0,5').split(',').map(s => s.trim());
+      const a = parseInt(parts[0]) || 0;
+      const b = parts[1] !== undefined ? parseInt(parts[1]) : undefined;
+      const res = xzx_str.slice(a, b);
+      // 可视化：高亮源范围，然后显示结果
+      let absA = a < 0 ? xzx_str.length + a : a;
+      let absB = b === undefined ? xzx_str.length : (b < 0 ? xzx_str.length + b : b);
+      xzx_lastHighlightRanges = [{start:absA, end:absB, cls:'xzx-picked'}];
+      return res;
+    }
+    case 'substring': {
+      const parts = (input || '0,5').split(',').map(s => s.trim());
+      const a = parseInt(parts[0]) || 0;
+      const b = parseInt(parts[1]) || undefined;
+      const res = b !== undefined ? xzx_str.substring(a, b) : xzx_str.substring(a);
+      let absA = Math.max(0, Math.min(a, b !== undefined ? b : xzx_str.length));
+      let absB = Math.max(a, b !== undefined ? b : xzx_str.length);
+      xzx_lastHighlightRanges = [{start:absA, end:absB, cls:'xzx-picked'}];
+      return res;
+    }
+    case 'substr': {
+      const parts = (input || '0,5').split(',').map(s => s.trim());
+      const a = parseInt(parts[0]) || 0;
+      const len = parts[1] !== undefined ? parseInt(parts[1]) : undefined;
+      return len !== undefined ? xzx_str.substr(a, len) : xzx_str.substr(a);
+    }
+    case 'toUpperCase': return xzx_str.toUpperCase();
+    case 'toLowerCase': return xzx_str.toLowerCase();
+    case 'replace':
+    case 'replaceAll': {
+      // 用 | 分隔 旧值|新值；找不到 | 时回退用第一个逗号
+      const raw = input || 'World|JS';
+      let sub, rep;
+      if(raw.includes('|')){
+        const p = raw.split('|');
+        sub = (p[0] || '').trim();
+        rep = (p[1] !== undefined ? p[1] : '').trim();
+      } else {
+        // 用第一个逗号分隔
+        const idx = raw.indexOf(',');
+        sub = (raw.substring(0, idx >= 0 ? idx : raw.length) || 'World').trim();
+        rep = idx >= 0 ? raw.substring(idx + 1).trim() : 'JS';
+      }
+      // 去引号
+      sub = sub.replace(/^"|"$/g,'').replace(/^'|'$/g,'');
+      rep = rep.replace(/^"|"$/g,'').replace(/^'|'$/g,'');
+      sub = sub || 'World';
+      rep = rep || 'JS';
+      const res = fnName === 'replaceAll' ? xzx_str.replaceAll(sub, rep) : xzx_str.replace(sub, rep);
+      const idx = xzx_str.indexOf(sub);
+      if(idx !== -1){
+        xzx_lastHighlightRanges = [
+          {start:idx, end:idx+Math.max(sub.length,rep.length), cls:'xzx-high'}
+        ];
+      }
+      return res;
+    }
+    case 'trim': return xzx_str.trim();
+    case 'repeat': {
+      const n = parseInt(input) || 3;
+      return xzx_str.repeat(n);
+    }
+    case 'padStart': {
+      const parts = (input || '12,*').split(',').map(s => s.trim());
+      const len = parseInt(parts[0]) || 12;
+      const fill = (parts[1] || ' ').replace(/^"|"$/g,'');
+      return xzx_str.padStart(len, fill);
+    }
+    case 'padEnd': {
+      const parts = (input || '12,*').split(',').map(s => s.trim());
+      const len = parseInt(parts[0]) || 12;
+      const fill = (parts[1] || ' ').replace(/^"|"$/g,'');
+      return xzx_str.padEnd(len, fill);
+    }
+    case 'split': {
+      const sep = (input || ',').replace(/^"|"$/g,'');
+      return xzx_str.split(sep);
+    }
+  }
+}
+
+/* ============================================================
+   初始化
+   ============================================================ */
+xzx_obj = { name: '许镇玺', age: 21, isStudent: true, score: 95 };
+xzx_str = 'Hello, JavaScript真好用';
+xzx_renderObject();
+xzx_renderString();
+xzx_log('✨ 页面就绪，点击预设或方法按钮开始探索');
+</script>
+
+</body>
+</html>
