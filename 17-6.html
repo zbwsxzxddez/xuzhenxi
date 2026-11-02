@@ -1,0 +1,401 @@
+<!-- 姓名：许镇玺，日期：Promise/async 包饺子异步流程演示 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>包饺子流程 · Promise + async 异步演示 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-6 用 Promise + async/await 演示包饺子异步流程
+     买原料(线上‖线下, 竞速) → 取原料 → 和面‖和馅(并行) → 包 → 煮 → 吃
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(232,214,107,.08), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-header{
+    max-width:1050px;margin:0 auto 16px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-title{font-size:24px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-gold),var(--xzx-pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-sub{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  /* 流程图 */
+  .xzx-flow{
+    max-width:1050px;margin:0 auto 14px;
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);padding:16px;
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;
+  }
+  .xzx-node{
+    border:1px solid var(--xzx-line);background:var(--xzx-bg-3);
+    border-radius:10px;padding:10px 14px;text-align:center;min-width:104px;
+    transition:.25s;position:relative;
+  }
+  .xzx-node .xzx-nico{font-size:24px;line-height:1.2;}
+  .xzx-node .xzx-nname{font-size:12.5px;font-weight:700;margin-top:3px;}
+  .xzx-node .xzx-ntime{font-size:10px;color:var(--xzx-text-d);font-family:var(--xzx-mon);margin-top:2px;}
+  .xzx-node.xzx-doing{
+    border-color:var(--xzx-gold);box-shadow:0 0 0 2px rgba(232,214,107,.25);
+    animation:xzx_glow 1s ease-in-out infinite;
+  }
+  .xzx-node.xzx-doing .xzx-nname{color:var(--xzx-gold);}
+  @keyframes xzx_glow{
+    50%{box-shadow:0 0 14px rgba(232,214,107,.45);}
+  }
+  .xzx-node.xzx-done{border-color:var(--xzx-green);background:rgba(136,228,167,.08);}
+  .xzx-node.xzx-done .xzx-nname{color:var(--xzx-green);}
+  .xzx-node.xzx-done::after{
+    content:"✓";position:absolute;top:-7px;right:-7px;
+    width:18px;height:18px;border-radius:50%;
+    background:var(--xzx-green);color:#111;font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    animation:xzx_drop .3s ease;
+  }
+  @keyframes xzx_drop{
+    from{transform:scale(0);}
+    to{transform:scale(1);}
+  }
+  .xzx-arrow{color:var(--xzx-text-d);font-size:16px;font-family:var(--xzx-mon);}
+  .xzx-parallel{
+    display:flex;flex-direction:column;gap:6px;align-items:stretch;
+  }
+  .xzx-parallel .xzx-node{min-width:104px;}
+
+  .xzx-bar{
+    max-width:1050px;margin:0 auto 14px;
+    display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  }
+  .xzx-btn{
+    padding:10px 26px;border-radius:9px;border:none;
+    background:linear-gradient(135deg,var(--xzx-accent),var(--xzx-purple));
+    color:#111;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;
+    box-shadow:0 6px 18px rgba(110,193,255,.28);
+  }
+  .xzx-btn:hover{filter:brightness(1.08);}
+  .xzx-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .xzx-speed{
+    display:flex;gap:6px;align-items:center;font-size:12px;color:var(--xzx-text-d);
+  }
+  .xzx-speed select{
+    padding:7px 10px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:8px;color:var(--xzx-text);font-family:var(--xzx-mon);outline:none;cursor:pointer;
+  }
+  .xzx-progress{
+    flex:1;min-width:200px;height:10px;background:#151623;
+    border:1px solid var(--xzx-line);border-radius:6px;overflow:hidden;
+  }
+  .xzx-progress-fill{
+    height:100%;width:0%;border-radius:6px;
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-gold),var(--xzx-green));
+    transition:width .5s ease;
+  }
+
+  .xzx-columns{
+    max-width:1050px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+  @media(max-width:900px){ .xzx-columns{grid-template-columns:1fr;} }
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;display:flex;flex-direction:column;
+  }
+  .xzx-card-head{
+    padding:10px 14px;border-bottom:1px solid var(--xzx-line);
+    font-size:13px;font-weight:600;color:var(--xzx-accent);letter-spacing:1px;
+    background:rgba(255,255,255,.02);
+  }
+  .xzx-card-head::before{
+    content:"";display:inline-block;width:3px;height:12px;
+    background:var(--xzx-accent);border-radius:2px;margin-right:6px;vertical-align:-1px;
+  }
+
+  /* 日志 */
+  .xzx-log{
+    padding:12px;min-height:200px;max-height:320px;overflow-y:auto;
+    font-family:var(--xzx-mon);font-size:11.5px;line-height:1.95;
+  }
+  .xzx-log div{padding:1px 0;border-bottom:1px dashed rgba(61,64,96,.4);}
+  .xzx-log div:last-child{border-bottom:none;}
+  .xzx-log .xzx-t{color:var(--xzx-text-d);margin-right:6px;}
+  .xzx-log .xzx-step{color:var(--xzx-gold);font-weight:700;}
+  .xzx-log .xzx-info{color:var(--xzx-accent);}
+  .xzx-log .xzx-ok{color:var(--xzx-green);}
+  .xzx-log .xzx-parallel{color:var(--xzx-purple);}
+  .xzx-log .xzx-race{color:var(--xzx-pink);}
+  .xzx-log .xzx-final{color:#111;background:var(--xzx-gold);padding:2px 10px;border-radius:6px;display:inline-block;margin-top:6px;font-weight:700;}
+
+  /* 代码 */
+  .xzx-code{
+    padding:14px;background:#151623;font-family:var(--xzx-mon);
+    font-size:11.5px;line-height:1.85;white-space:pre;overflow-x:auto;color:var(--xzx-text-d);
+  }
+  .xzx-code .xzx-kw{color:var(--xzx-pink);}
+  .xzx-code .xzx-fn{color:var(--xzx-accent);}
+  .xzx-code .xzx-str{color:var(--xzx-green);}
+  .xzx-code .xzx-api{color:var(--xzx-gold);font-weight:700;}
+  .xzx-code .xzx-cm{color:#63678a;}
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>包饺子流程</span> · Promise + async/await 异步演示</div>
+  <div class="xzx-sub">Promise.race / Promise.all · 许镇玺</div>
+</div>
+
+<!-- 流程图 -->
+<div class="xzx-flow" id="xzxFlow">
+  <div class="xzx-parallel">
+    <div class="xzx-node" id="xzxN_online"><div class="xzx-nico">🛒</div><div class="xzx-nname">线上买原料</div><div class="xzx-ntime">6s</div></div>
+    <div class="xzx-node" id="xzxN_offline"><div class="xzx-nico">🏬</div><div class="xzx-nname">线下买原料</div><div class="xzx-ntime">3s</div></div>
+  </div>
+  <span class="xzx-arrow">⇉</span>
+  <div class="xzx-node" id="xzxN_take"><div class="xzx-nico">📦</div><div class="xzx-nname">取原料</div><div class="xzx-ntime">2s</div></div>
+  <span class="xzx-arrow">→</span>
+  <div class="xzx-parallel">
+    <div class="xzx-node" id="xzxN_dough"><div class="xzx-nico">🍞</div><div class="xzx-nname">和面</div><div class="xzx-ntime">5s</div></div>
+    <div class="xzx-node" id="xzxN_filling"><div class="xzx-nico">🥬</div><div class="xzx-nname">和馅</div><div class="xzx-ntime">4s</div></div>
+  </div>
+  <span class="xzx-arrow">⇒</span>
+  <div class="xzx-node" id="xzxN_wrap"><div class="xzx-nico">🥟</div><div class="xzx-nname">包饺子</div><div class="xzx-ntime">3s</div></div>
+  <span class="xzx-arrow">→</span>
+  <div class="xzx-node" id="xzxN_boil"><div class="xzx-nico">🍲</div><div class="xzx-nname">煮饺子</div><div class="xzx-ntime">4s</div></div>
+  <span class="xzx-arrow">→</span>
+  <div class="xzx-node" id="xzxN_eat"><div class="xzx-nico">😋</div><div class="xzx-nname">吃饺子</div><div class="xzx-ntime">2s</div></div>
+</div>
+
+<!-- 控制条 -->
+<div class="xzx-bar">
+  <button class="xzx-btn" id="xzxRun">🥟 开始包饺子</button>
+  <div class="xzx-speed">
+    速度
+    <select id="xzxSpeed">
+      <option value="1" selected>原速 ×1</option>
+      <option value="2">快进 ×2</option>
+      <option value="4">快进 ×4</option>
+    </select>
+  </div>
+  <div class="xzx-progress"><div class="xzx-progress-fill" id="xzxProgressFill"></div></div>
+  <span class="xzx-sub" id="xzxPhase">待开始</span>
+</div>
+
+<div class="xzx-columns">
+
+  <!-- 日志 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">流程日志</div>
+    <div class="xzx-log" id="xzxLog">
+      <div><span class="xzx-t">[--:--:--]</span><span class="xzx-info">点击「开始包饺子」，观看 Promise + async/await 的异步编排…</span></div>
+    </div>
+  </div>
+
+  <!-- 核心代码 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">核心代码</div>
+    <div class="xzx-code"><span class="xzx-cm">// setTimeout 模拟每一步耗时</span>
+<span class="xzx-kw">const</span> <span class="xzx-fn">xzx_step</span> = (msg, ms) =&gt;
+  <span class="xzx-kw">new</span> <span class="xzx-api">Promise</span>(res =&gt; <span class="xzx-api">setTimeout</span>(() =&gt; res(msg), ms));
+
+<span class="xzx-kw">async function</span> <span class="xzx-fn">makeDumplings</span>() {
+  <span class="xzx-cm">// ① 线上(6s)/线下(3s)同时买 —— 竞速，谁快用谁</span>
+  <span class="xzx-kw">await</span> <span class="xzx-api">Promise.race</span>([buyOnline(), buyOffline()]);
+
+  <span class="xzx-cm">// ② 取原料（2s）</span>
+  <span class="xzx-kw">await</span> takeIngredients();
+
+  <span class="xzx-cm">// ③ 和面(5s) 与 和馅(4s) 同时进行 —— 全部完成才继续</span>
+  <span class="xzx-kw">await</span> <span class="xzx-api">Promise.all</span>([makeDough(), makeFilling()]);
+
+  <span class="xzx-cm">// ④⑤⑥ 包(3s) → 煮(4s) → 吃(2s) 依次串行</span>
+  <span class="xzx-kw">await</span> wrapDumplings();
+  <span class="xzx-kw">await</span> boilDumplings();
+  <span class="xzx-kw">await</span> eatDumplings();
+}</div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-6 包饺子异步流程
+   Promise.race（买原料竞速） + Promise.all（和面/和馅并行）
+   每一步用 setTimeout 模拟耗时
+   ============================================================ */
+const xzx_el = {
+  log: document.getElementById('xzxLog'),
+  run: document.getElementById('xzxRun'),
+  speed: document.getElementById('xzxSpeed'),
+  fill: document.getElementById('xzxProgressFill'),
+  phase: document.getElementById('xzxPhase')
+};
+
+/* 速度倍率（快进） */
+function xzx_rate(){ return parseInt(xzx_el.speed.value, 10); }
+
+/* 日志 */
+function xzx_log(msg, cls){
+  const t = new Date().toLocaleTimeString('zh-CN', {hour12:false});
+  const d = document.createElement('div');
+  d.innerHTML = `<span class="xzx-t">[${t}]</span><span class="${cls}">${msg}</span>`;
+  xzx_el.log.appendChild(d);
+  xzx_el.log.scrollTop = xzx_el.log.scrollHeight;
+}
+
+/* 节点状态 */
+function xzx_state(id, st){
+  const n = document.getElementById(id);
+  n.classList.remove('xzx-doing', 'xzx-done');
+  if(st) n.classList.add(st);
+}
+function xzx_resetNodes(){
+  ['xzxN_online','xzxN_offline','xzxN_take','xzxN_dough','xzxN_filling','xzxN_wrap','xzxN_boil','xzxN_eat']
+    .forEach(id => xzx_state(id, null));
+}
+
+/* 进度条：8 个节点 */
+const XZX_STEPS_TOTAL = 8;
+let xzx_done = 0;
+function xzx_tickProgress(){
+  xzx_done++;
+  xzx_el.fill.style.width = (xzx_done / XZX_STEPS_TOTAL * 100) + '%';
+}
+
+/* ---------- setTimeout 封装为 Promise ---------- */
+function xzx_step(name, nodeId, seconds){
+  return new Promise(resolve => {
+    xzx_state(nodeId, 'xzx-doing');
+    xzx_el.phase.textContent = name + ' 中…';
+    const ms = seconds * 1000 / xzx_rate();
+    setTimeout(() => {
+      xzx_state(nodeId, 'xzx-done');
+      xzx_tickProgress();
+      resolve();
+    }, ms);
+  });
+}
+
+/* ---------- 各步骤 ---------- */
+function xzx_buyOnline(){
+  xzx_log('①a 线上下单买原料…（需 6s）', 'xzx-info');
+  return xzx_step('', 'xzxN_online', 6).then(() => {
+    xzx_log('①a 线上原料已送到', 'xzx-info');
+    return 'online';
+  });
+}
+function xzx_buyOffline(){
+  xzx_log('①b 线下出门买原料…（需 3s）', 'xzx-info');
+  return xzx_step('', 'xzxN_offline', 3).then(() => {
+    xzx_log('①b 线下买好原料返回', 'xzx-info');
+    return 'offline';
+  });
+}
+function xzx_take(){
+  return xzx_step('取原料', 'xzxN_take', 2).then(() => {
+    xzx_log('② 取到原料，开始准备！', 'xzx-ok');
+  });
+}
+function xzx_dough(){
+  xzx_log('③a 开始和面…（需 5s）', 'xzx-parallel');
+  return xzx_step('', 'xzxN_dough', 5).then(() => {
+    xzx_log('③a 面和好了 ✓', 'xzx-parallel');
+  });
+}
+function xzx_filling(){
+  xzx_log('③b 开始和馅…（需 4s）', 'xzx-parallel');
+  return xzx_step('', 'xzxN_filling', 4).then(() => {
+    xzx_log('③b 馅拌好了 ✓', 'xzx-parallel');
+  });
+}
+function xzx_wrap(){
+  return xzx_step('包饺子', 'xzxN_wrap', 3).then(() => {
+    xzx_log('④ 饺子包好了，一共 36 只 🥟', 'xzx-ok');
+  });
+}
+function xzx_boil(){
+  return xzx_step('煮饺子', 'xzxN_boil', 4).then(() => {
+    xzx_log('⑤ 饺子煮熟，热气腾腾出锅 🍲', 'xzx-ok');
+  });
+}
+function xzx_eat(){
+  return xzx_step('吃饺子', 'xzxN_eat', 2).then(() => {
+    xzx_log('⑥ 开吃！真香 😋', 'xzx-ok');
+  });
+}
+
+/* ---------- 主流程 async/await ---------- */
+async function xzx_makeDumplings(){
+  xzx_resetNodes();
+  xzx_done = 0;
+  xzx_el.fill.style.width = '0%';
+  xzx_el.run.disabled = true;
+  xzx_el.speed.disabled = true;
+
+  xzx_log('=== 包饺子流程开始 ===', 'xzx-step');
+
+  // ① 线上/线下同时买：竞速，完成任何一个即可进行下一步
+  xzx_log('① 线上(6s)与线下(3s)同时出发 —— Promise.race 竞速', 'xzx-race');
+  const first = await Promise.race([xzx_buyOnline(), xzx_buyOffline()]);
+  xzx_log(`① Promise.race 胜出：${first === 'offline' ? '线下' : '线上'}渠道先完成，立即进入下一步`, 'xzx-race');
+
+  // ② 取原料
+  await xzx_take();
+
+  // ③ 和面 + 和馅：同时进行，全部完成才继续
+  xzx_log('③ 和面(5s)与和馅(4s)同时进行 —— Promise.all 并行等待', 'xzx-parallel');
+  await Promise.all([xzx_dough(), xzx_filling()]);
+  xzx_log('③ Promise.all 完成：面和馅都已就绪', 'xzx-parallel');
+
+  // ④⑤⑥ 串行
+  await xzx_wrap();
+  await xzx_boil();
+  await xzx_eat();
+
+  xzx_log('=== 全部完成！饺子真香 🥟 ===', 'xzx-step');
+  const d = document.createElement('div');
+  d.innerHTML = `<span class="xzx-final">🎉 流程结束：总耗时约 ${(6+2+5+3+4+2)}s 逻辑时长（竞速与并行已节省时间）</span>`;
+  xzx_el.log.appendChild(d);
+  xzx_el.log.scrollTop = xzx_el.log.scrollHeight;
+
+  xzx_el.phase.textContent = '已完成 ✓';
+  xzx_el.run.disabled = false;
+  xzx_el.speed.disabled = false;
+}
+
+xzx_el.run.addEventListener('click', xzx_makeDumplings);
+</script>
+
+</body>
+</html>

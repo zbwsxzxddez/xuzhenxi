@@ -1,0 +1,458 @@
+<!-- 姓名：许镇玺，日期：远程接口测试工具 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口测试工具 · fetch GET/POST 实战 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-4 远程接口测试（GET / POST / PUT / PATCH / DELETE）
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(242,143,173,.10), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-header{
+    max-width:1050px;margin:0 auto 16px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-title{font-size:24px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-sub{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  .xzx-layout{
+    max-width:1050px;margin:0 auto;
+    display:grid;grid-template-columns:430px 1fr;gap:14px;align-items:start;
+  }
+  @media(max-width:900px){ .xzx-layout{grid-template-columns:1fr;} }
+
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;
+  }
+  .xzx-card-head{
+    padding:10px 14px;border-bottom:1px solid var(--xzx-line);
+    font-size:13px;font-weight:600;color:var(--xzx-accent);letter-spacing:1px;
+    background:rgba(255,255,255,.02);
+  }
+  .xzx-card-head::before{
+    content:"";display:inline-block;width:3px;height:12px;
+    background:var(--xzx-accent);border-radius:2px;margin-right:6px;vertical-align:-1px;
+  }
+  .xzx-card-body{padding:14px;}
+
+  /* 请求构建区 */
+  .xzx-row{display:flex;gap:8px;margin-bottom:10px;}
+  .xzx-method{
+    padding:9px 12px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:8px;color:var(--xzx-text);font-family:var(--xzx-mon);
+    font-size:13px;font-weight:700;cursor:pointer;outline:none;
+  }
+  .xzx-method:focus{border-color:var(--xzx-accent);}
+  .xzx-url{
+    flex:1;padding:9px 12px;background:#151623;border:1px solid var(--xzx-line);
+    border-radius:8px;color:var(--xzx-text);font-family:var(--xzx-mon);
+    font-size:12.5px;outline:none;min-width:0;
+  }
+  .xzx-url:focus{border-color:var(--xzx-accent);}
+  .xzx-body-label{
+    font-size:11px;color:var(--xzx-text-d);margin:4px 0 6px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--xzx-mon);
+  }
+  .xzx-body-area{
+    width:100%;height:130px;padding:10px 12px;background:#151623;
+    border:1px solid var(--xzx-line);border-radius:8px;
+    color:var(--xzx-text);font-family:var(--xzx-mon);font-size:12px;
+    line-height:1.7;resize:vertical;outline:none;
+  }
+  .xzx-body-area:focus{border-color:var(--xzx-accent);}
+  .xzx-body-area.xzx-bad{border-color:var(--xzx-red);}
+  .xzx-body-area:disabled{opacity:.45;}
+
+  .xzx-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .xzx-btn{
+    padding:9px 16px;border-radius:8px;border:1px solid var(--xzx-line);
+    background:var(--xzx-bg-3);color:var(--xzx-text);
+    font-size:13px;font-weight:500;cursor:pointer;transition:.18s;
+  }
+  .xzx-btn:hover{border-color:var(--xzx-accent);color:var(--xzx-accent);}
+  .xzx-btn.xzx-send{
+    flex:1;background:linear-gradient(135deg,var(--xzx-accent),var(--xzx-purple));
+    border:none;color:#111;font-weight:700;
+    box-shadow:0 6px 18px rgba(110,193,255,.28);
+  }
+  .xzx-btn.xzx-send:hover{color:#111;filter:brightness(1.08);}
+  .xzx-btn.xzx-send:disabled{opacity:.55;cursor:wait;}
+  .xzx-quick{
+    font-size:11px;color:var(--xzx-text-d);margin-top:10px;line-height:2;
+  }
+  .xzx-quick a{
+    color:var(--xzx-gold);text-decoration:none;font-family:var(--xzx-mon);
+    border:1px dashed var(--xzx-line);border-radius:6px;padding:2px 8px;margin:0 3px;
+    cursor:pointer;display:inline-block;transition:.15s;
+  }
+  .xzx-quick a:hover{border-color:var(--xzx-gold);}
+
+  /* 响应区 */
+  .xzx-resp-meta{
+    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;
+    font-family:var(--xzx-mon);font-size:12px;align-items:center;
+  }
+  .xzx-pill{
+    padding:4px 12px;border-radius:20px;border:1px solid var(--xzx-line);
+    background:var(--xzx-bg-3);color:var(--xzx-text-d);
+  }
+  .xzx-pill b{color:var(--xzx-text);}
+  .xzx-pill.xzx-ok{border-color:var(--xzx-green);color:var(--xzx-green);}
+  .xzx-pill.xzx-warn{border-color:var(--xzx-orange);color:var(--xzx-orange);}
+  .xzx-pill.xzx-err{border-color:var(--xzx-red);color:var(--xzx-red);}
+
+  .xzx-out{
+    background:#151623;border:1px solid var(--xzx-line);border-radius:8px;
+    padding:12px;font-family:var(--xzx-mon);font-size:12px;line-height:1.8;
+    max-height:430px;overflow:auto;white-space:pre-wrap;word-break:break-all;
+    min-height:180px;color:var(--xzx-text-d);
+  }
+  .xzx-out.xzx-err-text{color:var(--xzx-red);border-color:var(--xzx-red);background:rgba(255,123,123,.06);}
+  .xzx-out.xzx-ok-text{color:var(--xzx-text);}
+  .xzx-empty-hint{text-align:center;padding:50px 10px;font-style:italic;}
+
+  /* JSON 简易高亮 */
+  .xzx-j-key{color:var(--xzx-pink);}
+  .xzx-j-str{color:var(--xzx-green);}
+  .xzx-j-num{color:var(--xzx-orange);}
+  .xzx-j-bool{color:var(--xzx-purple);}
+  .xzx-j-null{color:var(--xzx-red);font-style:italic;}
+
+  .xzx-headers-toggle{
+    font-size:11px;color:var(--xzx-text-d);font-family:var(--xzx-mon);
+    cursor:pointer;margin-top:8px;display:inline-block;
+  }
+  .xzx-headers-toggle:hover{color:var(--xzx-accent);}
+  #xzxHeadersOut{display:none;margin-top:6px;}
+
+  .xzx-tip{
+    max-width:1050px;margin:16px auto 0;
+    font-size:11px;color:var(--xzx-text-d);line-height:1.8;
+  }
+  .xzx-tip b{color:var(--xzx-gold);}
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>远程接口测试工具</span> · GET / POST / PUT / PATCH / DELETE</div>
+  <div class="xzx-sub">fetch + async/await · 许镇玺</div>
+</div>
+
+<div class="xzx-layout">
+
+  <!-- 左：请求构建 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">构建请求</div>
+    <div class="xzx-card-body">
+      <div class="xzx-row">
+        <select class="xzx-method" id="xzxMethod">
+          <option value="GET" selected>GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="PATCH">PATCH</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+        <input class="xzx-url" id="xzxUrl" spellcheck="false"
+               placeholder="https://api.example.com/..." value="https://jsonplaceholder.typicode.com/posts/1">
+      </div>
+
+      <div class="xzx-body-label">
+        <span>请求体 Body（JSON）— 仅 POST / PUT / PATCH 需要</span>
+        <span id="xzxBodyHint">当前方法：GET（已禁用）</span>
+      </div>
+      <textarea class="xzx-body-area" id="xzxBody" spellcheck="false" disabled>{
+  "title": "许镇玺的测试文章",
+  "body": "这是通过 fetch 发送的请求体内容",
+  "userId": 1
+}</textarea>
+
+      <div class="xzx-actions">
+        <button class="xzx-btn xzx-send" id="xzxSend">▶ 发送请求</button>
+        <button class="xzx-btn" id="xzxReset">重置</button>
+      </div>
+
+      <div class="xzx-quick">
+        快捷示例：<br>
+        <a data-url="https://jsonplaceholder.typicode.com/posts/1" data-m="GET">GET 单篇文章</a>
+        <a data-url="https://jsonplaceholder.typicode.com/posts" data-m="GET">GET 文章列表</a>
+        <a data-url="https://jsonplaceholder.typicode.com/posts" data-m="POST">POST 新建</a>
+        <a data-url="https://jsonplaceholder.typicode.com/posts/1" data-m="PUT">PUT 整体更新</a>
+        <a data-url="https://jsonplaceholder.typicode.com/posts/1" data-m="PATCH">PATCH 局部更新</a>
+        <a data-url="https://jsonplaceholder.typicode.com/posts/1" data-m="DELETE">DELETE 删除</a>
+        <a data-url="https://jsonplaceholder.typicode.com/invalid-path-xyz" data-m="GET">GET 404 错误</a>
+        <a data-url="https://no-such-domain-xzx.test/api" data-m="GET">GET 网络错误</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：响应 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">响应结果</div>
+    <div class="xzx-card-body">
+      <div class="xzx-resp-meta">
+        <span class="xzx-pill" id="xzxPillStatus">状态 <b>—</b></span>
+        <span class="xzx-pill" id="xzxPillTime">耗时 <b>—</b></span>
+        <span class="xzx-pill" id="xzxPillSize">大小 <b>—</b></span>
+      </div>
+
+      <span class="xzx-headers-toggle" id="xzxHeadersToggle">▸ 查看响应头 Headers</span>
+      <div class="xzx-out" id="xzxHeadersOut"></div>
+
+      <div class="xzx-out" id="xzxOut" style="margin-top:8px;">
+        <div class="xzx-empty-hint">填好请求后点击 <b style="color:var(--xzx-accent)">▶ 发送请求</b>，或选择左侧快捷示例</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="xzx-tip">
+  <b>说明：</b>jsonplaceholder.typicode.com 是免费测试接口，POST/PUT/PATCH/DELETE 不会真正写入数据，仅模拟返回。
+  本工具完整展示 <b>HTTP 状态码、耗时、响应体、响应头</b>；JSON 自动格式化并语法高亮；
+  请求体 JSON 写错会有红框提示；网络失败 / 404 / 500 分别给出不同错误信息。
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-4 远程接口测试
+   fetch + async/await，支持 GET / POST / PUT / PATCH / DELETE
+   ============================================================ */
+const xzx_el = {
+  method:  document.getElementById('xzxMethod'),
+  url:     document.getElementById('xzxUrl'),
+  body:    document.getElementById('xzxBody'),
+  hint:    document.getElementById('xzxBodyHint'),
+  send:    document.getElementById('xzxSend'),
+  reset:   document.getElementById('xzxReset'),
+  out:     document.getElementById('xzxOut'),
+  heads:   document.getElementById('xzxHeadersOut'),
+  headsT:  document.getElementById('xzxHeadersToggle'),
+  pillSt:  document.getElementById('xzxPillStatus'),
+  pillTime:document.getElementById('xzxPillTime'),
+  pillSize:document.getElementById('xzxPillSize')
+};
+
+const XZX_HAS_BODY = new Set(['POST', 'PUT', 'PATCH']);
+
+/* ---------- 方法切换：启用/禁用请求体 ---------- */
+function xzx_syncBody(){
+  const need = XZX_HAS_BODY.has(xzx_el.method.value);
+  xzx_el.body.disabled = !need;
+  xzx_el.hint.textContent = need
+    ? `当前方法：${xzx_el.method.value}（已启用）`
+    : `当前方法：${xzx_el.method.value}（已禁用）`;
+}
+xzx_el.method.addEventListener('change', xzx_syncBody);
+
+/* ---------- JSON 简易语法高亮 ---------- */
+function xzx_highlight(json){
+  return json
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
+      let cls = 'xzx-j-num';
+      if(/^"/.test(m))        cls = /:$/.test(m) ? 'xzx-j-key' : 'xzx-j-str';
+      else if(/true|false/.test(m)) cls = 'xzx-j-bool';
+      else if(/null/.test(m)) cls = 'xzx-j-null';
+      return `<span class="${cls}">${m}</span>`;
+    });
+}
+
+/* ---------- 响应头展示 ---------- */
+function xzx_showHeaders(h){
+  let s = '';
+  h.forEach((v, k) => { s += `${k}: ${v}\n`; });
+  xzx_el.heads.textContent = s || '（无响应头）';
+}
+xzx_el.headsT.addEventListener('click', () => {
+  const open = xzx_el.heads.style.display === 'block';
+  xzx_el.heads.style.display = open ? 'none' : 'block';
+  xzx_el.headsT.textContent = open ? '▸ 查看响应头 Headers' : '▾ 收起响应头 Headers';
+});
+
+/* ---------- 发送请求 ---------- */
+async function xzx_sendRequest(){
+  const method = xzx_el.method.value;
+  const url = xzx_el.url.value.trim();
+
+  // URL 校验
+  if(!url){ xzx_renderError('URL 不能为空'); return; }
+  if(!/^https?:\/\//i.test(url)){ xzx_renderError('URL 必须以 http:// 或 https:// 开头'); return; }
+
+  // 请求体校验（仅含 body 的方法）
+  let bodyOpt;
+  if(XZX_HAS_BODY.has(method)){
+    const raw = xzx_el.body.value.trim();
+    if(raw){
+      try {
+        JSON.parse(raw);
+        xzx_el.body.classList.remove('xzx-bad');
+      } catch(e){
+        xzx_el.body.classList.add('xzx-bad');
+        xzx_renderError(`请求体不是合法 JSON：${e.message}`);
+        return;
+      }
+    }
+    bodyOpt = JSON.stringify(JSON.parse(raw || '{}'));
+  }
+
+  // 界面进入 loading 态
+  xzx_el.send.disabled = true;
+  xzx_el.send.textContent = '⟳ 请求中…';
+  xzx_el.out.className = 'xzx-out';
+  xzx_el.out.textContent = '请求中，请稍候…';
+  xzx_el.pillSt.className = 'xzx-pill';
+  xzx_el.pillSt.innerHTML = '状态 <b>…</b>';
+  xzx_el.pillTime.innerHTML = '耗时 <b>—</b>';
+  xzx_el.pillSize.innerHTML = '大小 <b>—</b>';
+
+  const t0 = performance.now();
+
+  const opts = { method, headers:{} };
+  if(bodyOpt){
+    opts.headers['Content-Type'] = 'application/json; charset=UTF-8';
+    opts.body = bodyOpt;
+  }
+
+  try {
+    const res = await fetch(url, opts);
+    const cost = Math.round(performance.now() - t0);
+    const text = await res.text();
+
+    // 状态码
+    const okCls = res.ok ? 'xzx-ok' : (res.status >= 500 ? 'xzx-err' : 'xzx-warn');
+    xzx_el.pillSt.className = 'xzx-pill ' + okCls;
+    xzx_el.pillSt.innerHTML = `状态 <b>${res.status} ${res.statusText}</b>`;
+    xzx_el.pillTime.innerHTML = `耗时 <b>${cost} ms</b>`;
+    xzx_el.pillSize.innerHTML = `大小 <b>${new Blob([text]).size} B</b>`;
+
+    xzx_showHeaders(res.headers);
+
+    // 非 2xx：在顶部给出错误说明，但仍显示返回内容
+    if(!res.ok){
+      xzx_el.out.className = 'xzx-out xzx-ok-text';
+      xzx_el.out.innerHTML =
+        `⚠️ 服务器返回错误状态 ${res.status} ${res.statusText}\n` +
+        `（常见原因：资源不存在 404 / 服务器故障 500 / 权限不足 401·403）\n` +
+        `── 响应内容 ──\n\n` + xzx_maybeFormat(text);
+      return;
+    }
+
+    // 空响应（如 DELETE 204）
+    if(!text){
+      xzx_el.out.className = 'xzx-out xzx-ok-text';
+      xzx_el.out.textContent = `✓ 请求成功（${res.status}），响应体为空`;
+      return;
+    }
+
+    xzx_el.out.className = 'xzx-out xzx-ok-text';
+    xzx_el.out.innerHTML = xzx_maybeFormat(text);
+
+  } catch(err){
+    const cost = Math.round(performance.now() - t0);
+    // 网络层错误：DNS 失败 / CORS / 断网 / 超时
+    xzx_el.pillSt.className = 'xzx-pill xzx-err';
+    xzx_el.pillSt.innerHTML = '状态 <b>网络失败</b>';
+    xzx_el.pillTime.innerHTML = `耗时 <b>${cost} ms</b>`;
+    xzx_renderError(
+      `❌ ${err.name}: ${err.message}\n\n` +
+      `可能原因：\n` +
+      `· 域名不存在或无法解析（DNS）\n` +
+      `· 接口未开启 CORS 跨域许可\n` +
+      `· 本机断网或防火墙拦截\n` +
+      `· 混合内容限制（https 页面请求 http 接口）`
+    );
+  } finally {
+    xzx_el.send.disabled = false;
+    xzx_el.send.textContent = '▶ 发送请求';
+  }
+}
+
+/* JSON 就格式化+高亮，否则原样输出 */
+function xzx_maybeFormat(text){
+  try {
+    return xzx_highlight(JSON.stringify(JSON.parse(text), null, 2));
+  } catch(e){
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  }
+}
+
+function xzx_renderError(msg){
+  xzx_el.out.className = 'xzx-out xzx-err-text';
+  xzx_el.out.textContent = msg;
+  xzx_el.pillSt.className = 'xzx-pill xzx-err';
+  xzx_el.pillSt.innerHTML = '状态 <b>错误</b>';
+}
+
+/* ---------- 快捷示例 ---------- */
+document.querySelectorAll('.xzx-quick a').forEach(a => {
+  a.addEventListener('click', () => {
+    xzx_el.url.value = a.dataset.url;
+    xzx_el.method.value = a.dataset.m;
+    xzx_syncBody();
+    xzx_sendRequest();
+  });
+});
+
+/* ---------- 重置 ---------- */
+xzx_el.reset.addEventListener('click', () => {
+  xzx_el.url.value = 'https://jsonplaceholder.typicode.com/posts/1';
+  xzx_el.method.value = 'GET';
+  xzx_el.body.value = '{\n  "title": "许镇玺的测试文章",\n  "body": "这是通过 fetch 发送的请求体内容",\n  "userId": 1\n}';
+  xzx_el.body.classList.remove('xzx-bad');
+  xzx_syncBody();
+  xzx_el.out.className = 'xzx-out';
+  xzx_el.out.innerHTML = '<div class="xzx-empty-hint">填好请求后点击 <b style="color:var(--xzx-accent)">▶ 发送请求</b>，或选择左侧快捷示例</div>';
+  xzx_el.heads.textContent = '';
+  xzx_el.heads.style.display = 'none';
+  xzx_el.headsT.textContent = '▸ 查看响应头 Headers';
+  xzx_el.pillSt.className = 'xzx-pill';
+  xzx_el.pillSt.innerHTML = '状态 <b>—</b>';
+  xzx_el.pillTime.innerHTML = '耗时 <b>—</b>';
+  xzx_el.pillSize.innerHTML = '大小 <b>—</b>';
+});
+
+xzx_el.send.addEventListener('click', xzx_sendRequest);
+xzx_el.url.addEventListener('keydown', e => { if(e.key === 'Enter') xzx_sendRequest(); });
+</script>
+
+</body>
+</html>

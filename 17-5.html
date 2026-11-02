@@ -1,0 +1,389 @@
+<!-- 姓名：许镇玺，日期：JavaScript 两种定时器演示 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript 定时器 · setTimeout / setInterval · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-5 两种定时器：setTimeout（一次性）与 setInterval（周期性）
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(232,214,107,.08), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-header{
+    max-width:1050px;margin:0 auto 16px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-title{font-size:24px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-gold));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-sub{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  .xzx-layout{
+    max-width:1050px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;
+  }
+  @media(max-width:900px){ .xzx-layout{grid-template-columns:1fr;} }
+
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;display:flex;flex-direction:column;
+  }
+  .xzx-card-head{
+    padding:11px 16px;border-bottom:1px solid var(--xzx-line);
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(255,255,255,.02);
+  }
+  .xzx-card-head h2{font-size:14px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
+  .xzx-tag{
+    font-size:10px;font-family:var(--xzx-mon);font-weight:600;
+    padding:2px 10px;border-radius:10px;letter-spacing:1px;
+  }
+  .xzx-tag.t-blue{color:var(--xzx-accent);background:rgba(110,193,255,.12);border:1px solid var(--xzx-accent);}
+  .xzx-tag.t-gold{color:var(--xzx-gold);background:rgba(232,214,107,.12);border:1px solid var(--xzx-gold);}
+  .xzx-state{
+    font-size:11px;font-family:var(--xzx-mon);padding:3px 12px;border-radius:12px;
+    color:var(--xzx-text-d);border:1px dashed var(--xzx-line);
+  }
+  .xzx-state.xzx-running{color:var(--xzx-green);border:1px solid var(--xzx-green);animation:xzx_blink 1s step-start infinite;}
+  .xzx-state.xzx-done{color:var(--xzx-purple);border:1px solid var(--xzx-purple);}
+  @keyframes xzx_blink{50%{opacity:.45;}}
+
+  .xzx-card-body{padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;}
+
+  /* 代码说明条 */
+  .xzx-code{
+    background:#151623;border:1px solid var(--xzx-line);border-radius:8px;
+    padding:9px 12px;font-family:var(--xzx-mon);font-size:11.5px;line-height:1.7;
+    color:var(--xzx-text-d);
+  }
+  .xzx-code b{color:var(--xzx-accent);font-weight:700;}
+  .xzx-code .xzx-kw{color:var(--xzx-pink);}
+  .xzx-code .xzx-fn{color:var(--xzx-accent);}
+
+  /* 控制行 */
+  .xzx-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .xzx-num{
+    width:86px;padding:8px 10px;background:#151623;border:1px solid var(--xzx-line);
+    border-radius:8px;color:var(--xzx-text);font-family:var(--xzx-mon);
+    font-size:13px;outline:none;text-align:center;
+  }
+  .xzx-num:focus{border-color:var(--xzx-accent);}
+  .xzx-unit{font-size:12px;color:var(--xzx-text-d);}
+  .xzx-btn{
+    padding:9px 16px;border-radius:8px;border:1px solid var(--xzx-line);
+    background:var(--xzx-bg-3);color:var(--xzx-text);
+    font-size:13px;font-weight:600;cursor:pointer;transition:.18s;
+  }
+  .xzx-btn:hover{transform:translateY(-1px);}
+  .xzx-btn.xzx-start{background:linear-gradient(135deg,var(--xzx-accent),var(--xzx-purple));border:none;color:#111;}
+  .xzx-btn.xzx-start-gold{background:linear-gradient(135deg,var(--xzx-gold),var(--xzx-orange));border:none;color:#111;}
+  .xzx-btn.xzx-stop:hover{border-color:var(--xzx-red);color:var(--xzx-red);}
+  .xzx-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+  /* 可视化轨道 */
+  .xzx-track-label{font-size:11px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+  .xzx-track{
+    height:34px;background:#151623;border:1px solid var(--xzx-line);border-radius:8px;
+    display:flex;align-items:center;padding:0 8px;gap:6px;overflow:hidden;position:relative;
+  }
+  .xzx-shell{
+    height:20px;min-width:26px;padding:0 7px;border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-family:var(--xzx-mon);font-weight:700;color:#111;
+    animation:xzx_drop .35s ease;
+  }
+  @keyframes xzx_drop{
+    from{opacity:0;transform:translateY(-14px) scale(.8);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .xzx-shell.s-blue{background:var(--xzx-accent);}
+  .xzx-shell.s-gold{background:var(--xzx-gold);}
+  .xzx-shell.s-red{background:var(--xzx-red);}
+
+  /* 倒计时大数字 */
+  .xzx-count{
+    text-align:center;font-family:var(--xzx-mon);font-size:44px;font-weight:800;
+    color:var(--xzx-gold);line-height:1.2;min-height:60px;
+  }
+  .xzx-count.xzx-fire{animation:xzx_pop .4s ease;}
+  @keyframes xzx_pop{
+    0%{transform:scale(1.35);color:var(--xzx-green);}
+    100%{transform:scale(1);}
+  }
+
+  /* 日志 */
+  .xzx-log{
+    flex:1;min-height:120px;max-height:180px;overflow-y:auto;
+    background:#151623;border:1px solid var(--xzx-line);border-radius:8px;
+    padding:10px;font-family:var(--xzx-mon);font-size:11.5px;line-height:1.9;
+  }
+  .xzx-log div{border-bottom:1px dashed rgba(61,64,96,.45);padding:1px 0;}
+  .xzx-log div:last-child{border-bottom:none;}
+  .xzx-log .xzx-t{color:var(--xzx-text-d);margin-right:6px;}
+  .xzx-log .xzx-info{color:var(--xzx-accent);}
+  .xzx-log .xzx-gold{color:var(--xzx-gold);}
+  .xzx-log .xzx-green{color:var(--xzx-green);}
+  .xzx-log .xzx-red{color:var(--xzx-red);}
+
+  .xzx-tip{
+    max-width:1050px;margin:16px auto 0;
+    font-size:11px;color:var(--xzx-text-d);line-height:1.9;
+  }
+  .xzx-tip b{color:var(--xzx-gold);}
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>JavaScript 两种定时器</span> · setTimeout / setInterval</div>
+  <div class="xzx-sub">单线程事件循环 · 许镇玺</div>
+</div>
+
+<div class="xzx-layout">
+
+  <!-- ========== 左：setTimeout 一次性定时器 ========== -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>setTimeout <span class="xzx-tag t-blue">一次性</span></h2>
+      <span class="xzx-state" id="xzxT1State">空闲</span>
+    </div>
+    <div class="xzx-card-body">
+      <div class="xzx-code">
+        <span class="xzx-kw">const</span> id = <b>setTimeout</b>(<span class="xzx-fn">fn</span>, delay)<br>
+        <span class="xzx-kw">clearTimeout</span>(id)&nbsp;&nbsp;<span style="color:var(--xzx-text-d)">// 到点只执行一次</span>
+      </div>
+
+      <div class="xzx-row">
+        <input class="xzx-num" id="xzxT1Delay" type="number" min="1" max="60" value="5">
+        <span class="xzx-unit">秒后引爆 💣</span>
+        <button class="xzx-btn xzx-start" id="xzxT1Start">▶ 启动</button>
+        <button class="xzx-btn xzx-stop" id="xzxT1Cancel" disabled>✕ clearTimeout 取消</button>
+      </div>
+
+      <div class="xzx-count" id="xzxT1Count">—</div>
+
+      <div class="xzx-track-label">执行轨道（到点后出现一枚「执行」方块）</div>
+      <div class="xzx-track" id="xzxT1Track"></div>
+
+      <div class="xzx-log" id="xzxT1Log"><div><span class="xzx-t">[--:--:--]</span><span class="xzx-info">等待启动 setTimeout…</span></div></div>
+    </div>
+  </div>
+
+  <!-- ========== 右：setInterval 周期定时器 ========== -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>setInterval <span class="xzx-tag t-gold">周期性</span></h2>
+      <span class="xzx-state" id="xzxT2State">空闲</span>
+    </div>
+    <div class="xzx-card-body">
+      <div class="xzx-code">
+        <span class="xzx-kw">const</span> id = <b>setInterval</b>(<span class="xzx-fn">fn</span>, interval)<br>
+        <span class="xzx-kw">clearInterval</span>(id)&nbsp;&nbsp;<span style="color:var(--xzx-text-d)">// 每隔 interval 执行一次</span>
+      </div>
+
+      <div class="xzx-row">
+        <input class="xzx-num" id="xzxT2Delay" type="number" min="1" max="60" value="1">
+        <span class="xzx-unit">秒 一次</span>
+        <button class="xzx-btn xzx-start-gold" id="xzxT2Start">▶ 启动</button>
+        <button class="xzx-btn xzx-stop" id="xzxT2Stop" disabled>■ clearInterval 停止</button>
+      </div>
+
+      <div class="xzx-count" id="xzxT2Count">已执行 0 次</div>
+
+      <div class="xzx-track-label">执行轨道（每周期掉落一枚「滴答」方块，最多显示最近 12 个）</div>
+      <div class="xzx-track" id="xzxT2Track"></div>
+
+      <div class="xzx-log" id="xzxT2Log"><div><span class="xzx-t">[--:--:--]</span><span class="xzx-gold">等待启动 setInterval…</span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="xzx-tip">
+  <b>区别总结：</b><b>setTimeout</b> 到点后<b>只执行一次</b>，适合延时任务（如提示框自动消失）；
+  <b>setInterval</b> 每隔固定时间<b>重复执行</b>，适合轮询、倒计时、轮播图等场景。
+  两者都返回一个 ID，分别用 <b>clearTimeout / clearInterval</b> 取消。
+  JS 是单线程的，定时器回调实际由事件循环调度，若主线程被阻塞，触发时间会延后（不保证精确）。
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-5 两种定时器演示
+   ============================================================ */
+function xzx_now(){
+  return new Date().toLocaleTimeString('zh-CN', {hour12:false});
+}
+
+function xzx_log(box, msg, cls){
+  const d = document.createElement('div');
+  d.innerHTML = `<span class="xzx-t">[${xzx_now()}]</span><span class="${cls}">${msg}</span>`;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  while(box.children.length > 50) box.removeChild(box.firstChild);
+}
+
+/* ================= setTimeout 部分 ================= */
+const xzx_t1 = {
+  timer:   null,
+  delay:   document.getElementById('xzxT1Delay'),
+  start:   document.getElementById('xzxT1Start'),
+  cancel:  document.getElementById('xzxT1Cancel'),
+  count:   document.getElementById('xzxT1Count'),
+  state:   document.getElementById('xzxT1State'),
+  track:   document.getElementById('xzxT1Track'),
+  log:     document.getElementById('xzxT1Log')
+};
+let xzx_t1_remain = 0;
+let xzx_t1_ticker = null;
+
+xzx_t1.start.addEventListener('click', () => {
+  if(xzx_t1.timer) return;
+  const sec = Math.max(1, Math.min(60, parseInt(xzx_t1.delay.value, 10) || 5));
+  xzx_t1_remain = sec;
+
+  xzx_t1.state.textContent = '计时中';
+  xzx_t1.state.className = 'xzx-state xzx-running';
+  xzx_t1.start.disabled = true;
+  xzx_t1.cancel.disabled = false;
+  xzx_t1.count.textContent = sec + ' s';
+  xzx_log(xzx_t1.log, `setTimeout(fn, ${sec * 1000}) 已注册，返回 id=1`, 'info');
+
+  // 每秒刷新倒计时显示（展示用）
+  xzx_t1_ticker = setInterval(() => {
+    xzx_t1_remain--;
+    xzx_t1.count.textContent = Math.max(0, xzx_t1_remain) + ' s';
+  }, 1000);
+
+  // 核心：一次性定时器
+  xzx_t1.timer = setTimeout(() => {
+    clearInterval(xzx_t1_ticker);
+    xzx_t1.count.textContent = '💥 执行完毕';
+    xzx_t1.count.classList.remove('xzx-fire');
+    void xzx_t1.count.offsetWidth;
+    xzx_t1.count.classList.add('xzx-fire');
+
+    const s = document.createElement('div');
+    s.className = 'xzx-shell s-blue';
+    s.textContent = '执行 ✓';
+    xzx_t1.track.appendChild(s);
+    while(xzx_t1.track.children.length > 8) xzx_t1.track.removeChild(xzx_t1.track.firstChild);
+
+    xzx_log(xzx_t1.log, '回调函数执行！setTimeout 到点触发（仅此一次）', 'green');
+    xzx_t1.state.textContent = '已完成';
+    xzx_t1.state.className = 'xzx-state xzx-done';
+    xzx_t1.timer = null;
+    xzx_t1.start.disabled = false;
+    xzx_t1.cancel.disabled = true;
+  }, sec * 1000);
+});
+
+xzx_t1.cancel.addEventListener('click', () => {
+  if(!xzx_t1.timer) return;
+  clearTimeout(xzx_t1.timer);      // 取消一次性定时器
+  clearInterval(xzx_t1_ticker);
+  xzx_t1.timer = null;
+  xzx_t1.count.textContent = '已取消';
+  xzx_log(xzx_t1.log, 'clearTimeout(id) 调用，回调被取消，永远不会执行', 'red');
+
+  const s = document.createElement('div');
+  s.className = 'xzx-shell s-red';
+  s.textContent = '取消 ✕';
+  xzx_t1.track.appendChild(s);
+  while(xzx_t1.track.children.length > 8) xzx_t1.track.removeChild(xzx_t1.track.firstChild);
+
+  xzx_t1.state.textContent = '空闲';
+  xzx_t1.state.className = 'xzx-state';
+  xzx_t1.start.disabled = false;
+  xzx_t1.cancel.disabled = true;
+});
+
+/* ================= setInterval 部分 ================= */
+const xzx_t2 = {
+  timer:  null,
+  delay:  document.getElementById('xzxT2Delay'),
+  start:  document.getElementById('xzxT2Start'),
+  stop:   document.getElementById('xzxT2Stop'),
+  count:  document.getElementById('xzxT2Count'),
+  state:  document.getElementById('xzxT2State'),
+  track:  document.getElementById('xzxT2Track'),
+  log:    document.getElementById('xzxT2Log')
+};
+let xzx_t2_times = 0;
+
+xzx_t2.start.addEventListener('click', () => {
+  if(xzx_t2.timer) return;
+  const sec = Math.max(1, Math.min(60, parseInt(xzx_t2.delay.value, 10) || 1));
+  xzx_t2_times = 0;
+  xzx_t2.count.textContent = '已执行 0 次';
+
+  xzx_t2.state.textContent = '循环中';
+  xzx_t2.state.className = 'xzx-state xzx-running';
+  xzx_t2.start.disabled = true;
+  xzx_t2.stop.disabled = false;
+  xzx_log(xzx_t2.log, `setInterval(fn, ${sec * 1000}) 已注册，返回 id=2`, 'gold');
+
+  // 核心：周期定时器
+  xzx_t2.timer = setInterval(() => {
+    xzx_t2_times++;
+    xzx_t2.count.textContent = `已执行 ${xzx_t2_times} 次`;
+    xzx_t2.count.classList.remove('xzx-fire');
+    void xzx_t2.count.offsetWidth;
+    xzx_t2.count.classList.add('xzx-fire');
+
+    const s = document.createElement('div');
+    s.className = 'xzx-shell s-gold';
+    s.textContent = '滴答 ' + xzx_t2_times;
+    xzx_t2.track.appendChild(s);
+    while(xzx_t2.track.children.length > 12) xzx_t2.track.removeChild(xzx_t2.track.firstChild);
+
+    xzx_log(xzx_t2.log, `第 ${xzx_t2_times} 次触发（每 ${sec}s 一次，持续运行）`, 'gold');
+  }, sec * 1000);
+});
+
+xzx_t2.stop.addEventListener('click', () => {
+  if(!xzx_t2.timer) return;
+  clearInterval(xzx_t2.timer);     // 停止周期定时器
+  xzx_t2.timer = null;
+  xzx_log(xzx_t2.log, `clearInterval(id) 调用，循环停止，共执行 ${xzx_t2_times} 次`, 'red');
+  xzx_t2.state.textContent = '空闲';
+  xzx_t2.state.className = 'xzx-state';
+  xzx_t2.start.disabled = false;
+  xzx_t2.stop.disabled = true;
+});
+</script>
+
+</body>
+</html>
