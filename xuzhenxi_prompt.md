@@ -77,3 +77,7 @@
 ## 2026-11-02-10-30
 **Model:** trae
 **Prompt:** 完成17-1.html，展示json。做成交互式 JSON 可视化工具：左边文本输入 JSON，右边树形展示 + 语法高亮 + 类型着色 chip + 折叠/展开；含 parse/stringify 转换、格式化/压缩、深拷贝、find 路径等实用功能。
+
+## 2026-11-02-11-20
+**Model:** deepseek-v4.1-flash
+**Prompt:** 完成17-2.html 获取`https://dog.ceo/api/breeds/image/random`的数据并展示。接口可以跨域访问。使用fetch和原生代码实现。

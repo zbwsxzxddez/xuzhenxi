@@ -1,0 +1,546 @@
+<!-- 姓名：许镇玺，日期：随机狗狗图片接口请求 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机狗狗图片 · fetch 接口实战 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-2 fetch 请求 dog.ceo 随机狗狗图片
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(242,143,173,.10), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-header{
+    max-width:1100px;margin:0 auto 16px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-title{font-size:24px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-sub{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  .xzx-layout{
+    max-width:1100px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 340px;gap:14px;
+    align-items:start;
+  }
+
+  /* ---------- 卡片 ---------- */
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;
+  }
+  .xzx-card-head{
+    padding:11px 16px;border-bottom:1px solid var(--xzx-line);
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+    background:rgba(255,255,255,.02);
+  }
+  .xzx-card-head h2{
+    font-size:13px;font-weight:600;color:var(--xzx-accent);letter-spacing:1px;
+  }
+  .xzx-card-head h2::before{
+    content:"";display:inline-block;width:3px;height:12px;
+    background:var(--xzx-accent);border-radius:2px;margin-right:6px;vertical-align:-1px;
+  }
+  .xzx-card-body{padding:16px;}
+
+  /* ---------- 图片舞台 ---------- */
+  .xzx-stage{
+    position:relative;aspect-ratio:4/3;background:#151623;
+    border-radius:10px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--xzx-line);
+  }
+  .xzx-dog{
+    width:100%;height:100%;object-fit:cover;display:block;
+    opacity:0;transition:opacity .45s ease, transform .45s ease;
+    transform:scale(1.03);
+  }
+  .xzx-dog.xzx-show{opacity:1;transform:scale(1);}
+  .xzx-dog.xzx-enter{animation:xzx_pop .5s ease;}
+  @keyframes xzx_pop{
+    0%{opacity:.25;transform:scale(.96);}
+    100%{opacity:1;transform:scale(1);}
+  }
+
+  /* 加载骨架 */
+  .xzx-skeleton{
+    position:absolute;inset:0;display:none;
+    flex-direction:column;align-items:center;justify-content:center;gap:16px;
+    background:linear-gradient(110deg,#1c1e2d 30%,#252838 50%,#1c1e2d 70%);
+    background-size:200% 100%;
+    animation:xzx_shimmer 1.4s linear infinite;
+  }
+  .xzx-skeleton.xzx-on{display:flex;}
+  @keyframes xzx_shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+  }
+  .xzx-paw{
+    font-size:52px;animation:xzx_bounce 1s ease-in-out infinite;
+  }
+  @keyframes xzx_bounce{
+    0%,100%{transform:translateY(0) rotate(-6deg);}
+    50%{transform:translateY(-14px) rotate(6deg);}
+  }
+  .xzx-skeleton p{font-size:12px;color:var(--xzx-text-d);letter-spacing:1px;}
+
+  /* 错误态 */
+  .xzx-error-stage{
+    position:absolute;inset:0;display:none;
+    flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    background:rgba(255,123,123,.08);padding:24px;text-align:center;
+  }
+  .xzx-error-stage.xzx-on{display:flex;}
+  .xzx-error-icon{font-size:44px;}
+  .xzx-error-stage h3{font-size:15px;color:var(--xzx-red);}
+  .xzx-error-stage p{
+    font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);
+    word-break:break-all;line-height:1.7;max-width:90%;
+  }
+
+  /* 图片上的信息条 */
+  .xzx-overlay{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:14px 16px 12px;
+    background:linear-gradient(transparent, rgba(0,0,0,.78));
+    display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
+    opacity:0;transition:opacity .3s;
+  }
+  .xzx-stage:hover .xzx-overlay{opacity:1;}
+  .xzx-overlay .xzx-breed{
+    font-size:14px;font-weight:700;color:#fff;text-transform:capitalize;
+    letter-spacing:.5px;
+  }
+  .xzx-overlay .xzx-time{font-size:11px;color:rgba(255,255,255,.7);font-family:var(--xzx-mon);}
+
+  /* ---------- 按钮 ---------- */
+  .xzx-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .xzx-btn{
+    padding:9px 18px;border-radius:8px;border:1px solid var(--xzx-line);
+    background:var(--xzx-bg-3);color:var(--xzx-text);
+    font-size:13px;font-weight:500;cursor:pointer;transition:.18s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .xzx-btn:hover{border-color:var(--xzx-accent);color:var(--xzx-accent);transform:translateY(-1px);}
+  .xzx-btn.xzx-primary{
+    background:linear-gradient(135deg,var(--xzx-accent),var(--xzx-purple));
+    border:none;color:#111;font-weight:700;
+    box-shadow:0 6px 18px rgba(110,193,255,.28);
+  }
+  .xzx-btn.xzx-primary:hover{color:#111;filter:brightness(1.08);}
+  .xzx-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+  /* ---------- 右侧 ---------- */
+  .xzx-mini-stat{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;
+  }
+  .xzx-stat-box{
+    background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:8px;padding:10px 12px;
+  }
+  .xzx-stat-box .xzx-label{
+    font-size:10px;color:var(--xzx-text-d);letter-spacing:1px;
+    text-transform:uppercase;margin-bottom:3px;
+  }
+  .xzx-stat-box .xzx-num{
+    font-size:19px;font-weight:800;font-family:var(--xzx-mon);color:var(--xzx-gold);
+  }
+  .xzx-stat-box.xzx-ok .xzx-num{color:var(--xzx-green);}
+  .xzx-stat-box.xzx-bad .xzx-num{color:var(--xzx-red);}
+
+  /* 接口信息 */
+  .xzx-api-row{
+    display:flex;gap:8px;align-items:flex-start;padding:7px 0;
+    border-bottom:1px dashed var(--xzx-line);font-size:12px;
+  }
+  .xzx-api-row:last-child{border-bottom:none;}
+  .xzx-api-row .xzx-key2{color:var(--xzx-text-d);min-width:64px;flex-shrink:0;font-family:var(--xzx-mon);}
+  .xzx-api-row .xzx-val2{
+    color:var(--xzx-accent);font-family:var(--xzx-mon);
+    word-break:break-all;line-height:1.6;font-size:11.5px;
+  }
+  .xzx-api-row .xzx-val2.xzx-str{color:var(--xzx-green);}
+
+  /* 历史缩略图 */
+  .xzx-history{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+    max-height:200px;overflow-y:auto;
+  }
+  .xzx-thumb{
+    aspect-ratio:1/1;border-radius:6px;overflow:hidden;cursor:pointer;
+    border:2px solid transparent;transition:.2s;background:#151623;
+  }
+  .xzx-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .xzx-thumb:hover{border-color:var(--xzx-accent);transform:scale(1.04);}
+  .xzx-thumb.xzx-current{border-color:var(--xzx-gold);box-shadow:0 0 0 2px rgba(232,214,107,.3);}
+  .xzx-history-empty{
+    color:var(--xzx-text-d);font-size:12px;font-style:italic;text-align:center;
+    padding:18px 0;grid-column:span 4;
+  }
+
+  /* 日志 */
+  .xzx-log{
+    max-height:170px;overflow-y:auto;background:#151623;
+    border:1px solid var(--xzx-line);border-radius:8px;padding:10px;
+    font-family:var(--xzx-mon);font-size:11.5px;line-height:1.85;margin-top:14px;
+  }
+  .xzx-log div{padding:1px 0;border-bottom:1px dashed rgba(61,64,96,.5);}
+  .xzx-log div:last-child{border-bottom:none;}
+  .xzx-log .xzx-t{color:var(--xzx-text-d);margin-right:5px;}
+  .xzx-log .xzx-info{color:var(--xzx-accent);}
+  .xzx-log .xzx-ok{color:var(--xzx-green);}
+  .xzx-log .xzx-err{color:var(--xzx-red);}
+  .xzx-log .xzx-warn{color:var(--xzx-orange);}
+
+  .xzx-tip{
+    font-size:11px;color:var(--xzx-text-d);margin-top:10px;line-height:1.7;
+  }
+  .xzx-tip b{color:var(--xzx-gold);}
+
+  @media(max-width:900px){
+    .xzx-layout{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>随机狗狗图片</span> · fetch 接口实战</div>
+  <div class="xzx-sub">GET https://dog.ceo/api/breeds/image/random</div>
+</div>
+
+<div class="xzx-layout">
+
+  <!-- 左：图片主舞台 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>图片展示</h2>
+      <span class="xzx-sub" id="xzxStatusTag">待请求</span>
+    </div>
+    <div class="xzx-card-body">
+
+      <div class="xzx-stage" id="xzxStage">
+        <img class="xzx-dog" id="xzxDog" alt="随机狗狗图片" referrerpolicy="no-referrer">
+
+        <!-- 加载骨架 -->
+        <div class="xzx-skeleton" id="xzxSkeleton">
+          <div class="xzx-paw">🐾</div>
+          <p>正在请求接口…</p>
+        </div>
+
+        <!-- 错误态 -->
+        <div class="xzx-error-stage" id="xzxErrorStage">
+          <div class="xzx-error-icon">📡</div>
+          <h3>请求失败</h3>
+          <p id="xzxErrMsg">—</p>
+        </div>
+
+        <!-- 图片信息浮层 -->
+        <div class="xzx-overlay">
+          <div>
+            <div class="xzx-breed" id="xzxBreed">—</div>
+          </div>
+          <div class="xzx-time" id="xzxTime">—</div>
+        </div>
+      </div>
+
+      <div class="xzx-actions">
+        <button class="xzx-btn xzx-primary" id="xzxFetchBtn">🐕 换一只狗狗</button>
+        <button class="xzx-btn" id="xzxCopyBtn">📋 复制图片地址</button>
+        <button class="xzx-btn" id="xzxOpenBtn">🔗 新窗口打开</button>
+      </div>
+
+      <div class="xzx-tip">
+        <b>原理：</b>页面通过 <b>fetch()</b> 请求公有接口，接口返回 JSON：<b>{ "message": 图片地址, "status": "success" }</b>，
+        再用返回的地址设置 <b>&lt;img&gt; 的 src</b> 完成展示。接口已开启 CORS，可直接在浏览器跨域调用。
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：状态 / 接口信息 / 历史 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>请求状态</h2>
+    </div>
+    <div class="xzx-card-body">
+
+      <div class="xzx-mini-stat">
+        <div class="xzx-stat-box">
+          <div class="xzx-label">请求次数</div>
+          <div class="xzx-num" id="xzxTotal">0</div>
+        </div>
+        <div class="xzx-stat-box xzx-ok">
+          <div class="xzx-label">成功</div>
+          <div class="xzx-num" id="xzxSuccess">0</div>
+        </div>
+        <div class="xzx-stat-box xzx-bad">
+          <div class="xzx-label">失败</div>
+          <div class="xzx-num" id="xzxFail">0</div>
+        </div>
+        <div class="xzx-stat-box" id="xzxStatusBox">
+          <div class="xzx-label">接口 status</div>
+          <div class="xzx-num" id="xzxApiStatus">—</div>
+        </div>
+      </div>
+
+      <h2 style="font-size:13px;color:var(--xzx-accent);letter-spacing:1px;margin:4px 0 6px;">返回数据</h2>
+      <div class="xzx-api-row">
+        <span class="xzx-key2">message</span>
+        <span class="xzx-val2" id="xzxApiMsg">—</span>
+      </div>
+      <div class="xzx-api-row">
+        <span class="xzx-key2">status</span>
+        <span class="xzx-val2 xzx-str" id="xzxApiStatus2">—</span>
+      </div>
+      <div class="xzx-api-row">
+        <span class="xzx-key2">品种</span>
+        <span class="xzx-val2" id="xzxApiBreed">—</span>
+      </div>
+      <div class="xzx-api-row">
+        <span class="xzx-key2">耗时</span>
+        <span class="xzx-val2" id="xzxApiCost">—</span>
+      </div>
+
+      <h2 style="font-size:13px;color:var(--xzx-accent);letter-spacing:1px;margin:14px 0 8px;">历史记录</h2>
+      <div class="xzx-history" id="xzxHistory">
+        <div class="xzx-history-empty">还没有记录</div>
+      </div>
+
+      <div class="xzx-log" id="xzxLog"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-2 随机狗狗图片
+   fetch + async/await 原生实现
+   ============================================================ */
+const XZX_API = 'https://dog.ceo/api/breeds/image/random';
+
+const xzx_el = {
+  dog:       document.getElementById('xzxDog'),
+  stage:     document.getElementById('xzxStage'),
+  skeleton:  document.getElementById('xzxSkeleton'),
+  errStage:  document.getElementById('xzxErrorStage'),
+  errMsg:    document.getElementById('xzxErrMsg'),
+  breed:     document.getElementById('xzxBreed'),
+  time:      document.getElementById('xzxTime'),
+  statusTag: document.getElementById('xzxStatusTag'),
+  total:     document.getElementById('xzxTotal'),
+  success:   document.getElementById('xzxSuccess'),
+  fail:      document.getElementById('xzxFail'),
+  apiStatus: document.getElementById('xzxApiStatus'),
+  apiMsg:    document.getElementById('xzxApiMsg'),
+  apiStatus2:document.getElementById('xzxApiStatus2'),
+  apiBreed:  document.getElementById('xzxApiBreed'),
+  apiCost:   document.getElementById('xzxApiCost'),
+  history:   document.getElementById('xzxHistory'),
+  log:       document.getElementById('xzxLog'),
+  fetchBtn:  document.getElementById('xzxFetchBtn')
+};
+
+/* ---------- 状态 ---------- */
+let xzx_total = 0;
+let xzx_success = 0;
+let xzx_fail = 0;
+let xzx_loading = false;
+let xzx_url = '';
+let xzx_history = [];      // [{url, breed}]
+
+/* ---------- 日志 ---------- */
+function xzx_log(msg, type){
+  type = type || 'info';
+  const t = new Date().toLocaleTimeString('zh-CN', {hour12:false});
+  const d = document.createElement('div');
+  d.innerHTML = `<span class="xzx-t">[${t}]</span><span class="xzx-${type}">${msg}</span>`;
+  xzx_el.log.appendChild(d);
+  xzx_el.log.scrollTop = xzx_el.log.scrollHeight;
+}
+
+/* ---------- 从 URL 解析品种 ---------- */
+function xzx_parseBreed(url){
+  // 例：https://images.dog.ceo/breeds/hound-afghan/n02088094_1003.jpg
+  const m = url.match(/\/breeds\/([^/]+)\//);
+  if(!m) return '未知品种';
+  const raw = m[1];
+  // hound-afghan → Afghan Hound 风格的中文展示
+  const parts = raw.split('-').reverse();
+  return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+}
+
+/* ---------- 渲染历史 ---------- */
+function xzx_renderHistory(currentUrl){
+  const box = xzx_el.history;
+  box.innerHTML = '';
+  if(xzx_history.length === 0){
+    box.innerHTML = '<div class="xzx-history-empty">还没有记录</div>';
+    return;
+  }
+  xzx_history.forEach(item => {
+    const d = document.createElement('div');
+    d.className = 'xzx-thumb' + (item.url === currentUrl ? ' xzx-current' : '');
+    d.title = item.breed;
+    const img = document.createElement('img');
+    img.src = item.url;
+    img.alt = item.breed;
+    img.loading = 'lazy';
+    d.appendChild(img);
+    d.addEventListener('click', () => {
+      xzx_showImage(item.url, item.breed);
+      xzx_renderHistory(item.url);
+      xzx_log('切换历史图片：' + item.breed);
+    });
+    box.appendChild(d);
+  });
+}
+
+/* ---------- 展示图片 ---------- */
+function xzx_showImage(url, breed){
+  xzx_url = url;
+  xzx_el.dog.classList.remove('xzx-show', 'xzx-enter');
+  xzx_el.dog.src = url;
+  xzx_el.breed.textContent = breed;
+  xzx_el.time.textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+  xzx_el.dog.onload = () => {
+    xzx_el.dog.classList.add('xzx-show', 'xzx-enter');
+    xzx_el.skeleton.classList.remove('xzx-on');
+  };
+  xzx_el.dog.onerror = () => {
+    xzx_el.skeleton.classList.remove('xzx-on');
+    xzx_el.errStage.classList.add('xzx-on');
+    xzx_el.errMsg.textContent = '图片资源加载失败：' + url;
+    xzx_log('图片加载失败', 'err');
+  };
+}
+
+/* ---------- 主请求 ---------- */
+async function xzx_fetchDog(){
+  if(xzx_loading) return;
+  xzx_loading = true;
+  xzx_el.fetchBtn.disabled = true;
+
+  xzx_total++;
+  xzx_el.total.textContent = xzx_total;
+  xzx_el.statusTag.textContent = '请求中…';
+  xzx_el.errStage.classList.remove('xzx-on');
+  xzx_el.skeleton.classList.add('xzx-on');
+  xzx_log('GET ' + XZX_API, 'info');
+
+  const t0 = performance.now();
+
+  try {
+    // 1) 发请求 + 检查 HTTP 状态
+    const res = await fetch(XZX_API, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+
+    // 2) 解析 JSON
+    const data = await res.json();
+    const cost = Math.round(performance.now() - t0);
+
+    // 3) 校验返回结构
+    if(data.status !== 'success' || typeof data.message !== 'string'){
+      throw new Error('返回数据格式异常：' + JSON.stringify(data));
+    }
+
+    const url = data.message;
+    const breed = xzx_parseBreed(url);
+
+    // 4) 更新统计与接口信息区
+    xzx_success++;
+    xzx_el.success.textContent = xzx_success;
+    xzx_el.apiStatus.textContent = data.status;
+    xzx_el.statusTag.textContent = '成功 ✓ 200 OK';
+    xzx_el.apiMsg.textContent = url;
+    xzx_el.apiStatus2.textContent = data.status;
+    xzx_el.apiBreed.textContent = breed;
+    xzx_el.apiCost.textContent = cost + ' ms';
+    xzx_log(`200 OK · ${cost}ms · ${breed}`, 'ok');
+
+    // 5) 添入历史（最多保留 8 条）
+    xzx_history.unshift({url, breed});
+    if(xzx_history.length > 8) xzx_history.pop();
+
+    // 6) 展示
+    xzx_showImage(url, breed);
+    xzx_renderHistory(url);
+
+  } catch(err) {
+    xzx_fail++;
+    xzx_el.fail.textContent = xzx_fail;
+    xzx_el.statusTag.textContent = '失败 ✗';
+    xzx_el.skeleton.classList.remove('xzx-on');
+    xzx_el.errStage.classList.add('xzx-on');
+    xzx_el.errMsg.textContent = err.message || String(err);
+    xzx_el.apiStatus.textContent = 'error';
+    xzx_log('请求失败：' + (err.message || err), 'err');
+  } finally {
+    xzx_loading = false;
+    xzx_el.fetchBtn.disabled = false;
+  }
+}
+
+/* ---------- 按钮事件 ---------- */
+xzx_el.fetchBtn.addEventListener('click', xzx_fetchDog);
+
+document.getElementById('xzxCopyBtn').addEventListener('click', async () => {
+  if(!xzx_url){ xzx_log('还没有图片地址可复制', 'warn'); return; }
+  try {
+    await navigator.clipboard.writeText(xzx_url);
+    xzx_log('已复制图片地址到剪贴板', 'ok');
+    const b = document.getElementById('xzxCopyBtn');
+    const old = b.textContent;
+    b.textContent = '✓ 已复制';
+    setTimeout(() => b.textContent = old, 1200);
+  } catch(e){
+    xzx_log('复制失败（浏览器限制）', 'err');
+  }
+});
+
+document.getElementById('xzxOpenBtn').addEventListener('click', () => {
+  if(!xzx_url){ xzx_log('还没有图片地址', 'warn'); return; }
+  window.open(xzx_url, '_blank', 'noopener');
+  xzx_log('已在新窗口打开图片', 'info');
+});
+
+/* ---------- 初始化 ---------- */
+xzx_log('页面就绪，正在自动请求第一张图片…', 'info');
+xzx_fetchDog();
+</script>
+
+</body>
+</html>
