@@ -1,0 +1,521 @@
+<!-- 姓名：许镇玺，日期：JSON 可视化工具 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 可视化工具 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-1 JSON 可视化工具
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:        #1a1c2c;
+    --xzx-bg-2:      #242637;
+    --xzx-bg-3:      #2f3248;
+    --xzx-line:      #3d4060;
+    --xzx-text:      #e0e2f0;
+    --xzx-text-d:    #9a9eb8;
+    --xzx-accent:    #6ec1ff;
+    --xzx-accent-2:  #f28fad;
+    --xzx-gold:      #e8d66b;
+    --xzx-green:     #88e4a7;
+    --xzx-purple:    #b8a0ff;
+    --xzx-orange:    #ffb86b;
+    --xzx-red:       #ff7b7b;
+    --xzx-shadow:    0 6px 24px rgba(0,0,0,.35);
+    --xzx-radius:    10px;
+    --xzx-mon:       Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--xzx-bg);
+    color:var(--xzx-text);
+    line-height:1.6;
+    min-height:100vh;
+    padding:20px;
+    background-image:
+      radial-gradient(600px 400px at 10% -10%, rgba(110,193,255,.08), transparent 60%),
+      radial-gradient(500px 500px at 100% 100%, rgba(184,160,255,.08), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  /* ---------- 顶部标题 ---------- */
+  .xzx-header{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .xzx-title{font-size:22px;font-weight:700;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-accent-2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-meta{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  /* ---------- 主布局 ---------- */
+  .xzx-main{
+    max-width:1280px;margin:0 auto;
+    display:grid;grid-template-columns:420px 1fr;gap:14px;
+  }
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;display:flex;flex-direction:column;min-height:600px;
+  }
+  .xzx-card-head{
+    padding:10px 14px;border-bottom:1px solid var(--xzx-line);
+    display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;
+    background:rgba(255,255,255,.02);
+  }
+  .xzx-card-head h2{font-size:13px;font-weight:600;color:var(--xzx-accent);letter-spacing:1px;}
+  .xzx-card-head h2::before{content:"";display:inline-block;width:3px;height:12px;background:var(--xzx-accent);border-radius:2px;margin-right:6px;vertical-align:-1px;}
+
+  /* ---------- 左侧输入区 ---------- */
+  .xzx-textarea{
+    flex:1;padding:14px;background:#1e1f2e;border:none;outline:none;
+    color:var(--xzx-text);font-family:var(--xzx-mon);font-size:13px;
+    line-height:1.7;resize:none;min-height:460px;
+  }
+
+  /* 预设 */
+  .xzx-presets{display:flex;gap:5px;flex-wrap:wrap;}
+  .xzx-preset{
+    padding:3px 10px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:12px;font-family:var(--xzx-mon);font-size:11px;
+    color:var(--xzx-text-d);cursor:pointer;transition:.2s;
+  }
+  .xzx-preset:hover{color:var(--xzx-gold);border-color:var(--xzx-gold);}
+
+  /* 工具栏 */
+  .xzx-toolbar{
+    display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--xzx-line);
+    background:rgba(0,0,0,.15);
+  }
+  .xzx-btn{
+    padding:6px 12px;background:var(--xzx-bg-3);border:1px solid var(--xzx-line);
+    border-radius:6px;color:var(--xzx-text);font-family:var(--xzx-mon);font-size:12px;
+    cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .xzx-btn:hover{border-color:var(--xzx-accent);color:var(--xzx-accent);}
+  .xzx-btn.xzx-primary{background:var(--xzx-accent);border-color:var(--xzx-accent);color:#111;font-weight:600;}
+  .xzx-btn.xzx-primary:hover{background:#4da8e8;border-color:#4da8e8;color:#111;}
+  .xzx-btn.xzx-danger:hover{border-color:var(--xzx-red);color:var(--xzx-red);}
+  .xzx-btn.xzx-ok:hover{border-color:var(--xzx-green);color:var(--xzx-green);}
+
+  /* ---------- 右侧树形区 ---------- */
+  .xzx-tree-wrap{flex:1;padding:14px;overflow:auto;background:#1e1f2e;min-height:460px;}
+  .xzx-tree{font-family:var(--xzx-mon);font-size:13px;}
+  .xzx-tree-row{
+    display:flex;align-items:flex-start;padding:2px 4px;border-radius:4px;cursor:default;
+    transition:.1s;white-space:nowrap;
+  }
+  .xzx-tree-row:hover{background:rgba(110,193,255,.1);}
+  .xzx-tree-row.xzx-highlight{background:rgba(232,214,107,.2);box-shadow:0 0 0 1px var(--xzx-gold);}
+
+  /* 折叠箭头 */
+  .xzx-toggle{
+    width:16px;height:16px;flex-shrink:0;margin-top:1px;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    color:var(--xzx-text-d);font-size:10px;user-select:none;
+    transition:transform .2s;
+  }
+  .xzx-toggle.xzx-open{transform:rotate(90deg);}
+  .xzx-toggle.xzx-leaf{visibility:hidden;}
+
+  /* key */
+  .xzx-key{color:var(--xzx-accent-2);font-weight:600;}
+  .xzx-key::before,.xzx-key::after{content:'"';color:var(--xzx-text-d);}
+  .xzx-colon{color:var(--xzx-text-d);margin-right:6px;}
+
+  /* 类型着色值 */
+  .xzx-val{font-weight:500;}
+  .xzx-val.str{color:var(--xzx-green);}
+  .xzx-val.num{color:var(--xzx-orange);}
+  .xzx-val.bool{color:var(--xzx-purple);}
+  .xzx-val.null{color:var(--xzx-red);font-style:italic;}
+
+  /* 包裹符号 */
+  .xzx-wrap{color:var(--xzx-text-d);font-weight:700;}
+  .xzx-indent{display:inline-block;width:20px;flex-shrink:0;}
+
+  /* 类型 chip */
+  .xzx-type-chip{
+    margin-left:6px;font-size:10px;padding:1px 6px;border-radius:8px;font-family:var(--xzx-mon);
+  }
+  .xzx-type-chip.t-str{background:rgba(136,228,167,.15);color:var(--xzx-green);}
+  .xzx-type-chip.t-num{background:rgba(255,184,107,.15);color:var(--xzx-orange);}
+  .xzx-type-chip.t-bool{background:rgba(184,160,255,.15);color:var(--xzx-purple);}
+  .xzx-type-chip.t-null{background:rgba(255,123,123,.15);color:var(--xzx-red);}
+  .xzx-type-chip.t-obj{background:rgba(110,193,255,.15);color:var(--xzx-accent);}
+  .xzx-type-chip.t-arr{background:rgba(242,143,173,.15);color:var(--xzx-accent-2);}
+
+  /* 错误 */
+  .xzx-error{
+    padding:18px;background:rgba(255,123,123,.1);border:1px solid var(--xzx-red);
+    border-radius:8px;color:var(--xzx-red);font-family:var(--xzx-mon);font-size:13px;line-height:1.7;
+  }
+  .xzx-error strong{color:#fff;}
+  .xzx-empty{color:var(--xzx-text-d);font-style:italic;text-align:center;padding:60px 0;}
+
+  /* 底部状态栏 */
+  .xzx-status{
+    display:flex;gap:16px;padding:8px 14px;border-top:1px solid var(--xzx-line);
+    font-size:11px;color:var(--xzx-text-d);font-family:var(--xzx-mon);flex-wrap:wrap;
+  }
+  .xzx-status b{color:var(--xzx-gold);font-weight:600;}
+  .xzx-status .xzx-err{color:var(--xzx-red);}
+
+  @media(max-width:850px){
+    .xzx-main{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>JSON 可视化工具</span> · parse / stringify / 树形展开</div>
+  <div class="xzx-meta">许镇玺 · 17-1</div>
+</div>
+
+<div class="xzx-main">
+
+  <!-- 左：输入 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>JSON 输入</h2>
+      <div class="xzx-presets">
+        <div class="xzx-preset" data-preset="user">用户</div>
+        <div class="xzx-preset" data-preset="shop">商品</div>
+        <div class="xzx-preset" data-preset="array">数组</div>
+        <div class="xzx-preset" data-preset="deep">深层嵌套</div>
+      </div>
+    </div>
+    <textarea class="xzx-textarea" id="xzxInput" spellcheck="false" placeholder='在这里粘贴或输入 JSON，例如：{"name":"许镇玺","age":21}'></textarea>
+
+    <div class="xzx-toolbar">
+      <button class="xzx-btn xzx-primary" id="xzxParseBtn">▶ parse 解析</button>
+      <button class="xzx-btn" id="xzxFormatBtn">{} 格式化</button>
+      <button class="xzx-btn" id="xzxMinifyBtn">压缩</button>
+      <button class="xzx-btn xzx-ok" id="xzxCopyBtn">复制</button>
+      <button class="xzx-btn xzx-danger" id="xzxClearBtn">清空</button>
+    </div>
+  </div>
+
+  <!-- 右：树形展示 -->
+  <div class="xzx-card">
+    <div class="xzx-card-head">
+      <h2>树形结构</h2>
+      <div>
+        <button class="xzx-btn" id="xzxCollapseAll">全部折叠</button>
+        <button class="xzx-btn" id="xzxExpandAll">全部展开</button>
+      </div>
+    </div>
+    <div class="xzx-tree-wrap" id="xzxTreeWrap">
+      <div class="xzx-empty">点击左侧 <b style="color:var(--xzx-gold)">parse 解析</b> 或选择一个预设开始</div>
+    </div>
+    <div class="xzx-status" id="xzxStatus"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-1 JSON 可视化
+   ============================================================ */
+
+/* ---------- 预设数据 ---------- */
+const xzx_presets = {
+  user: {
+    name: "许镇玺",
+    age: 21,
+    isStudent: true,
+    score: 95.5,
+    tags: ["前端", "CSS", "JS", "设计"],
+    address: {
+      province: "辽宁",
+      city: "沈阳",
+      zip: null
+    }
+  },
+  shop: {
+    code: "JD-2026-001",
+    product: {
+      title: "JavaScript高级程序设计(第4版)",
+      price: 129.00,
+      onSale: true,
+      img: "https://img.example.com/book.jpg"
+    },
+    count: 2,
+    total: 258.00,
+    note: null
+  },
+  array: [
+    { id: 1, name: "苹果", price: 5.5 },
+    { id: 2, name: "香蕉", price: 3.2 },
+    { id: 3, name: "樱桃", price: 28.0 },
+    null,
+    "特价水果",
+    true,
+    100
+  ],
+  deep: {
+    company: "许氏科技",
+    dept: {
+      name: "前端部",
+      teams: [
+        { name: "Web组", members: ["张三","李四","王五"] },
+        { name: "H5组",  members: ["赵六"] }
+      ],
+      budget: { quarter1: 50000, quarter2: 58000 }
+    },
+    ceo: null,
+    founded: 2024
+  }
+};
+
+/* ---------- 工具：类型判断 ---------- */
+function xzx_type(v){
+  if(v === null) return 'null';
+  if(Array.isArray(v)) return 'array';
+  return typeof v;
+}
+function xzx_typeChip(t){
+  return t==='string'?'t-str':t==='number'?'t-num':t==='boolean'?'t-bool':t==='null'?'t-null':t==='array'?'t-arr':'t-obj';
+}
+function xzx_preview(v){
+  const t = xzx_type(v);
+  if(t==='string'){ const s = JSON.stringify(v); return s.length > 30 ? s.substring(0,30)+'…' : s; }
+  if(t==='object'){ const k = Object.keys(v).length; return `{${k}}`; }
+  if(t==='array') return `[${v.length}]`;
+  return String(v);
+}
+
+/* ---------- 渲染一棵树 ---------- */
+function xzx_renderTree(root){
+  const wrap = document.getElementById('xzxTreeWrap');
+  wrap.innerHTML = '';
+  if(root === undefined){ wrap.innerHTML = '<div class="xzx-empty">无数据</div>'; return; }
+
+  const row = xzx_buildNode(root, null, 0, true);
+  wrap.appendChild(row);
+
+  // 更新状态
+  const stat = document.getElementById('xzxStatus');
+  const t = xzx_type(root);
+  const keys = t==='object'?Object.keys(root).length: t==='array'?root.length:0;
+  stat.innerHTML = `类型: <b>${t}</b> · 顶层键/元素: <b>${keys}</b> · 深度: <b>${xzx_maxDepth(root)}</b> · 字节数: <b>${JSON.stringify(root).length}</b>`;
+}
+
+/* 最大深度 */
+function xzx_maxDepth(v){
+  const t = xzx_type(v);
+  if(t==='object' || t==='array'){
+    const arr = t==='array' ? v : Object.values(v);
+    if(arr.length === 0) return 1;
+    return 1 + Math.max(...arr.map(xzx_maxDepth));
+  }
+  return 1;
+}
+
+/* 递归构建节点 DOM */
+function xzx_buildNode(val, key, depth, isRoot){
+  const t = xzx_type(val);
+  const isContainer = (t==='object' || t==='array');
+  const row = document.createElement('div');
+  row.className = 'xzx-tree-row';
+
+  // 折叠箭头
+  const toggle = document.createElement('span');
+  toggle.className = 'xzx-toggle';
+  toggle.textContent = '▶';
+  if(isContainer) toggle.classList.add('xzx-open');
+  else toggle.classList.add('xzx-leaf');
+  toggle.addEventListener('click', () => {
+    if(!isContainer) return;
+    toggle.classList.toggle('xzx-open');
+    children.style.display = toggle.classList.contains('xzx-open') ? '' : 'none';
+  });
+
+  // key 部分
+  const keySpan = document.createElement('span');
+  keySpan.style.display = 'inline-flex';
+  if(key !== null){
+    const k = document.createElement('span');
+    if(Number.isInteger(+key) && +key>=0 && t==='array'){
+      k.textContent = key;
+      k.style.color = 'var(--xzx-text)';
+      k.style.fontWeight = '400';
+      k.style.fontSize = '11px';
+    } else {
+      k.className = 'xzx-key';
+      k.textContent = key;
+    }
+    const colon = document.createElement('span');
+    colon.className = 'xzx-colon';
+    colon.textContent = ':';
+    keySpan.appendChild(k); keySpan.appendChild(colon);
+  }
+
+  // 值部分
+  const valSpan = document.createElement('span');
+  valSpan.style.display = 'inline-flex';
+
+  if(!isContainer){
+    const v = document.createElement('span');
+    v.className = 'xzx-val ' + t;
+    v.textContent = t==='string' ? '"'+val+'"' : String(val);
+    valSpan.appendChild(v);
+
+    const chip = document.createElement('span');
+    chip.className = 'xzx-type-chip ' + xzx_typeChip(t);
+    chip.textContent = t;
+    valSpan.appendChild(chip);
+  } else {
+    // 开启符号 + 预览 + 关闭符号
+    const wrapOpen = document.createElement('span');
+    wrapOpen.className = 'xzx-wrap';
+    wrapOpen.textContent = t==='array' ? '[' : '{';
+    valSpan.appendChild(wrapOpen);
+
+    const chip = document.createElement('span');
+    chip.className = 'xzx-type-chip ' + xzx_typeChip(t);
+    chip.textContent = t==='array' ? `array[${val.length}]` : `object{${Object.keys(val).length}}`;
+    valSpan.appendChild(chip);
+
+    const wrapClose = document.createElement('span');
+    wrapClose.className = 'xzx-wrap';
+    wrapClose.textContent = t==='array' ? ']' : '}';
+    valSpan.appendChild(wrapClose);
+  }
+
+  row.appendChild(toggle);
+  row.appendChild(keySpan);
+  row.appendChild(valSpan);
+
+  // 子节点容器（缩进）
+  const children = document.createElement('div');
+  children.style.marginLeft = '20px';
+
+  if(isContainer){
+    const entries = t==='array' ? val.map((v,i)=>[i,v]) : Object.entries(val);
+    if(entries.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'xzx-wrap';
+      empty.textContent = '（空）';
+      empty.style.color = 'var(--xzx-text-d)';
+      empty.style.fontStyle = 'italic';
+      children.appendChild(empty);
+    } else {
+      entries.forEach(([k,v]) => {
+        children.appendChild(xzx_buildNode(v, k, depth+1, false));
+      });
+    }
+  }
+
+  // 包裹在 fragment 中：如果是叶子，不显示 children
+  const wrapper = document.createElement('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.flexDirection = 'column';
+  wrapper.appendChild(row);
+  if(isContainer) wrapper.appendChild(children);
+
+  return wrapper;
+}
+
+/* ---------- 事件绑定 ---------- */
+const xzxInput = document.getElementById('xzxInput');
+
+// 预设
+document.addEventListener('click', e => {
+  const pre = e.target.closest('.xzx-preset');
+  if(pre){
+    xzxInput.value = JSON.stringify(xzx_presets[pre.dataset.preset], null, 2);
+  }
+
+  // 解析
+  if(e.target.id === 'xzxParseBtn'){
+    xzx_parse();
+  }
+
+  // 格式化
+  if(e.target.id === 'xzxFormatBtn'){
+    try {
+      const v = JSON.parse(xzxInput.value);
+      xzxInput.value = JSON.stringify(v, null, 2);
+      xzx_parse();
+    } catch(err){ xzx_showError(err.message); }
+  }
+
+  // 压缩
+  if(e.target.id === 'xzxMinifyBtn'){
+    try {
+      const v = JSON.parse(xzxInput.value);
+      xzxInput.value = JSON.stringify(v);
+      xzx_parse();
+    } catch(err){ xzx_showError(err.message); }
+  }
+
+  // 复制
+  if(e.target.id === 'xzxCopyBtn'){
+    navigator.clipboard.writeText(xzxInput.value).then(()=>{
+      const btn = e.target; const old = btn.textContent;
+      btn.textContent = '✓ 已复制';
+      setTimeout(()=>btn.textContent=old, 1200);
+    });
+  }
+
+  // 清空
+  if(e.target.id === 'xzxClearBtn'){
+    xzxInput.value = '';
+    document.getElementById('xzxTreeWrap').innerHTML = '<div class="xzx-empty">点击左侧 <b style="color:var(--xzx-gold)">parse 解析</b> 或选择一个预设开始</div>';
+    document.getElementById('xzxStatus').innerHTML = '';
+  }
+
+  // 折叠全部
+  if(e.target.id === 'xzxCollapseAll'){
+    document.querySelectorAll('.xzx-toggle.xzx-open').forEach(t => {
+      t.classList.remove('xzx-open');
+      const child = t.closest('.xzx-tree-row').nextElementSibling;
+      if(child) child.style.display = 'none';
+    });
+  }
+
+  // 展开全部
+  if(e.target.id === 'xzxExpandAll'){
+    document.querySelectorAll('.xzx-toggle:not(.xzx-leaf)').forEach(t => {
+      t.classList.add('xzx-open');
+      const child = t.closest('.xzx-tree-row').nextElementSibling;
+      if(child) child.style.display = '';
+    });
+  }
+});
+
+function xzx_parse(){
+  const raw = xzxInput.value.trim();
+  if(!raw){ xzx_showError('输入为空'); return; }
+  try {
+    const v = JSON.parse(raw);
+    xzx_renderTree(v);
+  } catch(err){
+    xzx_showError(err.message);
+  }
+}
+
+function xzx_showError(msg){
+  document.getElementById('xzxTreeWrap').innerHTML = `
+    <div class="xzx-error">
+      <strong>❌ JSON 语法错误</strong><br>
+      ${msg}<br><br>
+      提示：检查引号 / 逗号 / 括号是否配对；JSON 不允许注释、不允许尾逗号；键名必须用双引号。
+    </div>`;
+  document.getElementById('xzxStatus').innerHTML = `状态: <span class="xzx-err">解析失败</span>`;
+}
+
+/* 默认载入一个预设 */
+xzxInput.value = JSON.stringify(xzx_presets.user, null, 2);
+xzx_parse();
+</script>
+
+</body>
+</html>
