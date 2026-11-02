@@ -1,0 +1,408 @@
+<!-- 姓名：许镇玺，日期：商品详情页 fetch 实战 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品详情 · fetch 实战 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-3-detail 商品详情（按 ID 请求 dummyjson.com 接口）
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(242,143,173,.10), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-topbar{
+    max-width:1000px;margin:0 auto 18px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-back{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 16px;border:1px solid var(--xzx-line);border-radius:8px;
+    background:var(--xzx-bg-2);color:var(--xzx-text-d);
+    font-size:13px;text-decoration:none;transition:.2s;
+  }
+  .xzx-back:hover{border-color:var(--xzx-accent);color:var(--xzx-accent);}
+  .xzx-title{font-size:20px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-id-tag{font-family:var(--xzx-mon);font-size:12px;color:var(--xzx-text-d);}
+  .xzx-id-tag b{color:var(--xzx-gold);}
+
+  .xzx-wrap{max-width:1000px;margin:0 auto;}
+
+  /* 主卡片 */
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;
+    display:grid;grid-template-columns:1fr 1fr;
+    animation:xzx_up .4s ease both;
+  }
+  @keyframes xzx_up{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  @media(max-width:800px){ .xzx-card{grid-template-columns:1fr;} }
+
+  /* 左侧图集 */
+  .xzx-gallery{padding:18px;border-right:1px solid var(--xzx-line);}
+  @media(max-width:800px){ .xzx-gallery{border-right:none;border-bottom:1px solid var(--xzx-line);} }
+  .xzx-main-img{
+    width:100%;aspect-ratio:1/1;background:#fff;border-radius:10px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .xzx-main-img img{
+    width:100%;height:100%;object-fit:contain;padding:14px;display:block;
+    animation:xzx_fadein .35s ease;
+  }
+  @keyframes xzx_fadein{
+    from{opacity:0;transform:scale(.97);}
+    to{opacity:1;transform:scale(1);}
+  }
+  .xzx-thumbs{
+    margin-top:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  }
+  .xzx-thumb{
+    aspect-ratio:1/1;background:#fff;border-radius:8px;overflow:hidden;cursor:pointer;
+    border:2px solid transparent;transition:.2s;padding:4px;
+  }
+  .xzx-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
+  .xzx-thumb:hover{transform:translateY(-2px);}
+  .xzx-thumb.xzx-cur{border-color:var(--xzx-gold);box-shadow:0 0 0 2px rgba(232,214,107,.25);}
+
+  /* 右侧信息 */
+  .xzx-info{padding:22px;display:flex;flex-direction:column;gap:12px;}
+  .xzx-cat-tag{
+    align-self:flex-start;font-size:11px;font-family:var(--xzx-mon);
+    color:var(--xzx-accent);background:rgba(110,193,255,.12);
+    border:1px solid var(--xzx-accent);border-radius:12px;padding:3px 12px;
+    text-transform:capitalize;
+  }
+  .xzx-name{font-size:22px;font-weight:800;line-height:1.4;}
+  .xzx-brand{font-size:13px;color:var(--xzx-text-d);}
+  .xzx-brand b{color:var(--xzx-purple);font-weight:600;}
+
+  .xzx-price-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:10px 0;border-top:1px dashed var(--xzx-line);border-bottom:1px dashed var(--xzx-line);}
+  .xzx-price-big{
+    font-size:30px;font-weight:800;color:var(--xzx-orange);font-family:var(--xzx-mon);
+  }
+  .xzx-price-big small{font-size:15px;font-weight:600;}
+  .xzx-old-price{
+    font-size:14px;color:var(--xzx-text-d);text-decoration:line-through;font-family:var(--xzx-mon);
+  }
+  .xzx-off-tag{
+    font-size:11px;font-weight:700;color:#111;background:var(--xzx-green);
+    padding:3px 10px;border-radius:12px;font-family:var(--xzx-mon);
+  }
+
+  .xzx-rate-row{display:flex;gap:16px;align-items:center;font-family:var(--xzx-mon);font-size:12px;}
+  .xzx-stars{color:var(--xzx-gold);font-size:14px;letter-spacing:2px;}
+  .xzx-stock{
+    padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;
+  }
+  .xzx-stock.xzx-in{color:var(--xzx-green);background:rgba(136,228,167,.12);border:1px solid var(--xzx-green);}
+  .xzx-stock.xzx-low{color:var(--xzx-orange);background:rgba(255,184,107,.12);border:1px solid var(--xzx-orange);}
+
+  .xzx-desc{
+    font-size:13px;line-height:1.9;color:var(--xzx-text-d);
+  }
+  .xzx-desc b{color:var(--xzx-text);}
+
+  /* 参数表格 */
+  .xzx-specs{
+    margin-top:4px;border:1px solid var(--xzx-line);border-radius:10px;overflow:hidden;
+    font-size:12px;
+  }
+  .xzx-spec-row{
+    display:flex;justify-content:space-between;gap:10px;
+    padding:8px 14px;border-bottom:1px dashed var(--xzx-line);
+  }
+  .xzx-spec-row:last-child{border-bottom:none;}
+  .xzx-spec-row:nth-child(odd){background:rgba(255,255,255,.02);}
+  .xzx-spec-row .xzx-sk{color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+  .xzx-spec-row .xzx-sv{color:var(--xzx-text);font-family:var(--xzx-mon);text-align:right;}
+
+  /* 骨架 */
+  .xzx-loading{
+    max-width:1000px;margin:0 auto;display:flex;gap:18px;
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);padding:22px;
+  }
+  .xzx-skel{
+    background:linear-gradient(110deg,#252838 30%,#2f3350 50%,#252838 70%);
+    background-size:200% 100%;animation:xzx_shimmer 1.3s linear infinite;border-radius:8px;
+  }
+  @keyframes xzx_shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+  }
+  .xzx-loading .xzx-skel-img{width:45%;aspect-ratio:1/1;}
+  .xzx-loading .xzx-skel-right{flex:1;display:flex;flex-direction:column;gap:12px;}
+  .xzx-loading .xzx-skel-line{height:14px;}
+  .xzx-loading .xzx-skel-line.w70{width:70%;}
+  .xzx-loading .xzx-skel-line.w40{width:40%;}
+
+  /* 错误 */
+  .xzx-error-box{
+    max-width:1000px;margin:0 auto;display:none;
+    background:rgba(255,123,123,.08);border:1px solid var(--xzx-red);
+    border-radius:var(--xzx-radius);padding:26px;text-align:center;
+  }
+  .xzx-error-box.xzx-on{display:block;}
+  .xzx-error-box .xzx-eicon{font-size:40px;margin-bottom:8px;}
+  .xzx-error-box h3{color:var(--xzx-red);font-size:15px;margin-bottom:6px;}
+  .xzx-error-box p{color:var(--xzx-text-d);font-family:var(--xzx-mon);font-size:12px;line-height:1.7;word-break:break-all;}
+  .xzx-error-actions{margin-top:14px;display:flex;gap:10px;justify-content:center;}
+  .xzx-ebtn{
+    padding:8px 20px;border-radius:8px;border:1px solid var(--xzx-line);
+    background:transparent;color:var(--xzx-text);cursor:pointer;font-size:13px;text-decoration:none;transition:.2s;
+  }
+  .xzx-ebtn:hover{border-color:var(--xzx-accent);color:var(--xzx-accent);}
+  .xzx-ebtn.xzx-red{border-color:var(--xzx-red);color:var(--xzx-red);}
+  .xzx-ebtn.xzx-red:hover{background:var(--xzx-red);color:#fff;}
+
+  .xzx-tip{
+    max-width:1000px;margin:18px auto 0;
+    font-size:11px;color:var(--xzx-text-d);line-height:1.8;font-family:var(--xzx-mon);
+  }
+  .xzx-tip b{color:var(--xzx-gold);}
+</style>
+</head>
+<body>
+
+<div class="xzx-topbar">
+  <a class="xzx-back" href="17-3.html">← 返回商品列表</a>
+  <div class="xzx-title"><span>商品详情</span> · fetch 按 ID 查询</div>
+  <div class="xzx-id-tag">GET /products/<b id="xzxIdShow">?</b></div>
+</div>
+
+<div class="xzx-wrap">
+  <!-- 骨架屏 -->
+  <div class="xzx-loading" id="xzxLoading">
+    <div class="xzx-skel xzx-skel-img"></div>
+    <div class="xzx-skel-right">
+      <div class="xzx-skel xzx-skel-line" style="width:30%;"></div>
+      <div class="xzx-skel xzx-skel-line w70"></div>
+      <div class="xzx-skel xzx-skel-line w40"></div>
+      <div class="xzx-skel xzx-skel-line"></div>
+      <div class="xzx-skel xzx-skel-line w70"></div>
+    </div>
+  </div>
+
+  <!-- 错误 -->
+  <div class="xzx-error-box" id="xzxError">
+    <div class="xzx-eicon">📡</div>
+    <h3>商品详情请求失败</h3>
+    <p id="xzxErrMsg">—</p>
+    <div class="xzx-error-actions">
+      <a class="xzx-btn-e xzx-ebtn" href="17-3.html">去商品列表</a>
+      <button class="xzx-ebtn xzx-red" id="xzxRetryBtn">↻ 重新请求</button>
+    </div>
+  </div>
+
+  <!-- 详情卡片 -->
+  <div class="xzx-card" id="xzxDetail" style="display:none;">
+    <!-- 左：图集 -->
+    <div class="xzx-gallery">
+      <div class="xzx-main-img"><img id="xzxMainImg" src="" alt="商品主图"></div>
+      <div class="xzx-thumbs" id="xzxThumbs"></div>
+    </div>
+    <!-- 右：信息 -->
+    <div class="xzx-info">
+      <span class="xzx-cat-tag" id="xzxCat">—</span>
+      <h1 class="xzx-name" id="xzxName">—</h1>
+      <div class="xzx-brand">品牌：<b id="xzxBrand">—</b></div>
+
+      <div class="xzx-price-row">
+        <span class="xzx-price-big" id="xzxPrice">$0</span>
+        <span class="xzx-old-price" id="xzxOldPrice">$0</span>
+        <span class="xzx-off-tag" id="xzxOff">-0%</span>
+      </div>
+
+      <div class="xzx-rate-row">
+        <span class="xzx-stars" id="xzxStars">☆☆☆☆☆</span>
+        <span id="xzxRate" style="color:var(--xzx-gold);">0 / 5</span>
+        <span class="xzx-stock xzx-in" id="xzxStock">库存 —</span>
+      </div>
+
+      <p class="xzx-desc" id="xzxDesc">—</p>
+
+      <div class="xzx-specs">
+        <div class="xzx-spec-row"><span class="xzx-sk">商品 ID</span><span class="xzx-sv" id="xzxSpecId">—</span></div>
+        <div class="xzx-spec-row"><span class="xzx-sk">折扣后单价</span><span class="xzx-sv" id="xzxSpecPrice">—</span></div>
+        <div class="xzx-spec-row"><span class="xzx-sk">折扣率</span><span class="xzx-sv" id="xzxSpecOff">—</span></div>
+        <div class="xzx-spec-row"><span class="xzx-sk">评分</span><span class="xzx-sv" id="xzxSpecRate">—</span></div>
+        <div class="xzx-spec-row"><span class="xzx-sk">库存数量</span><span class="xzx-sv" id="xzxSpecStock">—</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="xzx-tip">接口：<b>https://dummyjson.com/products/{id}</b> · ID 取自地址栏查询参数 <b>?id=</b></div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-3-detail 商品详情
+   fetch + async/await 原生实现，ID 从 URL ?id= 读取
+   ============================================================ */
+const XZX_BASE = 'https://dummyjson.com/products/';
+
+const xzx_el = {
+  loading: document.getElementById('xzxLoading'),
+  error:   document.getElementById('xzxError'),
+  errMsg:  document.getElementById('xzxErrMsg'),
+  retry:   document.getElementById('xzxRetryBtn'),
+  detail:  document.getElementById('xzxDetail'),
+  idShow:  document.getElementById('xzxIdShow'),
+  mainImg: document.getElementById('xzxMainImg'),
+  thumbs:  document.getElementById('xzxThumbs'),
+  cat:     document.getElementById('xzxCat'),
+  name:    document.getElementById('xzxName'),
+  brand:   document.getElementById('xzxBrand'),
+  price:   document.getElementById('xzxPrice'),
+  oldPrice:document.getElementById('xzxOldPrice'),
+  off:     document.getElementById('xzxOff'),
+  stars:   document.getElementById('xzxStars'),
+  rate:    document.getElementById('xzxRate'),
+  stock:   document.getElementById('xzxStock'),
+  desc:    document.getElementById('xzxDesc'),
+  specId:   document.getElementById('xzxSpecId'),
+  specPrice:document.getElementById('xzxSpecPrice'),
+  specOff:  document.getElementById('xzxSpecOff'),
+  specRate: document.getElementById('xzxSpecRate'),
+  specStock:document.getElementById('xzxSpecStock')
+};
+
+/* ---------- 从地址栏取 ID ---------- */
+function xzx_getId(){
+  const q = new URLSearchParams(location.search);
+  const id = parseInt(q.get('id'), 10);
+  return Number.isInteger(id) && id > 0 ? id : 1;   // 默认 1
+}
+
+/* ---------- 星级 ---------- */
+function xzx_starRow(r){
+  const full = Math.round(r);
+  return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+
+/* ---------- 图集 ---------- */
+function xzx_renderGallery(images){
+  if(!Array.isArray(images) || images.length === 0) return;
+  let cur = 0;
+  const setMain = i => {
+    cur = i;
+    xzx_el.mainImg.src = images[i];
+    // 重新触发淡入动画
+    xzx_el.mainImg.style.animation = 'none';
+    void xzx_el.mainImg.offsetWidth;
+    xzx_el.mainImg.style.animation = '';
+    [...xzx_el.thumbs.children].forEach((t, j) =>
+      t.classList.toggle('xzx-cur', j === i));
+  };
+  xzx_el.thumbs.innerHTML = '';
+  images.slice(0, 4).forEach((src, i) => {
+    const d = document.createElement('div');
+    d.className = 'xzx-thumb' + (i === 0 ? ' xzx-cur' : '');
+    const img = document.createElement('img');
+    img.src = src; img.alt = '缩略图 ' + (i+1); img.loading = 'lazy';
+    d.appendChild(img);
+    d.addEventListener('click', () => setMain(i));
+    xzx_el.thumbs.appendChild(d);
+  });
+  setMain(0);
+}
+
+/* ---------- 渲染详情 ---------- */
+function xzx_render(p){
+  xzx_el.cat.textContent = p.category;
+  xzx_el.name.textContent = p.title;
+  xzx_el.brand.textContent = p.brand || '—';
+  xzx_el.price.innerHTML = `<small>$</small>${p.price}`;
+  const old = p.price / (1 - p.discountPercentage / 100);
+  xzx_el.oldPrice.textContent = '$' + old.toFixed(2);
+  xzx_el.off.textContent = '-' + p.discountPercentage.toFixed(1) + '%';
+  xzx_el.stars.textContent = xzx_starRow(p.rating);
+  xzx_el.rate.textContent = p.rating + ' / 5';
+
+  // 库存：<=20 显示低库存橙色
+  const low = p.stock <= 20;
+  xzx_el.stock.textContent = low ? `仅剩 ${p.stock} 件` : `有货 ${p.stock} 件`;
+  xzx_el.stock.className = 'xzx-stock ' + (low ? 'xzx-low' : 'xzx-in');
+
+  xzx_el.desc.textContent = p.description;
+  xzx_el.specId.textContent   = '#' + p.id;
+  xzx_el.specPrice.textContent = '$' + p.price.toFixed(2);
+  xzx_el.specOff.textContent   = p.discountPercentage.toFixed(2) + ' %';
+  xzx_el.specRate.textContent  = p.rating + ' / 5';
+  xzx_el.specStock.textContent = p.stock + ' 件';
+
+  xzx_renderGallery(p.images);
+  document.title = p.title + ' · 商品详情 · 许镇玺';
+}
+
+/* ---------- 主请求 ---------- */
+async function xzx_load(){
+  const id = xzx_getId();
+  xzx_el.idShow.textContent = id;
+
+  xzx_el.error.classList.remove('xzx-on');
+  xzx_el.detail.style.display = 'none';
+  xzx_el.loading.style.display = 'flex';
+
+  const t0 = performance.now();
+  try {
+    const res = await fetch(XZX_BASE + id, {cache:'no-store'});
+    if(res.status === 404) throw new Error('未找到 ID 为 ' + id + ' 的商品（404）');
+    if(!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+
+    const p = await res.json();
+    const cost = Math.round(performance.now() - t0);
+    console.log('[xzx] 详情请求耗时:', cost, 'ms');
+
+    xzx_render(p);
+    xzx_el.loading.style.display = 'none';
+    xzx_el.detail.style.display = 'grid';
+  } catch(err){
+    xzx_el.loading.style.display = 'none';
+    xzx_el.errMsg.textContent = err.message || String(err);
+    xzx_el.error.classList.add('xzx-on');
+  }
+}
+
+xzx_el.retry.addEventListener('click', xzx_load);
+xzx_load();
+</script>
+
+</body>
+</html>

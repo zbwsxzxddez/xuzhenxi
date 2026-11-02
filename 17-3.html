@@ -1,0 +1,332 @@
+<!-- 姓名：许镇玺，日期：商品列表页 fetch 实战 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品列表 · fetch 实战 · 许镇玺</title>
+<style>
+  /* ============================================================
+     许镇玺 · 17-3 商品列表（数据来自 dummyjson.com 接口）
+     纯原生 HTML + CSS + JS，无 CDN
+     ============================================================ */
+  :root{
+    --xzx-bg:      #1a1c2c;
+    --xzx-bg-2:    #242637;
+    --xzx-bg-3:    #2f3248;
+    --xzx-line:    #3d4060;
+    --xzx-text:    #e0e2f0;
+    --xzx-text-d:  #9a9eb8;
+    --xzx-accent:  #6ec1ff;
+    --xzx-pink:    #f28fad;
+    --xzx-gold:    #e8d66b;
+    --xzx-green:   #88e4a7;
+    --xzx-purple:  #b8a0ff;
+    --xzx-orange:  #ffb86b;
+    --xzx-red:     #ff7b7b;
+    --xzx-radius:  12px;
+    --xzx-mon:     Consolas,"JetBrains Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    min-height:100vh;padding:22px;
+    background:var(--xzx-bg);color:var(--xzx-text);
+    background-image:
+      radial-gradient(600px 400px at 8% -8%, rgba(110,193,255,.10), transparent 60%),
+      radial-gradient(600px 400px at 100% 100%, rgba(242,143,173,.10), transparent 60%);
+  }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--xzx-bg);}
+  ::-webkit-scrollbar-thumb{background:var(--xzx-line);border-radius:3px;}
+
+  .xzx-header{
+    max-width:1100px;margin:0 auto 16px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;
+  }
+  .xzx-title{font-size:24px;font-weight:800;letter-spacing:1px;}
+  .xzx-title span{
+    background:linear-gradient(90deg,var(--xzx-accent),var(--xzx-purple),var(--xzx-pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .xzx-sub{font-size:12px;color:var(--xzx-text-d);font-family:var(--xzx-mon);}
+
+  /* 状态栏 */
+  .xzx-meta-bar{
+    max-width:1100px;margin:0 auto 14px;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    font-family:var(--xzx-mon);font-size:11.5px;color:var(--xzx-text-d);
+  }
+  .xzx-chip-stat{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:20px;padding:4px 12px;
+  }
+  .xzx-chip-stat b{color:var(--xzx-gold);font-weight:700;}
+  .xzx-chip-stat.xzx-ok b{color:var(--xzx-green);}
+  .xzx-chip-stat.xzx-bad b{color:var(--xzx-red);}
+  .xzx-chip-stat.xzx-ms b{color:var(--xzx-accent);}
+
+  /* 商品网格 */
+  .xzx-grid{
+    max-width:1100px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  }
+  @media(max-width:980px){ .xzx-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:520px){ .xzx-grid{grid-template-columns:1fr;} }
+
+  .xzx-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;cursor:pointer;
+    display:flex;flex-direction:column;
+    transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    text-decoration:none;color:inherit;
+    animation:xzx_up .4s ease both;
+  }
+  .xzx-card:nth-child(1){animation-delay:.02s;}
+  .xzx-card:nth-child(2){animation-delay:.06s;}
+  .xzx-card:nth-child(3){animation-delay:.10s;}
+  .xzx-card:nth-child(4){animation-delay:.14s;}
+  .xzx-card:nth-child(5){animation-delay:.18s;}
+  .xzx-card:nth-child(6){animation-delay:.22s;}
+  .xzx-card:nth-child(7){animation-delay:.26s;}
+  .xzx-card:nth-child(8){animation-delay:.30s;}
+  @keyframes xzx_up{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .xzx-card:hover{
+    transform:translateY(-4px);border-color:var(--xzx-accent);
+    box-shadow:0 12px 28px rgba(0,0,0,.4);
+  }
+
+  .xzx-card-img{
+    aspect-ratio:1/1;background:#fff;position:relative;overflow:hidden;
+  }
+  .xzx-card-img img{
+    width:100%;height:100%;object-fit:contain;display:block;padding:10px;
+    transition:transform .3s;
+  }
+  .xzx-card:hover .xzx-card-img img{transform:scale(1.06);}
+  .xzx-badge-cat{
+    position:absolute;top:8px;left:8px;
+    background:rgba(26,28,44,.85);color:var(--xzx-accent);
+    font-size:10px;font-family:var(--xzx-mon);
+    padding:3px 8px;border-radius:10px;border:1px solid var(--xzx-line);
+    text-transform:capitalize;backdrop-filter:blur(4px);
+  }
+  .xzx-badge-id{
+    position:absolute;top:8px;right:8px;
+    background:rgba(26,28,44,.85);color:var(--xzx-text-d);
+    font-size:10px;font-family:var(--xzx-mon);
+    padding:3px 8px;border-radius:10px;border:1px solid var(--xzx-line);
+  }
+
+  .xzx-card-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .xzx-card-title{
+    font-size:13px;font-weight:600;line-height:1.5;color:var(--xzx-text);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    min-height:39px;
+  }
+  .xzx-card:hover .xzx-card-title{color:var(--xzx-accent);}
+  .xzx-card-brand{font-size:11px;color:var(--xzx-text-d);text-transform:capitalize;}
+  .xzx-card-foot{
+    margin-top:auto;display:flex;justify-content:space-between;align-items:center;
+    padding-top:8px;border-top:1px dashed var(--xzx-line);
+  }
+  .xzx-price{
+    font-size:17px;font-weight:800;color:var(--xzx-orange);font-family:var(--xzx-mon);
+  }
+  .xzx-price small{font-size:11px;font-weight:400;margin-right:1px;}
+  .xzx-price .xzx-off{
+    font-size:10px;color:var(--xzx-green);margin-left:5px;font-weight:600;
+  }
+  .xzx-rating{font-size:11px;color:var(--xzx-gold);font-family:var(--xzx-mon);}
+
+  /* 骨架屏 */
+  .xzx-skeleton-card{
+    background:var(--xzx-bg-2);border:1px solid var(--xzx-line);
+    border-radius:var(--xzx-radius);overflow:hidden;
+  }
+  .xzx-skel{
+    background:linear-gradient(110deg,#252838 30%,#2f3350 50%,#252838 70%);
+    background-size:200% 100%;animation:xzx_shimmer 1.3s linear infinite;
+  }
+  @keyframes xzx_shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+  }
+  .xzx-skeleton-card .xzx-skel-img{aspect-ratio:1/1;}
+  .xzx-skeleton-card .xzx-skel-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+  .xzx-skeleton-card .xzx-skel-line{height:12px;border-radius:6px;}
+  .xzx-skeleton-card .xzx-skel-line.w60{width:60%;}
+  .xzx-skeleton-card .xzx-skel-line.w40{width:40%;}
+
+  /* 错误 */
+  .xzx-error-box{
+    max-width:1100px;margin:30px auto;display:none;
+    background:rgba(255,123,123,.08);border:1px solid var(--xzx-red);
+    border-radius:var(--xzx-radius);padding:24px;text-align:center;
+  }
+  .xzx-error-box.xzx-on{display:block;}
+  .xzx-error-box .xzx-eicon{font-size:40px;margin-bottom:8px;}
+  .xzx-error-box h3{color:var(--xzx-red);font-size:15px;margin-bottom:6px;}
+  .xzx-error-box p{
+    color:var(--xzx-text-d);font-family:var(--xzx-mon);
+    font-size:12px;word-break:break-all;line-height:1.7;
+  }
+  .xzx-retry{
+    margin-top:14px;padding:8px 22px;border-radius:8px;
+    border:1px solid var(--xzx-red);background:transparent;
+    color:var(--xzx-red);cursor:pointer;font-size:13px;transition:.2s;
+  }
+  .xzx-retry:hover{background:var(--xzx-red);color:#fff;}
+
+  .xzx-tip{
+    max-width:1100px;margin:18px auto 0;
+    font-size:11px;color:var(--xzx-text-d);line-height:1.8;
+  }
+  .xzx-tip b{color:var(--xzx-gold);}
+</style>
+</head>
+<body>
+
+<div class="xzx-header">
+  <div class="xzx-title"><span>商品列表</span> · fetch 接口实战</div>
+  <div class="xzx-sub">GET https://dummyjson.com/products?limit=8</div>
+</div>
+
+<!-- 请求状态条 -->
+<div class="xzx-meta-bar">
+  <span class="xzx-chip-stat">商品总数 <b id="xzxTotalNum">—</b></span>
+  <span class="xzx-chip-stat xzx-ok">成功 <b id="xzxOkNum">0</b></span>
+  <span class="xzx-chip-stat xzx-bad">失败 <b id="xzxBadNum">0</b></span>
+  <span class="xzx-chip-stat xzx-ms">耗时 <b id="xzxMs">—</b></span>
+  <span class="xzx-chip-stat">接口 status <b id="xzxApiState">—</b></span>
+</div>
+
+<!-- 骨架屏网格 -->
+<div class="xzx-grid" id="xzxGrid">
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+  <div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>
+</div>
+
+<!-- 错误框 -->
+<div class="xzx-error-box" id="xzxError">
+  <div class="xzx-eicon">📡</div>
+  <h3>接口请求失败</h3>
+  <p id="xzxErrMsg">—</p>
+  <button class="xzx-retry" id="xzxRetryBtn">↻ 重新请求</button>
+</div>
+
+<div class="xzx-tip">
+  <b>原理：</b>页面通过 <b>fetch()</b> 请求 dummyjson.com 商品接口，返回 <b>{ products: [...], total, skip, limit }</b>。
+  遍历 products 渲染 8 张卡片，点击卡片跳转 <b>17-3-detail.html?id=商品ID</b> 查看详情。
+</div>
+
+<script>
+/* ============================================================
+   许镇玺 · 17-3 商品列表
+   fetch + async/await 原生实现
+   ============================================================ */
+const XZX_API = 'https://dummyjson.com/products?limit=8';
+
+const xzx_el = {
+  grid:    document.getElementById('xzxGrid'),
+  error:   document.getElementById('xzxError'),
+  errMsg:  document.getElementById('xzxErrMsg'),
+  retry:   document.getElementById('xzxRetryBtn'),
+  total:   document.getElementById('xzxTotalNum'),
+  ok:      document.getElementById('xzxOkNum'),
+  bad:     document.getElementById('xzxBadNum'),
+  ms:      document.getElementById('xzxMs'),
+  state:   document.getElementById('xzxApiState')
+};
+
+let xzx_ok = 0, xzx_bad = 0, xzx_loading = false;
+
+function xzx_starRow(r){
+  const full = Math.round(r);
+  return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+
+function xzx_cardHTML(p){
+  return `
+    <div class="xzx-card-img">
+      <img src="${p.thumbnail}" alt="${p.title}" loading="lazy">
+      <span class="xzx-badge-cat">${p.category}</span>
+      <span class="xzx-badge-id">#${p.id}</span>
+    </div>
+    <div class="xzx-card-body">
+      <div class="xzx-card-title">${p.title}</div>
+      <div class="xzx-card-brand">${p.brand || '—'}</div>
+      <div class="xzx-card-foot">
+        <span class="xzx-price"><small>$</small>${p.price}<span class="xzx-off">-${p.discountPercentage.toFixed(0)}%</span></span>
+        <span class="xzx-rating">${xzx_starRow(p.rating)} ${p.rating}</span>
+      </div>
+    </div>`;
+}
+
+/* 渲染商品列表 */
+function xzx_render(products){
+  xzx_el.grid.innerHTML = '';
+  products.forEach(p => {
+    const a = document.createElement('a');
+    a.className = 'xzx-card';
+    a.href = `17-3-detail.html?id=${p.id}`;
+    a.innerHTML = xzx_cardHTML(p);
+    xzx_el.grid.appendChild(a);
+  });
+}
+
+/* 主请求 */
+async function xzx_load(){
+  if(xzx_loading) return;
+  xzx_loading = true;
+  xzx_el.error.classList.remove('xzx-on');
+  xzx_el.state.textContent = '请求中…';
+
+  // 骨架屏
+  xzx_el.grid.innerHTML = Array(8).fill(
+    `<div class="xzx-skeleton-card"><div class="xzx-skel xzx-skel-img"></div><div class="xzx-skel-body"><div class="xzx-skel xzx-skel-line"></div><div class="xzx-skel xzx-skel-line w60"></div><div class="xzx-skel xzx-skel-line w40"></div></div></div>`
+  ).join('');
+
+  const t0 = performance.now();
+  try {
+    const res = await fetch(XZX_API, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+
+    const data = await res.json();
+    const cost = Math.round(performance.now() - t0);
+
+    if(!Array.isArray(data.products)) throw new Error('返回数据缺少 products 数组');
+
+    xzx_ok++;
+    xzx_el.ok.textContent = xzx_ok;
+    xzx_el.total.textContent = data.total;
+    xzx_el.ms.textContent = cost + ' ms';
+    xzx_el.state.textContent = 'success';
+    xzx_render(data.products);
+  } catch(err){
+    xzx_bad++;
+    xzx_el.bad.textContent = xzx_bad;
+    xzx_el.state.textContent = 'error';
+    xzx_el.grid.innerHTML = '';
+    xzx_el.errMsg.textContent = err.message || String(err);
+    xzx_el.error.classList.add('xzx-on');
+  } finally {
+    xzx_loading = false;
+  }
+}
+
+xzx_el.retry.addEventListener('click', xzx_load);
+xzx_load();
+</script>
+
+</body>
+</html>
