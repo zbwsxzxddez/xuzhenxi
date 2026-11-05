@@ -1,0 +1,394 @@
+<!-- 姓名：许镇玺，日期：ECharts 智能客服数据大屏（三列 · 中国地图） -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-8 ECharts 数据大屏 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_bg:#081420;
+  --xzx_panel:rgba(13,32,48,.72);
+  --xzx_cyan:#38d6d6;
+  --xzx_blue:#3f8cff;
+  --xzx_gold:#f5c542;
+  --xzx_red:#ff6b57;
+  --xzx_text:#d7e6ef;
+  --xzx_dim:#6f8ba0;
+  --xzx_border:rgba(56,214,214,.28);
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:var(--xzx_sans);color:var(--xzx_text);
+  background:var(--xzx_bg);
+  background-image:
+    radial-gradient(1000px 500px at 50% -10%, rgba(63,140,255,.14), transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, rgba(56,214,214,.08), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(56,214,214,.03) 0 1px, transparent 1px 5px);
+  min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;
+}
+/* ---------- 顶部标题栏 ---------- */
+.xzx_topbar{
+  height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;border-bottom:1px solid var(--xzx_border);
+  background:linear-gradient(180deg, rgba(13,32,48,.9), rgba(13,32,48,.35));
+}
+.xzx_title{
+  font-size:clamp(18px,2.4vw,26px);font-weight:700;letter-spacing:.28em;
+  color:#eaf6fb;text-shadow:0 0 18px rgba(56,214,214,.55);
+}
+.xzx_title::before,.xzx_title::after{content:"◈";color:var(--xzx_cyan);margin:0 14px;font-size:.75em;}
+.xzx_clock{font-family:var(--xzx_mono);font-size:13px;color:var(--xzx_cyan);letter-spacing:.08em;text-align:right;}
+.xzx_clock small{display:block;color:var(--xzx_dim);font-size:11px;margin-top:2px;}
+/* ---------- KPI 指标条 ---------- */
+.xzx_kpis{
+  flex:none;display:flex;gap:14px;padding:12px 26px 0;
+}
+.xzx_kpi{
+  flex:1;background:var(--xzx_panel);border:1px solid var(--xzx_border);
+  border-radius:10px;padding:10px 16px;
+}
+.xzx_kpi b{display:block;font-family:var(--xzx_mono);font-size:clamp(18px,2vw,26px);color:var(--xzx_cyan);}
+.xzx_kpi.xzx_kpi-red b{color:var(--xzx_red);}
+.xzx_kpi.xzx_kpi-gold b{color:var(--xzx_gold);}
+.xzx_kpi span{font-size:12px;color:var(--xzx_dim);letter-spacing:.1em;}
+.xzx_kpi em{font-style:normal;font-family:var(--xzx_mono);font-size:11px;margin-left:6px;}
+.xzx_up{color:#57d98a;} .xzx_down{color:var(--xzx_red);}
+/* ---------- 三列大屏主体 ---------- */
+.xzx_grid{
+  flex:1;display:grid;grid-template-columns:26fr 48fr 26fr;gap:14px;
+  padding:12px 26px 16px;min-height:0;
+}
+.xzx_col{display:flex;flex-direction:column;gap:14px;min-height:0;}
+.xzx_panel{
+  flex:1;background:var(--xzx_panel);border:1px solid var(--xzx_border);
+  border-radius:12px;padding:12px 14px 8px;display:flex;flex-direction:column;min-height:0;
+  box-shadow:inset 0 0 40px rgba(56,214,214,.05);
+  position:relative;
+}
+.xzx_panel h3{
+  flex:none;font-size:14px;font-weight:600;color:#cfe9f5;letter-spacing:.14em;
+  padding-left:12px;border-left:3px solid var(--xzx_cyan);margin-bottom:4px;
+}
+.xzx_panel h3 small{color:var(--xzx_dim);font-size:11px;letter-spacing:.05em;margin-left:8px;font-family:var(--xzx_mono);}
+.xzx_chart{flex:1;min-height:0;}
+.xzx_center-top{flex:2.1;}   /* 中间上方：中国地图，占更高比例 */
+.xzx_center-bottom{flex:1;}
+.xzx_foot{
+  flex:none;text-align:center;padding:6px 0 12px;
+  font-family:var(--xzx_mono);font-size:11.5px;color:var(--xzx_dim);
+}
+.xzx_foot b{color:var(--xzx_cyan);font-weight:600;}
+@media (max-width:900px){
+  .xzx_grid{grid-template-columns:1fr;}
+  .xzx_chart{min-height:280px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部栏 ===== -->
+<header class="xzx_topbar">
+  <span class="xzx_title">智能客服数据监控大屏</span>
+  <div class="xzx_clock" id="xzx_clock">--:--:--<small>载入中…</small></div>
+</header>
+
+<!-- ===== KPI 指标条 ===== -->
+<div class="xzx_kpis" id="xzx_kpis">
+  <div class="xzx_kpi"><b id="xzx_kpi_today">12,847</b><span>今日会话量<em class="xzx_up">▲ 8.2%</em></span></div>
+  <div class="xzx_kpi xzx_kpi-gold"><b>92.6%</b><span>机器人解决率<em class="xzx_up">▲ 1.4%</em></span></div>
+  <div class="xzx_kpi"><b>0.8s</b><span>平均响应时延<em class="xzx_down">▼ 0.1s</em></span></div>
+  <div class="xzx_kpi xzx_kpi-red"><b>7.4%</b><span>人工转接率<em class="xzx_down">▼ 1.1%</em></span></div>
+  <div class="xzx_kpi xzx_kpi-gold"><b>4.73</b><span>满意度 CSAT（5 分制）<em class="xzx_up">▲ 0.08</em></span></div>
+</div>
+
+<!-- ===== 三列大屏主体 ===== -->
+<main class="xzx_grid">
+  <!-- 左列 -->
+  <div class="xzx_col">
+    <section class="xzx_panel">
+      <h3>意图分布雷达<small>xzx_radar</small></h3>
+      <div id="xzx_radar" class="xzx_chart"></div>
+    </section>
+    <section class="xzx_panel">
+      <h3>知识库健康度仪表<small>xzx_gauge</small></h3>
+      <div id="xzx_gauge" class="xzx_chart"></div>
+    </section>
+  </div>
+
+  <!-- 中列：上=地理信息图（中国地图），下=柱线混合 -->
+  <div class="xzx_col">
+    <section class="xzx_panel xzx_center-top">
+      <h3>用户地域分布 · 中国地图<small>xzx_map · 本地 GeoJSON</small></h3>
+      <div id="xzx_map" class="xzx_chart"></div>
+    </section>
+    <section class="xzx_panel xzx_center-bottom">
+      <h3>近 7 日会话量与解决率<small>xzx_mixed</small></h3>
+      <div id="xzx_mixed" class="xzx_chart"></div>
+    </section>
+  </div>
+
+  <!-- 右列 -->
+  <div class="xzx_col">
+    <section class="xzx_panel">
+      <h3>咨询渠道占比<small>xzx_pie</small></h3>
+      <div id="xzx_pie" class="xzx_chart"></div>
+    </section>
+    <section class="xzx_panel">
+      <h3>24 小时请求热力趋势<small>xzx_line</small></h3>
+      <div id="xzx_line" class="xzx_chart"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="xzx_foot"><b>许镇玺</b> ·《高级网页设计》课堂实践 18-8 · ECharts 与中国地图 GeoJSON 均由本地 cdn 目录加载</footer>
+
+<!-- 本地资源：echarts.min.js（cdn/echarts/）+ 中国地图（cdn/geo/china.js） -->
+<script src="cdn/echarts/echarts.min.js"></script>
+<script src="cdn/geo/china.js"></script>
+<script>
+/* ============ ECharts 数据大屏（许镇玺） ============
+   三列布局；中间上方为地理信息图（中国地图：各省份会话量 + Top 城市散点）。 */
+
+(function(){
+  'use strict';
+
+  /* ---------- 公共主题（变量名以 xzx_ 开头） ---------- */
+  var xzx_cyan = '#38d6d6', xzx_blue = '#3f8cff', xzx_gold = '#f5c542',
+      xzx_red = '#ff6b57', xzx_green = '#57d98a';
+  var xzx_axis = {
+    axisLine:  { lineStyle: { color: 'rgba(111,139,160,.5)' } },
+    axisLabel: { color: '#8fa9bc', fontSize: 11 },
+    splitLine: { lineStyle: { color: 'rgba(111,139,160,.15)' } }
+  };
+  var xzx_tipStyle = {
+    backgroundColor: 'rgba(8,20,32,.94)', borderColor: 'rgba(56,214,214,.5)',
+    textStyle: { color: '#d7e6ef', fontSize: 12 }
+  };
+
+  /* ---------- 时钟 ---------- */
+  (function xzx_clock(){
+    var el = document.getElementById('xzx_clock');
+    function xzx_tick(){
+      var d = new Date();
+      var p = function(n){ return String(n).padStart(2,'0'); };
+      el.innerHTML = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) +
+        '<small>' + d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) +
+        ' · 数据每 5 分钟刷新</small>';
+    }
+    xzx_tick();
+    setInterval(xzx_tick, 1000);
+  })();
+
+  /* ---------- 注册中国地图（本地 GeoJSON，来自 cdn/geo/china.js） ---------- */
+  echarts.registerMap('xzx_china', window.xzx_china_geo);
+
+  /* ---------- ① 中间上方：中国地图（地理信息图） ---------- */
+  var xzx_mapChart = echarts.init(document.getElementById('xzx_map'));
+  xzx_mapChart.setOption({
+    tooltip: Object.assign({ trigger: 'item', formatter: function(p){
+      return p.seriesType === 'effectScatter'
+        ? p.name + '<br/>会话量：' + p.value[2] + '（Top 城市）'
+        : (p.name || '-') + '<br/>会话量：' + (p.value || 0);
+    }}, xzx_tipStyle),
+    visualMap: {
+      min: 0, max: 9000, left: 10, bottom: 12,
+      text: ['高', '低'], textStyle: { color: '#8fa9bc', fontSize: 11 },
+      inRange: { color: ['#0d2c44', '#1b5f8a', '#2f9fc9', xzx_cyan] },
+      calculable: false
+    },
+    geo: {
+      map: 'xzx_china',
+      roam: true,                                  // 允许缩放拖拽
+      zoom: 1.18, top: 28, bottom: 40,
+      label: { show: false },
+      itemStyle: {
+        areaColor: '#0d2c44',
+        borderColor: 'rgba(56,214,214,.55)',
+        borderWidth: 1,
+        shadowColor: 'rgba(56,214,214,.35)', shadowBlur: 12
+      },
+      emphasis: {
+        label: { show: true, color: '#eaf6fb', fontSize: 11 },
+        itemStyle: { areaColor: xzx_blue }
+      }
+    },
+    series: [
+      {   // 省份会话量
+        name: '省份会话量', type: 'map', map: 'xzx_china', geoIndex: 0,
+        data: [
+          { name: '广东省', value: 9120 }, { name: '江苏省', value: 7640 },
+          { name: '浙江省', value: 7180 }, { name: '山东省', value: 5830 },
+          { name: '四川省', value: 5210 }, { name: '河南省', value: 4870 },
+          { name: '北京市', value: 4620 }, { name: '上海市', value: 4380 },
+          { name: '湖北省', value: 3950 }, { name: '福建省', value: 3610 },
+          { name: '湖南省', value: 3420 }, { name: '安徽省', value: 3180 },
+          { name: '河北省', value: 2860 }, { name: '陕西省', value: 2540 },
+          { name: '重庆市', value: 2310 }, { name: '辽宁省', value: 2150 },
+          { name: '江西省', value: 1920 }, { name: '云南省', value: 1740 },
+          { name: '广西壮族自治区', value: 1580 }, { name: '山西省', value: 1320 },
+          { name: '贵州省', value: 1180 }, { name: '天津市', value: 1060 },
+          { name: '黑龙江省', value: 940 }, { name: '吉林省', value: 880 },
+          { name: '内蒙古自治区', value: 760 }, { name: '新疆维吾尔自治区', value: 620 },
+          { name: '甘肃省', value: 540 }, { name: '海南省', value: 480 },
+          { name: '宁夏回族自治区', value: 320 }, { name: '青海省', value: 260 },
+          { name: '西藏自治区', value: 120 }, { name: '香港', value: 380 },
+          { name: '澳门', value: 90 }, { name: '台湾', value: 410 }
+        ]
+      },
+      {   // Top5 城市涟漪散点
+        name: 'Top 城市', type: 'effectScatter', coordinateSystem: 'geo',
+        symbolSize: function(v){ return 8 + v[2] / 220; },
+        rippleEffect: { brushType: 'stroke', scale: 3 },
+        label: { show: true, formatter: '{b}', position: 'right', color: '#f5c542', fontSize: 11 },
+        itemStyle: { color: xzx_gold, shadowBlur: 10, shadowColor: xzx_gold },
+        data: [
+          { name: '深圳', value: [114.06, 22.55, 3200] },
+          { name: '杭州', value: [120.15, 30.28, 2680] },
+          { name: '北京', value: [116.40, 39.90, 2410] },
+          { name: '成都', value: [104.07, 30.57, 1950] },
+          { name: '上海', value: [121.47, 31.23, 2280] }
+        ]
+      }
+    ]
+  });
+
+  /* ---------- ② 中间下方：柱线混合 ---------- */
+  var xzx_mixedChart = echarts.init(document.getElementById('xzx_mixed'));
+  xzx_mixedChart.setOption({
+    textStyle: { color: '#8fa9bc' },
+    tooltip: Object.assign({ trigger: 'axis' }, xzx_tipStyle),
+    legend: { data: ['会话量', '解决率%'], textStyle: { color: '#8fa9bc', fontSize: 11 }, top: 0 },
+    grid: { left: 44, right: 44, top: 30, bottom: 24 },
+    xAxis: Object.assign({ type: 'category',
+      data: ['周一','周二','周三','周四','周五','周六','周日'] }, xzx_axis),
+    yAxis: [
+      Object.assign({ type: 'value', name: '会话量' }, xzx_axis),
+      Object.assign({ type: 'value', name: '解决率%', max: 100,
+        splitLine: { show: false } }, xzx_axis)
+    ],
+    series: [
+      { name: '会话量', type: 'bar', barWidth: '32%',
+        data: [11800, 12240, 12060, 12680, 13420, 15230, 12840],
+        itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,
+          [{offset:0,color:xzx_cyan},{offset:1,color:'rgba(63,140,255,.25)'}]),
+          borderRadius: [4,4,0,0] } },
+      { name: '解决率%', type: 'line', yAxisIndex: 1, smooth: true,
+        data: [90.2, 91.5, 92.1, 91.8, 93.0, 94.2, 92.6],
+        lineStyle: { color: xzx_gold, width: 2.5 },
+        itemStyle: { color: xzx_gold },
+        areaStyle: { color: 'rgba(245,197,66,.12)' } }
+    ]
+  });
+
+  /* ---------- ③ 左上：意图雷达 ---------- */
+  var xzx_radarChart = echarts.init(document.getElementById('xzx_radar'));
+  xzx_radarChart.setOption({
+    textStyle: { color: '#8fa9bc' },
+    tooltip: xzx_tipStyle,
+    legend: { data: ['本周', '上周'], textStyle: { color: '#8fa9bc', fontSize: 11 }, top: 0 },
+    radar: {
+      indicator: [
+        { name: '售前咨询', max: 100 }, { name: '订单查询', max: 100 },
+        { name: '物流跟踪', max: 100 }, { name: '售后退换', max: 100 },
+        { name: '投诉建议', max: 100 }, { name: '账户问题', max: 100 }
+      ],
+      radius: '62%', center: ['50%', '56%'],
+      axisName: { color: '#8fa9bc', fontSize: 11 },
+      splitLine: { lineStyle: { color: 'rgba(111,139,160,.25)' } },
+      splitArea: { areaStyle: { color: ['rgba(13,32,48,.3)','rgba(56,214,214,.05)'] } },
+      axisLine: { lineStyle: { color: 'rgba(111,139,160,.3)' } }
+    },
+    series: [{
+      type: 'radar',
+      data: [
+        { value: [86, 92, 78, 74, 61, 69], name: '本周',
+          lineStyle: { color: xzx_cyan, width: 2 },
+          itemStyle: { color: xzx_cyan },
+          areaStyle: { color: 'rgba(56,214,214,.25)' } },
+        { value: [80, 88, 74, 70, 58, 66], name: '上周',
+          lineStyle: { color: xzx_blue, width: 1.5, type: 'dashed' },
+          itemStyle: { color: xzx_blue },
+          areaStyle: { color: 'rgba(63,140,255,.12)' } }
+      ]
+    }]
+  });
+
+  /* ---------- ④ 左下：知识库健康度仪表 ---------- */
+  var xzx_gaugeChart = echarts.init(document.getElementById('xzx_gauge'));
+  xzx_gaugeChart.setOption({
+    textStyle: { color: '#8fa9bc' },
+    series: [{
+      type: 'gauge', startAngle: 210, endAngle: -30, min: 0, max: 100,
+      radius: '78%', center: ['50%', '58%'],
+      progress: { show: true, width: 12, itemStyle: { color: xzx_green } },
+      axisLine: { lineStyle: { width: 12, color: [[1, 'rgba(111,139,160,.25)']] } },
+      axisTick: { show: false },
+      splitLine: { length: 8, lineStyle: { color: 'rgba(111,139,160,.5)' } },
+      axisLabel: { color: '#8fa9bc', fontSize: 10, distance: 16 },
+      pointer: { itemStyle: { color: xzx_gold }, width: 4 },
+      anchor: { show: true, size: 10, itemStyle: { color: xzx_gold } },
+      title: { show: true, offsetCenter: [0, '32%'], color: '#8fa9bc', fontSize: 12 },
+      detail: { valueAnimation: true, offsetCenter: [0, '62%'],
+        formatter: '{value} 分', color: xzx_green, fontSize: 22, fontFamily: 'Consolas' },
+      data: [{ value: 87.5, name: '知识库健康度' }]
+    }]
+  });
+
+  /* ---------- ⑤ 右上：渠道占比环形图 ---------- */
+  var xzx_pieChart = echarts.init(document.getElementById('xzx_pie'));
+  xzx_pieChart.setOption({
+    textStyle: { color: '#8fa9bc' },
+    tooltip: Object.assign({ trigger: 'item', formatter: '{b}<br/>{c}（{d}%）' }, xzx_tipStyle),
+    legend: { bottom: 0, textStyle: { color: '#8fa9bc', fontSize: 11 }, itemWidth: 12, itemHeight: 8 },
+    color: [xzx_cyan, xzx_blue, xzx_gold, xzx_red, xzx_green],
+    series: [{
+      type: 'pie', radius: ['42%', '66%'], center: ['50%', '44%'],
+      itemStyle: { borderColor: '#081420', borderWidth: 2 },
+      label: { color: '#8fa9bc', fontSize: 11, formatter: '{b} {d}%' },
+      emphasis: { scale: true, scaleSize: 6 },
+      data: [
+        { value: 5640, name: '网页端' },
+        { value: 4380, name: 'App' },
+        { value: 2160, name: '小程序' },
+        { value: 520,  name: '开放 API' },
+        { value: 147,  name: '其他' }
+      ]
+    }]
+  });
+
+  /* ---------- ⑥ 右下：24 小时请求趋势 ---------- */
+  var xzx_lineChart = echarts.init(document.getElementById('xzx_line'));
+  xzx_lineChart.setOption({
+    textStyle: { color: '#8fa9bc' },
+    tooltip: Object.assign({ trigger: 'axis' }, xzx_tipStyle),
+    grid: { left: 40, right: 16, top: 16, bottom: 24 },
+    xAxis: Object.assign({ type: 'category', boundaryGap: false,
+      data: ['0时','2时','4时','6时','8时','10时','12时','14时','16时','18时','20时','22时'] }, xzx_axis),
+    yAxis: Object.assign({ type: 'value', name: '请求/分' }, xzx_axis),
+    series: [{
+      type: 'line', smooth: true, symbol: 'none',
+      data: [120, 62, 38, 55, 380, 620, 540, 585, 610, 760, 830, 460],
+      lineStyle: { color: xzx_cyan, width: 2.5 },
+      itemStyle: { color: xzx_cyan },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,
+        [{offset:0,color:'rgba(56,214,214,.4)'},{offset:1,color:'rgba(56,214,214,0)'}]) },
+      markPoint: { data: [{ type: 'max', name: '峰值' }],
+        itemStyle: { color: xzx_red }, label: { color: '#fff', fontSize: 10 } }
+    }]
+  });
+
+  /* ---------- 自适应 ---------- */
+  window.addEventListener('resize', function(){
+    [xzx_mapChart, xzx_mixedChart, xzx_radarChart, xzx_gaugeChart, xzx_pieChart, xzx_lineChart]
+      .forEach(function(c){ c.resize(); });
+  });
+})();
+</script>
+</body>
+</html>

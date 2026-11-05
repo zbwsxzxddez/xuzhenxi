@@ -1,0 +1,186 @@
+<!-- 姓名：许镇玺，日期：Mermaid 智能客服流程图与 ER 图 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-6 Mermaid 智能客服流程图与 ER 图 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_paper:#f5f1e8;
+  --xzx_ink:#222b28;
+  --xzx_pine:#154943;
+  --xzx_cinnabar:#b23c28;
+  --xzx_line:#e2dac6;
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_serif:"STSong","Songti SC","SimSun","Noto Serif SC",serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  font-family:var(--xzx_sans);color:var(--xzx_ink);
+  background:var(--xzx_paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,105,70,.025) 0 1px, transparent 1px 4px),
+    radial-gradient(900px 420px at 50% -10%, rgba(178,60,40,.06), transparent 60%);
+}
+.xzx_header{width:min(1160px,94%);padding:30px 0 14px;text-align:center;}
+.xzx_header h1{
+  font-family:var(--xzx_serif);font-size:clamp(22px,4vw,32px);
+  color:var(--xzx_pine);letter-spacing:.08em;
+}
+.xzx_header p{
+  margin-top:8px;font-family:var(--xzx_mono);
+  font-size:12.5px;color:#7d7666;letter-spacing:.12em;
+}
+.xzx_cards{width:min(1160px,94%);display:flex;flex-direction:column;gap:20px;margin:10px 0 8px;}
+.xzx_card{
+  background:#fbf8f1;border:1px solid var(--xzx_line);border-radius:14px;
+  box-shadow:0 14px 34px -18px rgba(31,42,40,.28);
+  padding:18px 20px 14px;overflow-x:auto;
+}
+.xzx_card h2{
+  font-family:var(--xzx_serif);font-size:18px;font-weight:700;
+  color:var(--xzx_pine);letter-spacing:.05em;
+}
+.xzx_card .xzx_sub{font-family:var(--xzx_mono);font-size:11.5px;color:#a09a88;margin:2px 0 10px;}
+.xzx_mermaid{display:flex;justify-content:center;}
+.xzx_mermaid svg{max-width:100%;height:auto;}
+.xzx_footer{padding:10px 0 22px;font-family:var(--xzx_mono);font-size:12px;color:#a09a88;text-align:center;}
+.xzx_footer b{color:var(--xzx_pine);font-weight:600;}
+</style>
+</head>
+<body>
+
+<header class="xzx_header">
+  <h1>Mermaid 图表 · 智能客服系统流程图与 ER 图</h1>
+  <p>xzx · mermaid.min.js（本地 cdn/mermaid/，无外网依赖）· flowchart + erDiagram</p>
+</header>
+
+<main class="xzx_cards">
+
+  <section class="xzx_card">
+    <h2>智能客服系统业务流程图（flowchart）</h2>
+    <p class="xzx_sub">xzx_flow · 从用户提问到答案返回 / 转人工，再到 badcase 回流知识库的完整链路</p>
+    <pre class="mermaid xzx_mermaid">
+flowchart TD
+    A([用户提问]) --> B[接入层<br/>鉴权 · 限流 · 敏感词初筛]
+    B --> C[NLU 意图识别<br/>实体抽取 NER]
+    C --> D{置信度 ≥ 阈值?}
+    D -- 是 --> E[RAG 知识库检索<br/>查询改写 → 向量召回 → 重排]
+    E --> F{命中 Top-K 证据?}
+    F -- 是 --> G[LLM 基于证据<br/>生成答案]
+    F -- 否 --> H[兜底话术]
+    D -- 否 --> I[转人工坐席]
+    G --> J{敏感词 / 合规审查}
+    J -- 通过 --> K([返回用户])
+    J -- 不通过 --> H
+    H --> L[(badcase 沉淀)]
+    I --> L
+    L --> M[(知识库<br/>迭代更新)]
+    M -.-> E
+    style A fill:#eaf3ef,stroke:#154943,stroke-width:1.5px
+    style K fill:#eaf3ef,stroke:#154943,stroke-width:1.5px
+    style E fill:#fdf0ec,stroke:#b23c28,stroke-width:1.8px
+    style G fill:#fdf0ec,stroke:#b23c28,stroke-width:1.5px
+    style I fill:#fdf3e7,stroke:#a98238,stroke-width:1.5px
+    style L fill:#ece9f4,stroke:#5a4d8a,stroke-width:1.5px
+    style M fill:#ece9f4,stroke:#5a4d8a,stroke-width:1.5px
+    </pre>
+  </section>
+
+  <section class="xzx_card">
+    <h2>智能客服系统数据库 ER 图（erDiagram）</h2>
+    <p class="xzx_sub">xzx_er · 用户 / 会话 / 消息 / 意图 / 知识条目 / 人工坐席 六个核心实体</p>
+    <pre class="mermaid xzx_mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--|{ MESSAGE : "包含"
+    SESSION }o--o| AGENT : "可能转接"
+    MESSAGE }o--|| INTENT : "命中意图"
+    INTENT ||--o{ KB_ENTRY : "关联知识"
+    CATEGORY ||--o{ KB_ENTRY : "分类归属"
+    CATEGORY ||--o{ INTENT : "涵盖"
+
+    USER {
+        bigint user_id PK "用户ID"
+        varchar nickname "昵称"
+        varchar phone "手机号"
+        int member_level "会员等级"
+        datetime created_at "注册时间"
+    }
+    SESSION {
+        bigint session_id PK "会话ID"
+        bigint user_id FK "所属用户"
+        bigint agent_id FK "转接坐席(可空)"
+        varchar channel "渠道 web-app-api"
+        tinyint status "0进行中 1已结束"
+        datetime started_at "开始时间"
+    }
+    MESSAGE {
+        bigint msg_id PK "消息ID"
+        bigint session_id FK "所属会话"
+        bigint intent_id FK "命中意图(可空)"
+        tinyint role "0用户 1机器人 2坐席"
+        text content "消息内容"
+        decimal confidence "NLU置信度"
+        datetime sent_at "发送时间"
+    }
+    INTENT {
+        bigint intent_id PK "意图ID"
+        varchar intent_name "意图名称"
+        bigint category_id FK "所属类目"
+        decimal threshold "兜底阈值"
+    }
+    KB_ENTRY {
+        bigint kb_id PK "知识条目ID"
+        varchar question "标准问法"
+        text answer "标准答案"
+        bigint category_id FK "所属类目"
+        tinyint source "0人工 1badcase回流"
+        datetime updated_at "更新时间"
+    }
+    CATEGORY {
+        bigint category_id PK "类目ID"
+        varchar category_name "类目名称"
+        bigint parent_id FK "父类目"
+    }
+    AGENT {
+        bigint agent_id PK "坐席ID"
+        varchar agent_name "坐席姓名"
+        tinyint online_status "在线状态"
+    }
+    </pre>
+  </section>
+
+</main>
+
+<footer class="xzx_footer"><b>许镇玺</b> ·《高级网页设计》课堂实践 18-6 · Mermaid 由本地 cdn 目录加载</footer>
+
+<!-- 本地 Mermaid（已下载至 cdn/mermaid/，禁止使用外部 CDN 引用） -->
+<script src="cdn/mermaid/mermaid.min.js"></script>
+<script>
+/* 初始化 Mermaid（许镇玺）：主题配色与站点一致，变量名以 xzx_ 开头 */
+mermaid.initialize({
+  xzx_startOnLoad: true,
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: '"Microsoft YaHei","PingFang SC",sans-serif',
+    fontSize: '14px',
+    primaryColor: '#eef3f0',
+    primaryBorderColor: '#154943',
+    primaryTextColor: '#222b28',
+    lineColor: '#7d8a84',
+    secondaryColor: '#fdf3e7',
+    tertiaryColor: '#ece9f4'
+  },
+  flowchart: { curve: 'basis' },
+  er: { diagramPadding: 16 }
+});
+</script>
+</body>
+</html>

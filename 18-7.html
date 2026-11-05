@@ -1,0 +1,276 @@
+<!-- 姓名：许镇玺，日期：Three.js 3D 柱状图与 3D 饼图 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-7 Three.js 3D 图表 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_paper:#f5f1e8;
+  --xzx_ink:#222b28;
+  --xzx_pine:#154943;
+  --xzx_cinnabar:#b23c28;
+  --xzx_line:#e2dac6;
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_serif:"STSong","Songti SC","SimSun","Noto Serif SC",serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  font-family:var(--xzx_sans);color:var(--xzx_ink);
+  background:var(--xzx_paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,105,70,.025) 0 1px, transparent 1px 4px),
+    radial-gradient(900px 420px at 50% -10%, rgba(178,60,40,.06), transparent 60%);
+}
+.xzx_header{width:min(1160px,94%);padding:30px 0 14px;text-align:center;}
+.xzx_header h1{
+  font-family:var(--xzx_serif);font-size:clamp(22px,4vw,32px);
+  color:var(--xzx_pine);letter-spacing:.08em;
+}
+.xzx_header p{
+  margin-top:8px;font-family:var(--xzx_mono);
+  font-size:12.5px;color:#7d7666;letter-spacing:.12em;
+}
+.xzx_charts{width:min(1160px,94%);margin:10px 0 8px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.xzx_card{
+  background:#fbf8f1;border:1px solid var(--xzx_line);border-radius:14px;
+  box-shadow:0 14px 34px -18px rgba(31,42,40,.28);
+  padding:16px 16px 10px;
+}
+.xzx_card h2{
+  font-family:var(--xzx_serif);font-size:18px;font-weight:700;
+  color:var(--xzx_pine);letter-spacing:.05em;
+}
+.xzx_card .xzx_sub{font-family:var(--xzx_mono);font-size:11.5px;color:#a09a88;margin:2px 0 8px;}
+.xzx_scene{width:100%;height:430px;border-radius:10px;overflow:hidden;position:relative;background:#10201c;cursor:grab;}
+.xzx_scene:active{cursor:grabbing;}
+.xzx_hint{
+  position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
+  font-family:var(--xzx_mono);font-size:11px;color:rgba(251,248,241,.75);
+  background:rgba(16,32,28,.6);border:1px solid rgba(251,248,241,.2);
+  border-radius:999px;padding:3px 14px;pointer-events:none;white-space:nowrap;
+}
+.xzx_tip{
+  position:absolute;display:none;pointer-events:none;z-index:5;
+  padding:6px 12px;font-size:12.5px;color:#fdf6ec;white-space:nowrap;
+  background:rgba(16,32,28,.92);border:1px solid #a98238;border-radius:6px;
+}
+.xzx_footer{padding:10px 0 22px;font-family:var(--xzx_mono);font-size:12px;color:#a09a88;text-align:center;}
+.xzx_footer b{color:var(--xzx_pine);font-weight:600;}
+@media (max-width:900px){ .xzx_charts{grid-template-columns:1fr;} .xzx_scene{height:360px;} }
+</style>
+</head>
+<body>
+
+<header class="xzx_header">
+  <h1>Three.js 3D 数据图表</h1>
+  <p>xzx · three.min.js r128（本地 cdn/three/，无外网依赖）· 3D 柱状图 + 3D 饼图 · 拖拽旋转</p>
+</header>
+
+<main class="xzx_charts">
+  <section class="xzx_card">
+    <h2>2025 年月度销售额 · 3D 柱状图</h2>
+    <p class="xzx_sub">xzx_bar3d · 柱高与颜色映射销售额，网格底座</p>
+    <div id="xzx_bar3d" class="xzx_scene"><span class="xzx_hint">拖拽旋转 · 悬停查看数值</span><div class="xzx_tip" id="xzx_bar3d_tip"></div></div>
+  </section>
+  <section class="xzx_card">
+    <h2>品类销售占比 · 3D 饼图</h2>
+    <p class="xzx_sub">xzx_pie3d · 圆环扇区，最大占比扇区外扩强调</p>
+    <div id="xzx_pie3d" class="xzx_scene"><span class="xzx_hint">拖拽旋转 · 悬停查看占比</span><div class="xzx_tip" id="xzx_pie3d_tip"></div></div>
+  </section>
+</main>
+
+<footer class="xzx_footer"><b>许镇玺</b> ·《高级网页设计》课堂实践 18-7 · Three.js 由本地 cdn 目录加载</footer>
+
+<!-- 本地 Three.js（已下载至 cdn/three/，禁止使用外部 CDN 引用） -->
+<script src="cdn/three/three.min.js"></script>
+<script>
+/* ============ Three.js 3D 柱状图 + 3D 饼图（许镇玺） ============
+   变量名均以 xzx_ 开头；不依赖 OrbitControls，自实现拖拽旋转。 */
+
+(function(){
+  'use strict';
+
+  /* ---------- 公共工具 ---------- */
+  var xzx_dataColor = [
+    '#2a6b62','#154943','#a98238','#b23c28',
+    '#5a4d8a','#3d6b85','#c97b4a','#4e7a4e'
+  ];
+
+  // 初始化渲染器 / 相机 / 灯光，返回场景上下文
+  function xzx_createScene(container){
+    var w = container.clientWidth, h = container.clientHeight;
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    container.appendChild(renderer.domElement);
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color('#10201c');
+    scene.fog = new THREE.Fog('#10201c', 60, 140);
+
+    var camera = new THREE.PerspectiveCamera(42, w/h, 0.1, 300);
+    camera.position.set(20, 16, 24);
+    camera.lookAt(0, 3, 0);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    var xzx_dir = new THREE.DirectionalLight(0xffffff, 0.85);
+    xzx_dir.position.set(18, 30, 12);
+    scene.add(xzx_dir);
+    var xzx_fill = new THREE.DirectionalLight(0x7fd8c9, 0.25);
+    xzx_fill.position.set(-14, 10, -16);
+    scene.add(xzx_fill);
+
+    var group = new THREE.Group();
+    scene.add(group);   // 关键：把图表容器组加入场景，否则所有图形都不会渲染
+
+    return { renderer: renderer, scene: scene, camera: camera,
+             group: group, container: container };
+  }
+
+  // 通用拖拽旋转 + 自转 + 渲染循环
+  function xzx_bindOrbit(ctx, autoSpeed){
+    var dragging = false, px = 0, py = 0;
+    var el = ctx.renderer.domElement;
+    el.addEventListener('mousedown', function(e){ dragging = true; px = e.clientX; py = e.clientY; });
+    window.addEventListener('mouseup', function(){ dragging = false; });
+    window.addEventListener('mousemove', function(e){
+      if(!dragging) return;
+      ctx.group.rotation.y += (e.clientX - px) * 0.008;
+      ctx.group.rotation.x = Math.max(-0.5, Math.min(0.6, ctx.group.rotation.x + (e.clientY - py) * 0.005));
+      px = e.clientX; py = e.clientY;
+    });
+
+    (function xzx_loop(){
+      if(!dragging) ctx.group.rotation.y += autoSpeed;   // 缓慢自转
+      ctx.renderer.render(ctx.scene, ctx.camera);
+      requestAnimationFrame(xzx_loop);
+    })();
+
+    window.addEventListener('resize', function(){
+      var w = ctx.container.clientWidth, h = ctx.container.clientHeight;
+      ctx.camera.aspect = w/h;
+      ctx.camera.updateProjectionMatrix();
+      ctx.renderer.setSize(w, h);
+    });
+  }
+
+  // 射线拾取：命中返回 { object, userData }
+  function xzx_bindHover(ctx, tipEl, formatter){
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    ctx.renderer.domElement.addEventListener('mousemove', function(e){
+      var rect = ctx.renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, ctx.camera);
+      var hits = raycaster.intersectObjects(ctx.group.children, true);
+      var mesh = null;
+      for(var i=0;i<hits.length;i++){
+        if(hits[i].object.userData && hits[i].object.userData.xzx_label){ mesh = hits[i].object; break; }
+      }
+      if(mesh){
+        tipEl.style.display = 'block';
+        tipEl.innerHTML = formatter(mesh.userData);
+        tipEl.style.left = (e.clientX - rect.left + 14) + 'px';
+        tipEl.style.top  = (e.clientY - rect.top  + 14) + 'px';
+      }else{
+        tipEl.style.display = 'none';
+      }
+    });
+  }
+
+  /* ================= 图一：3D 柱状图 ================= */
+  (function xzx_bar3d(){
+    var box = document.getElementById('xzx_bar3d');
+    var tip = document.getElementById('xzx_bar3d_tip');
+    var ctx = xzx_createScene(box);
+    box.insertBefore(ctx.renderer.domElement, box.firstChild);
+
+    var months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    var values = [6.2, 5.4, 7.8, 8.6, 9.4, 11.2, 10.5, 12.8, 13.6, 15.4, 17.2, 21.6]; // 万元
+    var maxV = Math.max.apply(null, values);
+
+    // 底座网格
+    var grid = new THREE.GridHelper(30, 12, 0x2a6b62, 0x1c3a33);
+    grid.position.y = 0.01;
+    ctx.group.add(grid);
+
+    // 12 根柱子：横向一字排开，高度映射数值，颜色按档位渐变
+    var geoCache = new THREE.BoxGeometry(1.4, 1, 1.4);
+    for(var i=0;i<12;i++){
+      var v = values[i];
+      var hh = (v / maxV) * 12 + 0.6;
+      var mat = new THREE.MeshLambertMaterial({ color: new THREE.Color(xzx_dataColor[i % xzx_dataColor.length]) });
+      var bar = new THREE.Mesh(geoCache, mat);
+      bar.scale.y = hh;
+      bar.position.set(-16.5 + i * 3, hh/2, 0);
+      bar.userData = { xzx_label: months[i], xzx_value: v };
+      ctx.group.add(bar);
+    }
+
+    // 数值刻度参考线（纵轴）
+    var axisMat = new THREE.LineBasicMaterial({ color: 0xa98238 });
+    var axisGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-18.2, 0, 0), new THREE.Vector3(-18.2, 13, 0)
+    ]);
+    ctx.group.add(new THREE.Line(axisGeo, axisMat));
+
+    xzx_bindHover(ctx, tip, function(d){ return d.xzx_label + '：' + d.xzx_value.toFixed(1) + ' 万元'; });
+    xzx_bindOrbit(ctx, 0.003);
+  })();
+
+  /* ================= 图二：3D 饼图 ================= */
+  (function xzx_pie3d(){
+    var box = document.getElementById('xzx_pie3d');
+    var tip = document.getElementById('xzx_pie3d_tip');
+    var ctx = xzx_createScene(box);
+    box.insertBefore(ctx.renderer.domElement, box.firstChild);
+    ctx.camera.position.set(0, 20, 20);
+    ctx.camera.lookAt(0, 0, 0);
+
+    var items = [
+      { name:'数码家电', v:128.5 },
+      { name:'服饰鞋包', v:86.2 },
+      { name:'美妆个护', v:42.8 },
+      { name:'食品生鲜', v:24.6 },
+      { name:'图书文娱', v:15.3 },
+      { name:'其他',    v:7.3 }
+    ];
+    var total = items.reduce(function(s,d){ return s + d.v; }, 0);
+    var R = 8, H = 3.2, GAP = 0.045;   // 半径 / 厚度 / 扇区间隙(弧度)
+
+    var angle = 0;
+    items.forEach(function(d, i){
+      var span = (d.v / total) * Math.PI * 2;
+      var isTop = (i === 0);
+      // 圆柱扇区：thetaStart / thetaLength
+      var geo = new THREE.CylinderGeometry(R, R, H, 48, 1, false, angle + GAP/2, span - GAP);
+      var mat = new THREE.MeshLambertMaterial({ color: new THREE.Color(xzx_dataColor[i]) });
+      var slice = new THREE.Mesh(geo, mat);
+      // 最大扇区沿角平分线外扩，形成"强调"效果
+      if(isTop){
+        var mid = angle + span/2;
+        slice.position.set(Math.sin(mid) * 1.4, 0, Math.cos(mid) * 1.4);
+      }
+      slice.userData = {
+        xzx_label: d.name,
+        xzx_value: d.v,
+        xzx_pct: (d.v / total * 100).toFixed(1)
+      };
+      ctx.group.add(slice);
+      angle += span;
+    });
+
+    xzx_bindHover(ctx, tip, function(d){ return d.xzx_label + '：' + d.xzx_value + ' 万元（' + d.xzx_pct + '%）'; });
+    xzx_bindOrbit(ctx, 0.004);
+  })();
+})();
+</script>
+</body>
+</html>
