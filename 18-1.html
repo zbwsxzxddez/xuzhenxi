@@ -1,0 +1,266 @@
+<!-- 姓名：许镇玺，日期：Canvas 文字粒子动画 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-1 Canvas 文字粒子动画 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_paper:#f5f1e8;
+  --xzx_ink:#222b28;
+  --xzx_pine:#154943;
+  --xzx_cinnabar:#b23c28;
+  --xzx_gold:#a98238;
+  --xzx_line:#e2dac6;
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_serif:"STSong","Songti SC","SimSun","Noto Serif SC",serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  font-family:var(--xzx_sans);color:var(--xzx_ink);
+  background:var(--xzx_paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,105,70,.025) 0 1px, transparent 1px 4px),
+    radial-gradient(900px 420px at 50% -10%, rgba(178,60,40,.06), transparent 60%);
+}
+.xzx_header{
+  width:min(960px,94%);padding:30px 0 14px;text-align:center;
+}
+.xzx_header h1{
+  font-family:var(--xzx_serif);font-size:clamp(22px,4vw,32px);
+  color:var(--xzx_pine);letter-spacing:.08em;
+}
+.xzx_header p{
+  margin-top:8px;font-family:var(--xzx_mono);
+  font-size:12.5px;color:#7d7666;letter-spacing:.12em;
+}
+.xzx_stage{
+  position:relative;width:min(960px,94%);flex:1;
+  margin:10px 0 24px;border:1px solid var(--xzx_line);border-radius:14px;
+  background:linear-gradient(180deg,#fbf8f1,#f3edde);
+  box-shadow:0 14px 34px -18px rgba(31,42,40,.28);
+  overflow:hidden;
+}
+.xzx_canvas{display:block;width:100%;height:100%;cursor:crosshair;}
+.xzx_hint{
+  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  font-family:var(--xzx_mono);font-size:12px;color:#8a8371;
+  background:rgba(251,248,241,.85);border:1px solid var(--xzx_line);
+  border-radius:999px;padding:5px 16px;pointer-events:none;white-space:nowrap;
+}
+.xzx_toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 30px;
+}
+.xzx_btn{
+  font-family:var(--xzx_sans);font-size:13.5px;font-weight:600;color:var(--xzx_pine);
+  background:#fbf8f1;border:1px solid var(--xzx_pine);border-radius:8px;
+  padding:8px 18px;cursor:pointer;transition:background .2s,color .2s;
+}
+.xzx_btn:hover{background:var(--xzx_pine);color:#fdfbf5;}
+.xzx_btn.xzx_btn-warn{color:var(--xzx_cinnabar);border-color:var(--xzx_cinnabar);}
+.xzx_btn.xzx_btn-warn:hover{background:var(--xzx_cinnabar);color:#fff;}
+.xzx_footer{
+  padding:0 0 22px;font-family:var(--xzx_mono);font-size:12px;color:#a09a88;
+}
+@media (max-width:560px){ .xzx_hint{font-size:11px;padding:4px 12px;} }
+</style>
+</head>
+<body>
+
+<header class="xzx_header">
+  <h1>Canvas 文字粒子动画</h1>
+  <p>xzx · requestAnimationFrame + 粒子系统 · 文字「许镇玺」</p>
+</header>
+
+<div class="xzx_stage">
+  <canvas id="xzx_canvas" class="xzx_canvas"></canvas>
+  <span class="xzx_hint">移动 / 点击鼠标扰动粒子 · 双击重新聚拢</span>
+</div>
+
+<div class="xzx_toolbar">
+  <button class="xzx_btn" id="xzx_btn_scatter">打散</button>
+  <button class="xzx_btn" id="xzx_btn_gather">聚拢</button>
+  <button class="xzx_btn xzx_btn-warn" id="xzx_btn_color">换配色</button>
+</div>
+
+<footer class="xzx_footer">许镇玺 ·《高级网页设计》课堂实践 18-1 · 原生 Canvas 2D，无任何依赖</footer>
+
+<script>
+/* ============ Canvas 文字粒子动画（许镇玺） ============
+   思路：先在离屏 canvas 上绘制文字，逐像素采样出粒子目标点，
+   再让每个粒子用缓动飞向目标点，requestAnimationFrame 驱动。 */
+
+(function(){
+  'use strict';
+
+  /* ---------- 全局状态（变量名均以 xzx_ 开头） ---------- */
+  var xzx_canvas  = document.getElementById('xzx_canvas');
+  var xzx_ctx     = xzx_canvas.getContext('2d');
+  var xzx_particles = [];            // 粒子数组
+  var xzx_mouse   = { x:-9999, y:-9999, down:false };
+  var xzx_palettes = [
+    { bg:'#f5f1e8', text:'#b23c28', accent:'#154943' },  // 朱砂 + 松青
+    { bg:'#101820', text:'#f5c542', accent:'#4ecdc4' },  // 墨夜 + 鎏金
+    { bg:'#fdf6ec', text:'#154943', accent:'#a98238' }   // 宣纸 + 松青暗金
+  ];
+  var xzx_paletteIdx = 0;
+  var xzx_gap    = 6;     // 采样间隔（像素），越小粒子越多
+  var xzx_text   = '许镇玺';
+  var xzx_state  = 'gather';  // gather=聚拢 scatter=打散
+
+  /* ---------- 尺寸自适应 ---------- */
+  function xzx_resize(){
+    var rect = xzx_canvas.parentElement.getBoundingClientRect();
+    xzx_canvas.width  = Math.floor(rect.width  * devicePixelRatio);
+    xzx_canvas.height = Math.floor(rect.height * devicePixelRatio);
+    xzx_ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    xzx_buildParticles();
+  }
+
+  /* ---------- 离屏采样：得到文字像素坐标 ---------- */
+  function xzx_samplePoints(){
+    // 注意：必须取整，否则 devicePixelRatio 非整数时（如 1.25）
+    // getImageData 的索引计算会错位，导致粒子散乱
+    var w = Math.floor(xzx_canvas.width  / devicePixelRatio);
+    var h = Math.floor(xzx_canvas.height / devicePixelRatio);
+    var off = document.createElement('canvas');
+    off.width = w; off.height = h;
+    var octx = off.getContext('2d');
+
+    var fs = Math.min(w * 0.34, h * 0.52);   // 字号随画布缩放
+    octx.font = '700 ' + fs + 'px "STSong","Songti SC","SimSun",serif';
+    octx.textAlign = 'center';
+    octx.textBaseline = 'middle';
+    octx.fillStyle = '#000';
+    octx.fillText(xzx_text, w/2, h/2 - h*0.04);
+
+    var data = octx.getImageData(0,0,w,h).data;
+    var pts  = [];
+    for(var y=0; y<h; y+=xzx_gap){
+      for(var x=0; x<w; x+=xzx_gap){
+        if(data[(y*w + x)*4 + 3] > 128){   // 只取不透明像素
+          pts.push({ x:x, y:y });
+        }
+      }
+    }
+    return pts;
+  }
+
+  /* ---------- 构建 / 重建粒子 ---------- */
+  function xzx_buildParticles(){
+    var pts  = xzx_samplePoints();
+    var pal  = xzx_palettes[xzx_paletteIdx];
+    var w = Math.floor(xzx_canvas.width  / devicePixelRatio);
+    var h = Math.floor(xzx_canvas.height / devicePixelRatio);
+    var old = xzx_particles;
+
+    xzx_particles = pts.map(function(p, i){
+      var o = old[i];
+      // 复用旧粒子位置，形成平滑重排；新粒子从随机位置进入
+      var sx = o ? o.x : Math.random()*w;
+      var sy = o ? o.y : Math.random()*h;
+      return {
+        x: sx, y: sy,                       // 当前位置
+        tx: p.x, ty: p.y,                   // 目标位置
+        vx: 0, vy: 0,                       // 速度
+        r: 1.1 + Math.random()*1.3,         // 半径
+        c: Math.random() < 0.12 ? pal.accent : pal.text,
+        ph: Math.random()*Math.PI*2         // 呼吸相位
+      };
+    });
+  }
+
+  /* ---------- 主循环 ---------- */
+  var xzx_last = performance.now();
+  function xzx_loop(now){
+    var dt = Math.min((now - xzx_last)/16.7, 3);  // 帧率无关的步长
+    xzx_last = now;
+    var pal = xzx_palettes[xzx_paletteIdx];
+    var w = Math.floor(xzx_canvas.width  / devicePixelRatio);
+    var h = Math.floor(xzx_canvas.height / devicePixelRatio);
+
+    // 背景拖尾：半透明覆盖形成运动残影
+    xzx_ctx.globalAlpha = 0.35;
+    xzx_ctx.fillStyle = pal.bg;
+    xzx_ctx.fillRect(0,0,w,h);
+    xzx_ctx.globalAlpha = 1;
+
+    for(var i=0; i<xzx_particles.length; i++){
+      var p = xzx_particles[i];
+
+      if(xzx_state === 'gather'){
+        // 弹簧：飞向目标点
+        p.vx += (p.tx - p.x) * 0.012 * dt;
+        p.vy += (p.ty - p.y) * 0.012 * dt;
+      }else{
+        // 打散：缓慢漂移
+        p.vx += Math.sin(now/900 + p.ph) * 0.02 * dt;
+        p.vy += Math.cos(now/1100 + p.ph) * 0.02 * dt;
+      }
+
+      // 鼠标斥力
+      var dx = p.x - xzx_mouse.x, dy = p.y - xzx_mouse.y;
+      var d2 = dx*dx + dy*dy;
+      if(d2 < 10000 && d2 > 0.01){          // 半径 100px 内排斥
+        var d = Math.sqrt(d2);
+        var f = (100 - d) / 100 * 1.6;
+        p.vx += dx/d * f * dt;
+        p.vy += dy/d * f * dt;
+      }
+
+      // 阻尼与位移
+      p.vx *= 0.9; p.vy *= 0.9;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+
+      // 边界反弹
+      if(p.x < 0 || p.x > w) p.vx *= -0.6;
+      if(p.y < 0 || p.y > h) p.vy *= -0.6;
+
+      // 呼吸：半径轻微脉动
+      var breathe = 1 + Math.sin(now/600 + p.ph) * 0.18;
+      xzx_ctx.beginPath();
+      xzx_ctx.fillStyle = p.c;
+      xzx_ctx.arc(p.x, p.y, p.r * breathe, 0, Math.PI*2);
+      xzx_ctx.fill();
+    }
+
+    requestAnimationFrame(xzx_loop);
+  }
+
+  /* ---------- 交互 ---------- */
+  function xzx_pos(e){
+    var rect = xzx_canvas.getBoundingClientRect();
+    var t = e.touches ? e.touches[0] : e;
+    xzx_mouse.x = t.clientX - rect.left;
+    xzx_mouse.y = t.clientY - rect.top;
+  }
+  xzx_canvas.addEventListener('mousemove', xzx_pos);
+  xzx_canvas.addEventListener('touchmove', function(e){ e.preventDefault(); xzx_pos(e); }, { passive:false });
+  xzx_canvas.addEventListener('mouseleave', function(){ xzx_mouse.x = -9999; xzx_mouse.y = -9999; });
+  xzx_canvas.addEventListener('mousedown', function(){ xzx_mouse.down = true; xzx_state = 'scatter'; });
+  window.addEventListener('mouseup', function(){ xzx_mouse.down = false; xzx_state = 'gather'; });
+  xzx_canvas.addEventListener('dblclick', xzx_buildParticles);
+
+  document.getElementById('xzx_btn_scatter').addEventListener('click', function(){ xzx_state = 'scatter'; });
+  document.getElementById('xzx_btn_gather').addEventListener('click', function(){ xzx_state = 'gather'; });
+  document.getElementById('xzx_btn_color').addEventListener('click', function(){
+    xzx_paletteIdx = (xzx_paletteIdx + 1) % xzx_palettes.length;
+    var pal = xzx_palettes[xzx_paletteIdx];
+    xzx_particles.forEach(function(p){
+      p.c = Math.random() < 0.12 ? pal.accent : pal.text;
+    });
+  });
+
+  window.addEventListener('resize', xzx_resize);
+  xzx_resize();
+  requestAnimationFrame(xzx_loop);
+})();
+</script>
+</body>
+</html>

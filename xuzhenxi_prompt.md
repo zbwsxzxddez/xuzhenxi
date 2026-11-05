@@ -97,3 +97,15 @@
 ## 2026-11-02-16-40
 **Model:** glm-5.3-flashx
 **Prompt:** 完成17-6.html，使用promise和async完成异步操作的演示包饺子的流程。先买原料（线上线下同时购买，完成任何一个即可进行下一步），取原料，买完原料之后同时和面、和馅，两个活动都完成之后包饺子，包完饺子煮饺子，然后吃饺子。使用setTimeout模拟每一个流程，如买原料6s。在页面上显示流程。做完提交。
+
+## 2026-11-05-15-34
+**Model:** glm-5.3-flashx
+**Prompt:** 完成18-1.html和18-2.html，第一个显示canvas动画，包括文字许镇玺，第二个显示基于canvas的全站系统的系统架构图（电商系统）。完成18-3.html，其中包括基于知识库智能客服的系统的系统架构图，图的格式为svg，科研方向。
+
+## 2026-11-05-15-48
+**Model:** glm-5.3-flashx
+**Prompt:** 实现18-4.html，其中包括echarts的两个图：柱状图和饼图，cdn文件下载到cdn目录下。（示例代码/实力网址：https://echarts.apache.org/）
+
+## 2026-11-05-16-09
+**Model:** glm-5.3-flashx
+**Prompt:** 给我交上去吧（提交到 GitHub 仓库 git@github.com:zbwsxzxddez/xuzhenxi.git）

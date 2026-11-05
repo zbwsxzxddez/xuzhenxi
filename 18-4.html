@@ -1,0 +1,192 @@
+<!-- 姓名：许镇玺，日期：ECharts 柱状图与饼图 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-4 ECharts 柱状图与饼图 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_paper:#f5f1e8;
+  --xzx_ink:#222b28;
+  --xzx_pine:#154943;
+  --xzx_cinnabar:#b23c28;
+  --xzx_gold:#a98238;
+  --xzx_line:#e2dac6;
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_serif:"STSong","Songti SC","SimSun","Noto Serif SC",serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  font-family:var(--xzx_sans);color:var(--xzx_ink);
+  background:var(--xzx_paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,105,70,.025) 0 1px, transparent 1px 4px),
+    radial-gradient(900px 420px at 50% -10%, rgba(178,60,40,.06), transparent 60%);
+}
+.xzx_header{width:min(1160px,94%);padding:30px 0 14px;text-align:center;}
+.xzx_header h1{
+  font-family:var(--xzx_serif);font-size:clamp(22px,4vw,32px);
+  color:var(--xzx_pine);letter-spacing:.08em;
+}
+.xzx_header p{
+  margin-top:8px;font-family:var(--xzx_mono);
+  font-size:12.5px;color:#7d7666;letter-spacing:.12em;
+}
+.xzx_charts{
+  width:min(1160px,94%);
+  margin:10px 0 8px;
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+}
+.xzx_card{
+  background:#fbf8f1;border:1px solid var(--xzx_line);border-radius:14px;
+  box-shadow:0 14px 34px -18px rgba(31,42,40,.28);
+  padding:18px 18px 12px;
+}
+.xzx_card h2{
+  font-family:var(--xzx_serif);font-size:18px;font-weight:700;
+  color:var(--xzx_pine);letter-spacing:.05em;margin-bottom:2px;
+}
+.xzx_card .xzx_sub{
+  font-family:var(--xzx_mono);font-size:11.5px;color:#a09a88;margin-bottom:8px;
+}
+.xzx_chart{width:100%;height:420px;}
+.xzx_footer{padding:10px 0 22px;font-family:var(--xzx_mono);font-size:12px;color:#a09a88;text-align:center;}
+.xzx_footer b{color:var(--xzx_pine);font-weight:600;}
+@media (max-width:900px){ .xzx_charts{grid-template-columns:1fr;} .xzx_chart{height:360px;} }
+</style>
+</head>
+<body>
+
+<header class="xzx_header">
+  <h1>ECharts 数据可视化 · 柱状图与饼图</h1>
+  <p>xzx · Apache ECharts 5（本地 cdn/echarts/echarts.min.js，无外网依赖）· 示例参考 echarts.apache.org</p>
+</header>
+
+<main class="xzx_charts">
+  <section class="xzx_card">
+    <h2>2025 年各季度经营数据（柱状图）</h2>
+    <p class="xzx_sub">xzx_bar_chart · 订单量（单）与销售额（万元）双系列对比</p>
+    <div id="xzx_bar_chart" class="xzx_chart"></div>
+  </section>
+
+  <section class="xzx_card">
+    <h2>商品品类销售占比（饼图）</h2>
+    <p class="xzx_sub">xzx_pie_chart · 2025 全年各品类销售额占比</p>
+    <div id="xzx_pie_chart" class="xzx_chart"></div>
+  </section>
+</main>
+
+<footer class="xzx_footer"><b>许镇玺</b> ·《高级网页设计》课堂实践 18-4 · ECharts 由本地 cdn 目录加载</footer>
+
+<!-- 本地 ECharts（已下载至 cdn/echarts/，禁止使用外部 CDN 引用） -->
+<script src="cdn/echarts/echarts.min.js"></script>
+<script>
+/* ============ ECharts 柱状图 + 饼图（许镇玺） ============ */
+
+(function(){
+  'use strict';
+
+  /* ---------- 配色（与站点主题一致：松青 / 朱砂 / 暗金系） ---------- */
+  var xzx_palette = ['#154943','#b23c28','#a98238','#2a6b62','#5a4d8a','#3d6b85','#c97b4a'];
+  var xzx_textStyle = { color:'#222b28', fontFamily:'"Microsoft YaHei","PingFang SC",sans-serif' };
+
+  /* ---------- 图一：柱状图（双系列） ---------- */
+  var xzx_barChart = echarts.init(document.getElementById('xzx_bar_chart'));
+  xzx_barChart.setOption({
+    color: xzx_palette,
+    textStyle: xzx_textStyle,
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: 'rgba(251,248,241,.96)',
+      borderColor: '#154943',
+      textStyle: { color: '#222b28' }
+    },
+    legend: { data: ['订单量（单）', '销售额（万元）'], top: 6 },
+    grid: { left: 56, right: 56, top: 64, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: ['第一季度', '第二季度', '第三季度', '第四季度'],
+      axisLine: { lineStyle: { color: '#7d7666' } },
+      axisLabel: { color: '#4d5650' }
+    },
+    yAxis: [
+      { type: 'value', name: '订单量（单）', axisLabel: { color: '#4d5650' },
+        splitLine: { lineStyle: { color: '#e2dac6' } } },
+      { type: 'value', name: '销售额（万元）', axisLabel: { color: '#4d5650' },
+        splitLine: { show: false } }
+    ],
+    series: [
+      {
+        name: '订单量（单）',
+        type: 'bar',
+        barWidth: '26%',
+        data: [3260, 4180, 5240, 6890],
+        itemStyle: { borderRadius: [5, 5, 0, 0] },
+        label: { show: true, position: 'top', color: '#154943', fontSize: 11 }
+      },
+      {
+        name: '销售额（万元）',
+        type: 'bar',
+        yAxisIndex: 1,
+        barWidth: '26%',
+        data: [48.6, 63.2, 82.5, 110.4],
+        itemStyle: { borderRadius: [5, 5, 0, 0], color: '#b23c28' },
+        label: { show: true, position: 'top', color: '#b23c28', fontSize: 11 }
+      }
+    ]
+  });
+
+  /* ---------- 图二：饼图 ---------- */
+  var xzx_pieChart = echarts.init(document.getElementById('xzx_pie_chart'));
+  xzx_pieChart.setOption({
+    color: xzx_palette,
+    textStyle: xzx_textStyle,
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}<br/>销售额：{c} 万元（{d}%）',
+      backgroundColor: 'rgba(251,248,241,.96)',
+      borderColor: '#b23c28',
+      textStyle: { color: '#222b28' }
+    },
+    legend: { orient: 'horizontal', bottom: 6 },
+    series: [
+      {
+        name: '品类销售占比',
+        type: 'pie',
+        radius: ['38%', '62%'],          // 环形饼图
+        center: ['50%', '46%'],
+        avoidLabelOverlap: true,
+        itemStyle: { borderColor: '#fbf8f1', borderWidth: 2 },
+        label: { formatter: '{b}\n{d}%', color: '#4d5650', fontSize: 12 },
+        emphasis: {
+          scale: true,
+          scaleSize: 8,
+          itemStyle: { shadowBlur: 18, shadowColor: 'rgba(178,60,40,.4)' }
+        },
+        data: [
+          { value: 128.5, name: '数码家电' },
+          { value: 86.2,  name: '服饰鞋包' },
+          { value: 42.8,  name: '美妆个护' },
+          { value: 24.6,  name: '食品生鲜' },
+          { value: 15.3,  name: '图书文娱' },
+          { value: 7.3,   name: '其他' }
+        ]
+      }
+    ]
+  });
+
+  /* ---------- 窗口尺寸变化时自适应 ---------- */
+  window.addEventListener('resize', function(){
+    xzx_barChart.resize();
+    xzx_pieChart.resize();
+  });
+})();
+</script>
+</body>
+</html>

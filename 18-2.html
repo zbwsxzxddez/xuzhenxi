@@ -1,0 +1,364 @@
+<!-- 姓名：许镇玺，日期：Canvas 电商系统架构图 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="许镇玺">
+<title>18-2 Canvas 电商系统架构图 · 许镇玺</title>
+<style>
+/* 全部类名以 xzx_ 开头（项目命名规范） */
+:root{
+  --xzx_paper:#f5f1e8;
+  --xzx_ink:#222b28;
+  --xzx_pine:#154943;
+  --xzx_cinnabar:#b23c28;
+  --xzx_gold:#a98238;
+  --xzx_line:#e2dac6;
+  --xzx_sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  --xzx_serif:"STSong","Songti SC","SimSun","Noto Serif SC",serif;
+  --xzx_mono:Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  font-family:var(--xzx_sans);color:var(--xzx_ink);
+  background:var(--xzx_paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,105,70,.025) 0 1px, transparent 1px 4px),
+    radial-gradient(900px 420px at 50% -10%, rgba(178,60,40,.06), transparent 60%);
+}
+.xzx_header{width:min(1100px,94%);padding:30px 0 14px;text-align:center;}
+.xzx_header h1{
+  font-family:var(--xzx_serif);font-size:clamp(22px,4vw,32px);
+  color:var(--xzx_pine);letter-spacing:.08em;
+}
+.xzx_header p{
+  margin-top:8px;font-family:var(--xzx_mono);
+  font-size:12.5px;color:#7d7666;letter-spacing:.12em;
+}
+.xzx_stage{
+  position:relative;width:min(1100px,94%);
+  margin:10px 0 18px;border:1px solid var(--xzx_line);border-radius:14px;
+  background:linear-gradient(180deg,#fbf8f1,#f2ecdc);
+  box-shadow:0 14px 34px -18px rgba(31,42,40,.28);
+  overflow:hidden;
+}
+.xzx_canvas{display:block;width:100%;height:auto;cursor:default;}
+.xzx_tooltip{
+  position:absolute;display:none;pointer-events:none;z-index:5;
+  max-width:280px;padding:9px 13px;font-size:12.5px;line-height:1.65;color:#3d443f;
+  background:rgba(251,248,241,.97);border:1px solid var(--xzx_pine);
+  border-left:4px solid var(--xzx_cinnabar);border-radius:8px;
+  box-shadow:0 10px 24px -12px rgba(31,42,40,.35);
+}
+.xzx_tooltip b{color:var(--xzx_pine);display:block;margin-bottom:2px;}
+.xzx_legend{
+  display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:center;
+  width:min(1100px,94%);margin:0 0 8px;font-size:13px;color:#5a5344;
+}
+.xzx_legend span{display:inline-flex;align-items:center;gap:7px;}
+.xzx_legend i{width:14px;height:14px;border-radius:4px;display:inline-block;}
+.xzx_footer{padding:6px 0 22px;font-family:var(--xzx_mono);font-size:12px;color:#a09a88;text-align:center;}
+@media (max-width:640px){ .xzx_tooltip{font-size:11.5px;} }
+</style>
+</head>
+<body>
+
+<header class="xzx_header">
+  <h1>电商系统架构图（Canvas 绘制）</h1>
+  <p>xzx · Canvas 2D 全手绘 · 分层架构 + 动态数据流 · 悬停查看说明</p>
+</header>
+
+<div class="xzx_stage">
+  <canvas id="xzx_canvas" class="xzx_canvas" width="1080" height="820"></canvas>
+  <div id="xzx_tooltip" class="xzx_tooltip"></div>
+</div>
+
+<div class="xzx_legend" id="xzx_legend">
+  <span><i style="background:#eaf3ef;border:1px solid #154943;"></i>用户 / 客户端层</span>
+  <span><i style="background:#fdf3e7;border:1px solid #a98238;"></i>接入 / 网关层</span>
+  <span><i style="background:#eef3f0;border:1px solid #2a6b62;"></i>微服务应用层</span>
+  <span><i style="background:#f7eee9;border:1px solid #b23c28;"></i>中间件层</span>
+  <span><i style="background:#ece9f4;border:1px solid #5a4d8a;"></i>数据存储层</span>
+  <span><i style="background:#e8eef2;border:1px solid #3d6b85;"></i>基础设施层</span>
+</div>
+
+<footer class="xzx_footer">许镇玺 ·《高级网页设计》课堂实践 18-2 · 原生 Canvas，无任何依赖</footer>
+
+<script>
+/* ============ Canvas 电商系统架构图（许镇玺） ============
+   分层绘制：用户层 → 接入层 → 应用层 → 中间件层 → 数据层 → 基础设施层
+   层间箭头带流动光点表示请求链路；鼠标悬停节点显示说明。 */
+
+(function(){
+  'use strict';
+
+  var xzx_canvas  = document.getElementById('xzx_canvas');
+  var xzx_ctx     = xzx_canvas.getContext('2d');
+  var xzx_tip     = document.getElementById('xzx_tooltip');
+  var xzx_W       = xzx_canvas.width;
+  var xzx_H       = xzx_canvas.height;
+  var xzx_nodes   = [];   // 全部节点（命中检测用）
+  var xzx_flows   = [];   // 流动光点
+  var xzx_hover   = null;
+  var xzx_time    = 0;
+
+  /* ---------- 配色（每层一色） ---------- */
+  var xzx_colors = {
+    user : { fill:'#eaf3ef', border:'#154943', text:'#154943' },
+    gate : { fill:'#fdf3e7', border:'#a98238', text:'#7c5e20' },
+    app  : { fill:'#eef3f0', border:'#2a6b62', text:'#154943' },
+    mid  : { fill:'#f7eee9', border:'#b23c28', text:'#93301f' },
+    data : { fill:'#ece9f4', border:'#5a4d8a', text:'#453b6b' },
+    infra: { fill:'#e8eef2', border:'#3d6b85', text:'#2f5468' }
+  };
+
+  /* ---------- 绘制节点定义 ---------- */
+  function xzx_box(o){ xzx_nodes.push(o); return o; }
+
+  var xzx_layers = [
+    { key:'user',  label:'① 用户 / 客户端层', y:36,  h:96,
+      desc:'买家 / 卖家 / 运营人员通过浏览器或 App 访问系统',
+      items:[
+        xzx_box({x:70,  y:64, w:190, h:44, t:'PC Web 商城',   d:'浏览器访问商城前台：商品浏览、下单支付'}),
+        xzx_box({x:290, y:64, w:190, h:44, t:'移动 App / H5', d:'iOS / Android / 微信小程序多端入口'}),
+        xzx_box({x:510, y:64, w:190, h:44, t:'商家管理后台',   d:'商家入驻、商品发布、订单发货管理'}),
+        xzx_box({x:730, y:64, w:190, h:44, t:'运营管理后台',   d:'平台运营：类目、营销、风控、数据看板'})
+      ]},
+    { key:'gate',  label:'② 接入 / 网关层', y:168, h:96,
+      desc:'统一入口：DNS 解析、静态资源加速、负载均衡与 API 网关鉴权',
+      items:[
+        xzx_box({x:70,  y:196, w:280, h:44, t:'CDN 静态加速',    d:'商品图片 / 前端静态资源就近分发加速'}),
+        xzx_box({x:380, y:196, w:280, h:44, t:'Nginx 负载均衡',  d:'反向代理，轮询 / 加权分发到应用集群'}),
+        xzx_box({x:690, y:196, w:230, h:44, t:'API 网关',        d:'统一鉴权、限流熔断、路由、日志埋点'})
+      ]},
+    { key:'app',   label:'③ 微服务应用层', y:300, h:180,
+      desc:'按业务域拆分的微服务集群，独立部署、独立扩容',
+      items:[
+        xzx_box({x:70,  y:352, w:145, h:44, t:'用户服务', d:'注册登录、会员等级、收货地址管理'}),
+        xzx_box({x:235, y:352, w:145, h:44, t:'商品服务', d:'SPU/SKU 管理、类目品牌、商品详情'}),
+        xzx_box({x:400, y:352, w:145, h:44, t:'搜索服务', d:'关键词搜索、筛选排序、搜索联想'}),
+        xzx_box({x:565, y:352, w:145, h:44, t:'购物车服务', d:'加购、合并购物车、结算清单'}),
+        xzx_box({x:730, y:352, w:190, h:44, t:'订单服务', d:'下单、订单状态机、拆单合单'}),
+        xzx_box({x:940, y:352, w:70,  h:44, t:'…',      d:'评价、优惠券、直播等更多服务（可横向扩展）'}),
+        xzx_box({x:70,  y:418, w:145, h:44, t:'支付服务', d:'对接微信 / 支付宝，支付回调与对账'}),
+        xzx_box({x:235, y:418, w:145, h:44, t:'库存服务', d:'库存扣减、预售锁定、超卖防护'}),
+        xzx_box({x:400, y:418, w:145, h:44, t:'营销服务', d:'秒杀、拼团、满减、优惠券发放核销'}),
+        xzx_box({x:565, y:418, w:145, h:44, t:'物流服务', d:'对接快递鸟 / 菜鸟，运单跟踪'}),
+        xzx_box({x:730, y:418, w:190, h:44, t:'消息服务', d:'短信 / 站内信 / 公众号模板消息推送'})
+      ]},
+    { key:'mid',   label:'④ 中间件层', y:516, h:96,
+      desc:'服务治理与高并发支撑组件',
+      items:[
+        xzx_box({x:70,  y:544, w:190, h:44, t:'Redis 缓存集群', d:'热点商品缓存、分布式锁、Session 共享'}),
+        xzx_box({x:290, y:544, w:190, h:44, t:'RocketMQ 消息队列', d:'订单异步解耦：扣库存、通知、积分'}),
+        xzx_box({x:510, y:544, w:190, h:44, t:'Elasticsearch', d:'商品全文检索引擎，倒排索引'}),
+        xzx_box({x:730, y:544, w:190, h:44, t:'Nacos 注册配置中心', d:'服务注册发现、动态配置推送'})
+      ]},
+    { key:'data',  label:'⑤ 数据存储层', y:648, h:96,
+      desc:'持久化存储与读写分离',
+      items:[
+        xzx_box({x:70,  y:676, w:190, h:44, t:'MySQL 主从集群', d:'订单 / 商品核心库，一主多从读写分离'}),
+        xzx_box({x:290, y:676, w:190, h:44, t:'分库分表 Sharding', d:'订单表按用户 ID 哈希水平拆分'}),
+        xzx_box({x:510, y:676, w:190, h:44, t:'OSS 对象存储', d:'商品图片、视频、发票文件存储'}),
+        xzx_box({x:730, y:676, w:190, h:44, t:'数据仓库 / BI', d:'T+1 报表、用户画像、销售分析'})
+      ]},
+    { key:'infra', label:'⑥ 基础设施层', y:752, h:56,
+      desc:'云资源与运维保障（贯穿全部层次）',
+      items:[
+        xzx_box({x:70,  y:760, w:250, h:40, t:'云服务器 ECS / Docker + K8s 容器编排', d:'弹性伸缩，滚动发布，故障自愈'}),
+        xzx_box({x:350, y:760, w:250, h:40, t:'Prometheus + Grafana 监控告警', d:'QPS / RT / 错误率实时监控与告警'}),
+        xzx_box({x:630, y:760, w:290, h:40, t:'ELK 日志中心 · 链路追踪 SkyWalking', d:'日志采集检索、全链路调用跟踪'})
+      ]}
+  ];
+
+  /* ---------- 层与层之间的链路（光点路径） ---------- */
+  // 每条链路：从上层底部中点竖直到下层顶部，x 为链路横坐标
+  var xzx_links = [
+    { x:165, y1:108, y2:196, speed:1.6 },          // 用户层 → 接入层
+    { x:390, y1:108, y2:196, speed:1.3 },
+    { x:615, y1:108, y2:196, speed:1.8 },
+    { x:830, y1:108, y2:196, speed:1.4 },
+    { x:210, y1:240, y2:352, speed:1.5 },          // 接入层 → 应用层
+    { x:520, y1:240, y2:352, speed:1.9 },
+    { x:805, y1:240, y2:352, speed:1.2 },
+    { x:165, y1:462, y2:544, speed:1.7 },          // 应用层 → 中间件层
+    { x:385, y1:462, y2:544, speed:1.3 },
+    { x:605, y1:462, y2:544, speed:1.6 },
+    { x:825, y1:462, y2:544, speed:1.4 },
+    { x:165, y1:588, y2:676, speed:1.8 },          // 中间件层 → 数据层
+    { x:385, y1:588, y2:676, speed:1.2 },
+    { x:605, y1:588, y2:676, speed:1.5 },
+    { x:825, y1:588, y2:676, speed:1.7 }
+  ];
+  // 为每条链路预生成 2~3 个相位错开的光点
+  xzx_links.forEach(function(L, li){
+    L.dots = [];
+    var n = 2 + (li % 2);
+    for(var i=0;i<n;i++) L.dots.push({ off: i/n });
+  });
+
+  /* ---------- 基础绘制工具 ---------- */
+  function xzx_roundRect(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x+r, y);
+    c.arcTo(x+w, y,   x+w, y+h, r);
+    c.arcTo(x+w, y+h, x,   y+h, r);
+    c.arcTo(x,   y+h, x,   y,   r);
+    c.arcTo(x,   y,   x+w, y,   r);
+    c.closePath();
+  }
+
+  function xzx_drawLayer(L){
+    var col = xzx_colors[L.key];
+    // 层底板
+    xzx_ctx.fillStyle = 'rgba(255,255,255,.45)';
+    xzx_roundRect(xzx_ctx, 30, L.y, xzx_W-60, L.h, 12);
+    xzx_ctx.fill();
+    xzx_ctx.strokeStyle = col.border + '55';
+    xzx_ctx.lineWidth = 1;
+    xzx_roundRect(xzx_ctx, 30, L.y, xzx_W-60, L.h, 12);
+    xzx_ctx.stroke();
+
+    // 层标题（竖排小标签放在层左上角）
+    xzx_ctx.font = '700 15px "Microsoft YaHei",sans-serif';
+    xzx_ctx.fillStyle = col.text;
+    xzx_ctx.textAlign = 'left';
+    xzx_ctx.textBaseline = 'alphabetic';
+    xzx_ctx.fillText(L.label, 46, L.y + 24);
+
+    // 节点
+    L.items.forEach(function(b){
+      var hot = (xzx_hover === b);
+      xzx_ctx.save();
+      xzx_ctx.shadowColor = hot ? col.border : 'rgba(31,42,40,.18)';
+      xzx_ctx.shadowBlur  = hot ? 16 : 6;
+      xzx_ctx.shadowOffsetY = hot ? 4 : 2;
+      xzx_ctx.fillStyle = hot ? '#ffffff' : col.fill;
+      xzx_roundRect(xzx_ctx, b.x, b.y, b.w, b.h, 8);
+      xzx_ctx.fill();
+      xzx_ctx.restore();
+
+      xzx_ctx.strokeStyle = col.border;
+      xzx_ctx.lineWidth = hot ? 2 : 1.2;
+      xzx_roundRect(xzx_ctx, b.x, b.y, b.w, b.h, 8);
+      xzx_ctx.stroke();
+
+      xzx_ctx.fillStyle = col.text;
+      xzx_ctx.font = '600 13.5px "Microsoft YaHei",sans-serif';
+      xzx_ctx.textAlign = 'center';
+      xzx_ctx.textBaseline = 'middle';
+      xzx_ctx.fillText(b.t, b.x + b.w/2, b.y + b.h/2 + 1);
+    });
+  }
+
+  function xzx_drawArrows(){
+    xzx_ctx.strokeStyle = '#9aa5a0';
+    xzx_ctx.fillStyle   = '#9aa5a0';
+    xzx_ctx.lineWidth = 1.4;
+    xzx_links.forEach(function(L){
+      xzx_ctx.beginPath();
+      xzx_ctx.moveTo(L.x, L.y1);
+      xzx_ctx.lineTo(L.x, L.y2 - 7);
+      xzx_ctx.stroke();
+      // 箭头
+      xzx_ctx.beginPath();
+      xzx_ctx.moveTo(L.x, L.y2);
+      xzx_ctx.lineTo(L.x - 4.5, L.y2 - 8);
+      xzx_ctx.lineTo(L.x + 4.5, L.y2 - 8);
+      xzx_ctx.closePath();
+      xzx_ctx.fill();
+    });
+  }
+
+  function xzx_drawFlows(){
+    xzx_links.forEach(function(L){
+      L.dots.forEach(function(dot){
+        var t = (xzx_time * L.speed * 0.004 + dot.off) % 1;
+        var y = L.y1 + (L.y2 - L.y1) * t;
+        var alpha = Math.sin(t * Math.PI);          // 两端淡入淡出
+        var g = xzx_ctx.createRadialGradient(L.x, y, 0, L.x, y, 6);
+        g.addColorStop(0, 'rgba(178,60,40,' + (0.85*alpha) + ')');
+        g.addColorStop(1, 'rgba(178,60,40,0)');
+        xzx_ctx.fillStyle = g;
+        xzx_ctx.beginPath();
+        xzx_ctx.arc(L.x, y, 6, 0, Math.PI*2);
+        xzx_ctx.fill();
+        xzx_ctx.fillStyle = 'rgba(178,60,40,' + alpha + ')';
+        xzx_ctx.beginPath();
+        xzx_ctx.arc(L.x, y, 2.4, 0, Math.PI*2);
+        xzx_ctx.fill();
+      });
+    });
+  }
+
+  function xzx_drawTitle(){
+    xzx_ctx.font = '700 22px "STSong","SimSun",serif';
+    xzx_ctx.fillStyle = '#154943';
+    xzx_ctx.textAlign = 'right';
+    xzx_ctx.textBaseline = 'alphabetic';
+    xzx_ctx.fillText('电商系统架构图', xzx_W - 46, 46);
+    xzx_ctx.font = '12px Consolas,monospace';
+    xzx_ctx.fillStyle = '#8a8371';
+    xzx_ctx.fillText('drawn by 许镇玺 · Canvas 2D', xzx_W - 46, 66);
+  }
+
+  /* ---------- 主循环 ---------- */
+  function xzx_loop(){
+    xzx_time += 1;
+    xzx_ctx.clearRect(0,0,xzx_W,xzx_H);
+    xzx_drawTitle();
+    xzx_drawArrows();
+    xzx_drawFlows();
+    xzx_layers.forEach(xzx_drawLayer);
+    requestAnimationFrame(xzx_loop);
+  }
+
+  /* ---------- 悬停命中检测 ---------- */
+  function xzx_hit(mx, my){
+    var found = null;
+    for(var i=0;i<xzx_nodes.length;i++){
+      var b = xzx_nodes[i];
+      if(mx >= b.x && mx <= b.x+b.w && my >= b.y && my <= b.y+b.h){ found = b; break; }
+    }
+    return found;
+  }
+
+  xzx_canvas.addEventListener('mousemove', function(e){
+    var rect = xzx_canvas.getBoundingClientRect();
+    var mx = (e.clientX - rect.left) * (xzx_W / rect.width);
+    var my = (e.clientY - rect.top ) * (xzx_H / rect.height);
+    var b = xzx_hit(mx, my);
+    xzx_hover = b;
+    if(b){
+      var layerDesc = '';
+      xzx_layers.forEach(function(L){
+        if(L.items.indexOf(b) !== -1) layerDesc = L.label + '：' + L.desc;
+      });
+      xzx_tip.innerHTML = '<b>' + b.t + '</b>' + b.d + '<br><span style="color:#8a8371;font-size:11.5px;">' + layerDesc + '</span>';
+      xzx_tip.style.display = 'block';
+      var stage = xzx_canvas.parentElement;
+      var sx = (e.clientX - stage.getBoundingClientRect().left) + 16;
+      var sy = (e.clientY - stage.getBoundingClientRect().top ) + 16;
+      // 防止提示框溢出舞台
+      if(sx + 300 > stage.clientWidth)  sx = stage.clientWidth  - 300;
+      if(sy + 110 > stage.clientHeight) sy = stage.clientHeight - 110;
+      xzx_tip.style.left = sx + 'px';
+      xzx_tip.style.top  = sy + 'px';
+      xzx_canvas.style.cursor = 'pointer';
+    }else{
+      xzx_tip.style.display = 'none';
+      xzx_canvas.style.cursor = 'default';
+    }
+  });
+  xzx_canvas.addEventListener('mouseleave', function(){
+    xzx_hover = null;
+    xzx_tip.style.display = 'none';
+  });
+
+  xzx_loop();
+})();
+</script>
+</body>
+</html>
